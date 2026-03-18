@@ -451,7 +451,7 @@ z-index: 500;
 align-items: flex-end;
 justify-content: center;
 backdrop-filter: blur(2px);
-padding-top: 160px;
+padding-top: 0;
 }
 
 .modal-overlay.open {
@@ -463,7 +463,7 @@ background: #1a1a1a;
 border-radius: 24px 24px 0 0;
 width: 100%;
 max-width: 480px;
-max-height: calc(100vh - 180px);
+max-height: 88vh;
 overflow-y: auto;
 -webkit-overflow-scrolling: touch;
 overscroll-behavior: contain;
@@ -1315,12 +1315,14 @@ body { padding-bottom: 102px; }
 
       buildCustomiseBody(itemType);
       updateModalPrice();
-      document.getElementById('customiseModal').classList.add('open');
-      document.body.style.overflow = 'hidden';
-
+      // Scroll to top first so modal X is always visible
+      window.scrollTo({top: 0, behavior: 'instant'});
+      
       setTimeout(function() {
+        document.getElementById('customiseModal').classList.add('open');
+        document.body.style.overflow = 'hidden';
         document.getElementById('customiseModalInner').scrollTop = 0;
-      }, 10);
+      }, 80);
     }
 
     function buildCustomiseBody(itemType) {
