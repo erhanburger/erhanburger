@@ -22,7 +22,7 @@ overflow-x: hidden;
 body {
 overflow-x: hidden;
 font-family: ‘Nunito’, ‘Helvetica Neue’, Arial, sans-serif;
-background: #0f0f0f;
+background: #0a0a0a;
 color: #f0f0f0;
 min-height: 100vh;
 padding-bottom: 106px;
@@ -118,7 +118,7 @@ color: #8b0a1f;
 
 .hero {
 background: linear-gradient(160deg, #8b0a1f 0%, #c8102e 72%);
-padding: 12px 14px 14px;
+padding: 16px 14px 18px;
 text-align: center;
 position: relative;
 overflow: hidden;
@@ -170,7 +170,7 @@ white-space: nowrap;
 
 .search-wrap {
 padding: 10px 10px 6px;
-background: #0f0f0f;
+background: #0a0a0a;
 position: sticky;
 top: 96px;
 z-index: 180;
@@ -248,11 +248,11 @@ to { opacity: 1; transform: translateY(0); }
 display: flex;
 align-items: center;
 gap: 8px;
-padding: 12px 14px 8px;
+padding: 16px 14px 10px;
 font-family: ‘Bangers’, ‘Arial Black’, Impact, cursive;
-font-size: 1.25rem;
+font-size: 1.3rem;
 color: #FFD700;
-letter-spacing: 1px;
+letter-spacing: 2px;
 }
 
 .deals-grid {
@@ -345,18 +345,21 @@ gap: 8px;
 
 .item-row {
 background: #1a1a1a;
-border-radius: 14px;
+border-radius: 16px;
 display: flex;
 align-items: center;
 justify-content: space-between;
-padding: 10px 12px;
-border: 1.5px solid #2a2a2a;
-transition: border-color 0.15s;
+padding: 11px 14px;
+border: 1px solid #252525;
+transition: all 0.15s;
+box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 gap: 8px;
 }
 
 .item-row:active {
 border-color: #c8102e;
+background: #1f1010;
+transform: scale(0.99);
 }
 
 .item-left {
@@ -370,7 +373,7 @@ min-width: 0;
 .item-img {
 width: 50px;
 height: 50px;
-border-radius: 10px;
+border-radius: 14px;
 object-fit: cover;
 flex-shrink: 0;
 display: block;
@@ -383,9 +386,10 @@ min-width: 0;
 
 .item-name {
 font-weight: 800;
-font-size: 0.83rem;
-color: #f0f0f0;
+font-size: 0.85rem;
+color: #f5f5f5;
 line-height: 1.2;
+letter-spacing: 0.2px;
 }
 
 .item-right {
@@ -397,10 +401,11 @@ flex-shrink: 0;
 
 .item-price {
 font-family: ‘Bangers’, ‘Arial Black’, Impact, cursive;
-font-size: 1.12rem;
+font-size: 1.15rem;
 color: #FFD700;
 min-width: 42px;
 text-align: right;
+text-shadow: 0 1px 4px rgba(255,215,0,0.2);
 }
 
 .add-btn {
@@ -418,6 +423,23 @@ justify-content: center;
 font-weight: 900;
 transition: transform 0.1s, background 0.2s;
 flex-shrink: 0;
+position: relative;
+}
+.add-btn .btn-badge {
+position: absolute;
+top: -6px;
+right: -6px;
+background: #FFD700;
+color: #8b0a1f;
+font-size: 0.55rem;
+font-weight: 900;
+width: 16px;
+height: 16px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+line-height: 1;
 }
 
 .add-btn:active {
@@ -459,8 +481,8 @@ display: flex;
 }
 
 .modal {
-background: #1a1a1a;
-border-radius: 24px 24px 0 0;
+background: #141414;
+border-radius: 28px 28px 0 0;
 width: 100%;
 max-width: 480px;
 max-height: 88vh;
@@ -690,10 +712,10 @@ left: 50%;
 transform: translateX(-50%);
 width: 100%;
 max-width: 480px;
-background: #1a1a1a;
-border-top: 1px solid #2a2a2a;
-padding: 9px 12px 12px;
-box-shadow: 0 -8px 26px rgba(0,0,0,0.38);
+background: #141414;
+border-top: 1px solid #222;
+padding: 10px 14px 14px;
+box-shadow: 0 -12px 40px rgba(0,0,0,0.5);
 z-index: 300;
 display: none;
 }
@@ -1048,8 +1070,8 @@ position: relative;
 
 /* Deal card hover/active effect */
 .deal-card:active {
-transform: scale(0.97);
-box-shadow: 0 0 0 2px #FFD700;
+transform: scale(0.96);
+box-shadow: 0 0 0 2px rgba(255,215,0,0.5);
 }
 
 /* Open/Closed indicator */
@@ -1540,6 +1562,32 @@ background: currentColor;
       document.getElementById('cartTotal').textContent = total.toFixed(2);
       document.getElementById('modalTotal').textContent = total.toFixed(2);
       document.getElementById('cartBar').classList.toggle('visible', count > 0);
+      updateAddBtns();
+    }
+
+    function updateAddBtns() {
+      // Remove all existing badges first
+      document.querySelectorAll('.btn-badge').forEach(function(b) { b.remove(); });
+      // Add badge to buttons where item is in cart
+      cart.forEach(function(item) {
+        if (item.qty <= 0) return;
+        document.querySelectorAll('.add-btn').forEach(function(btn) {
+          var row = btn.closest('.item-row, .deal-card');
+          if (!row) return;
+          var nameEl = row.querySelector('.item-name, .deal-name');
+          if (!nameEl) return;
+          var rowName = nameEl.textContent.replace(/🔥 Popular/g,'').trim().toLowerCase();
+          var cartName = item.name.toLowerCase();
+          if (cartName.includes(rowName.substring(0,10)) || rowName.includes(cartName.substring(0,10))) {
+            if (!btn.querySelector('.btn-badge')) {
+              var badge = document.createElement('span');
+              badge.className = 'btn-badge';
+              badge.textContent = item.qty;
+              btn.appendChild(badge);
+            }
+          }
+        });
+      });
     }
 
     function openCart() { renderCartModal(); document.getElementById('cartModal').classList.add('open'); }
