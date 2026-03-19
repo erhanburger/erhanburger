@@ -1012,6 +1012,73 @@ body { padding-bottom: 102px; }
 .deal-img { height: 76px; }
 .order-btn { font-size: 1rem; }
 }
+
+.popular-badge {
+display: inline-block;
+background: #FF6B00;
+color: white;
+font-size: 0.58rem;
+font-weight: 900;
+padding: 2px 7px;
+border-radius: 20px;
+letter-spacing: 1px;
+text-transform: uppercase;
+margin-left: 6px;
+vertical-align: middle;
+}
+
+.deal-popular {
+position: absolute;
+top: 8px;
+left: 8px;
+background: #FF6B00;
+color: white;
+font-size: 0.58rem;
+font-weight: 900;
+padding: 3px 8px;
+border-radius: 20px;
+letter-spacing: 1px;
+text-transform: uppercase;
+z-index: 2;
+}
+
+.deal-card {
+position: relative;
+}
+
+/* Deal card hover/active effect */
+.deal-card:active {
+transform: scale(0.97);
+box-shadow: 0 0 0 2px #FFD700;
+}
+
+/* Open/Closed indicator */
+.open-status {
+display: inline-flex;
+align-items: center;
+gap: 5px;
+font-size: 0.68rem;
+font-weight: 800;
+padding: 4px 10px;
+border-radius: 20px;
+margin-top: 6px;
+}
+.open-status.open {
+background: rgba(0,200,80,0.2);
+color: #00c850;
+border: 1px solid rgba(0,200,80,0.3);
+}
+.open-status.closed {
+background: rgba(200,16,46,0.2);
+color: #ff6b6b;
+border: 1px solid rgba(200,16,46,0.3);
+}
+.open-dot {
+width: 7px;
+height: 7px;
+border-radius: 50%;
+background: currentColor;
+}
 </style>
 
 </head>
@@ -1058,6 +1125,7 @@ body { padding-bottom: 102px; }
     <div class="section-title"><span class="icon">🔥</span> MEAL DEALS</div>
     <div class="deals-grid">
       <div class="deal-card searchable" data-name="deal 1 quarter burger chips drink meal deal burger">
+        <div class="deal-popular">🔥 Popular</div>
         <div class="deal-header">DEAL 1</div>
         <img class="deal-img" src="IMG_0401.jpeg" alt="¼ Burger Meal">
         <div class="deal-name">¼ Burger<br>Chips &amp; Drink</div>
@@ -1065,6 +1133,7 @@ body { padding-bottom: 102px; }
         <button class="deal-add-btn" onclick="openCustomise('Deal 1 -- ¼ Burger, Chips & Drink',7.80,'meal')">+ Customise &amp; Add</button>
       </div>
       <div class="deal-card searchable" data-name="deal 2 half burger chips drink meal deal burger">
+        <div class="deal-popular">🔥 Popular</div>
         <div class="deal-header">DEAL 2</div>
         <img class="deal-img" src="IMG_0405.jpeg" alt="½ Burger Meal">
         <div class="deal-name">½ Burger<br>Chips &amp; Drink</div>
@@ -1570,6 +1639,30 @@ body { padding-bottom: 102px; }
     }
 
     updateCartUI();
+
+    function updateOpenStatus() {
+      var el = document.getElementById('openStatus');
+      if (!el) return;
+      var now = new Date();
+      var day = now.getDay(); // 0=Sun, 1=Mon...6=Sat
+      var hour = now.getHours();
+      var min = now.getMinutes();
+      var time = hour + min/60;
+      var isOpen = false;
+      if (day >= 1 && day <= 6) {
+        isOpen = time >= 11 && time < 20; // Mon-Sat 11am-8pm
+      } else if (day === 0) {
+        isOpen = time >= 11 && time < 18; // Sun 11am-6pm
+      }
+      if (isOpen) {
+        el.className = 'open-status open';
+        el.innerHTML = '<span class="open-dot"></span> We are OPEN';
+      } else {
+        el.className = 'open-status closed';
+        el.innerHTML = '<span class="open-dot"></span> Currently CLOSED';
+      }
+    }
+    updateOpenStatus();
   </script>
 
 </body>
