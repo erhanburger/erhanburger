@@ -1566,27 +1566,34 @@ background: currentColor;
     }
 
     function updateAddBtns() {
-      // Remove all existing badges first
+      // Remove all existing badges
       document.querySelectorAll('.btn-badge').forEach(function(b) { b.remove(); });
-      // Add badge to buttons where item is in cart
-      cart.forEach(function(item) {
-        if (item.qty <= 0) return;
-        document.querySelectorAll('.add-btn').forEach(function(btn) {
-          var row = btn.closest('.item-row, .deal-card');
-          if (!row) return;
-          var nameEl = row.querySelector('.item-name, .deal-name');
-          if (!nameEl) return;
-          var rowName = nameEl.textContent.replace(/🔥 Popular/g,'').trim().toLowerCase();
-          var cartName = item.name.toLowerCase();
-          if (cartName.includes(rowName.substring(0,10)) || rowName.includes(cartName.substring(0,10))) {
-            if (!btn.querySelector('.btn-badge')) {
-              var badge = document.createElement('span');
-              badge.className = 'btn-badge';
-              badge.textContent = item.qty;
-              btn.appendChild(badge);
-            }
-          }
+      if (cart.length === 0) return;
+
+      // Match by exact onclick parameter
+      document.querySelectorAll('.add-btn, .deal-add-btn').forEach(function(btn) {
+        var onclick = btn.getAttribute('onclick') || '';
+        // Extract item name from onclick
+        var match = onclick.match(/openCustomise\('([^']+)'/);
+        if (!match) {
+          // directAdd
+          match = onclick.match(/directAdd\('([^']+)'/);
+        }
+        if (!match) return;
+        var btnName = match[1];
+
+        // Find total qty in cart for this exact item name
+        var totalQty = 0;
+        cart.forEach(function(item) {
+          if (item.name === btnName) totalQty += item.qty;
         });
+
+        if (totalQty > 0) {
+          var badge = document.createElement('span');
+          badge.className = 'btn-badge';
+          badge.textContent = totalQty;
+          btn.appendChild(badge);
+        }
       });
     }
 
