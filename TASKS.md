@@ -29,3 +29,7 @@
 - [x] Masaüstü, mobil, klavye ve azaltılmış hareket akışlarını doğrula.
 - [x] Çalışan önizlemeyi kullanıcı onayına sun.
 - [ ] Kullanıcının bağımsız demo onayını al.
+
+## Kömür Stüdyosu Netlify önizlemesi
+
+- [x] Kayıtlı sürümü `charcoal-demo/` altında koru ve yerel statik önizlemeyi masaüstü ve mobilde doğrula.

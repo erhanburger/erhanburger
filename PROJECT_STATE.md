@@ -20,3 +20,8 @@
 - Bağımsız demo, Half Pounder montaj akışını katmanlı 2.5D olarak uygular. Yedi malzeme açılıp kapatılabilir ve aynı anda bir sos seçilebilir. Ekmekler sabittir. Sos şişesinin girişi, akış ve üst ekmeğin kapanışı sıralı çalışır. Mobilde sahne kaydırma sırasında görünür kalır. Azaltılmış hareket tercihinde seçimler doğrudan yerleşir.
 - Chromium 156 ve Playwright ile masaüstü ve dokunmatik mobil emülasyonda sıra, yeniden oynatma, sıfırlama, hızlı seçim değişiklikleri ve azaltılmış hareket kontrol edildi. Klavye ile seçim ve tüm katmanlar açıkken 320–2560 px aralığında sekiz görünümde üst ekmek ve sos şişesinin sahne içindeki yerleşimi doğrulandı. Fiziksel mobil cihaz testi yapılmadı.
 - Demo, Cloud Chrome önizlemesi ve GitHub dalından indirilebilir statik kaynak olarak incelemeye sunulur. Yerel çalıştırma komutu `SETUP.md` dosyasında. Yayındaki siteye entegrasyon kullanıcı onayına bağlıdır.
+
+## Kömür Stüdyosu önizlemesi
+
+- Daha önce kayıtlı Kömür Stüdyosu sürümünün `2de8bdc` commit'indeki HTML dosyası, gömülü WebP görselleri, CSS ve animasyon betiğiyle birlikte bayt düzeyinde aynı kopya olarak `charcoal-demo/index.html` yoluna alındı. Netlify hedefi `/charcoal-demo/`.
+- Chromium ile 1440×900 masaüstü ve 390×844 dokunmatik görünümde bu yolun açılması, görsellerin yüklenmesi, malzeme seçimi, tekrar oynatma ve sos animasyonu doğrulandı.
