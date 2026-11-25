@@ -38,12 +38,12 @@ function orderLayers(){
 
 function render(){
  if(!active)return;
- const {panel, fallback, summary, viewer} = active;
+ const {panel, fallback, summary, viewer, featured} = active;
  const layers = orderLayers();
  const spread = panel.classList.contains('bb-exploded');
  if(viewer) {
    viewer.update(layers, spread, [...selectedSauces].filter(name => !['Salt','Vinegar'].includes(name)));
- } else {
+ } else if (!featured) {
    renderFallback(fallback, layers, spread);
  }
  summary.textContent = [...selectedToppings, ...selectedSauces].join(' · ') || 'Choose your favourite toppings below';
@@ -66,6 +66,7 @@ window.buildCustomiseBody = function(type){
  original(type);
  if(!/burger|pounder/i.test(currentItem.name))return;
 
+ const featured = currentItem.name === 'Half Pounder with Cheese';
  const panel = document.createElement('section');
  panel.className = 'bb-preview';
  panel.innerHTML = `
@@ -73,28 +74,42 @@ window.buildCustomiseBody = function(type){
      <span>BUILD YOUR BURGER</span>
      <div class="bb-actions">
        <button type="button" class="bb-reset" hidden>Reset view</button>
-       <button type="button" class="bb-explode" aria-pressed="false">Explode view</button>
+       <button type="button" class="bb-explode" aria-pressed="false" ${featured ? 'hidden' : ''}>Explode view</button>
      </div>
    </div>
-   <div id="bb-stack" role="img" aria-label="Illustrative burger preview"></div>
+   ${featured ? '<div class="bb-photo"><img src="IMG_0352.png" alt="Half Pounder with Cheese menu photo"></div>' : '<div id="bb-stack" role="img" aria-label="Illustrative burger preview"></div>'}
    <div class="bb-stage" hidden></div>
    <p id="bb-rotate-help" hidden>Drag to rotate · Arrow keys to adjust</p>
    <p id="bb-summary" aria-live="polite"></p>`;
 
- const fallback = panel.querySelector('#bb-stack');
+ const fallback = panel.querySelector(featured ? '.bb-photo' : '#bb-stack');
  const stage = panel.querySelector('.bb-stage');
  const reset = panel.querySelector('.bb-reset');
+ const explode = panel.querySelector('.bb-explode');
  const help = panel.querySelector('#bb-rotate-help');
- const session = {panel, fallback, summary: panel.querySelector('#bb-summary')};
+ const session = {panel, fallback, featured, summary: panel.querySelector('#bb-summary')};
  active = session;
  document.getElementById('customiseBody').prepend(panel);
+ const returnToPreview = document.createElement('button');
+ if (featured) {
+   returnToPreview.type = 'button';
+   returnToPreview.className = 'bb-view-sauce';
+   returnToPreview.textContent = 'View 3D burger';
+   returnToPreview.hidden = true;
+   returnToPreview.onclick = () => {
+     document.getElementById('customiseModalInner').scrollTop = 0;
+     reset.focus({ preventScroll: true });
+   };
+   document.querySelector('#bdy-sauces .acc-subtitle').after(returnToPreview);
+ }
 
  function show3D(enabled){
    stage.hidden = reset.hidden = help.hidden = !enabled;
    fallback.hidden = enabled;
+   if (featured) explode.hidden = returnToPreview.hidden = !enabled;
  }
 
- panel.querySelector('.bb-explode').onclick = function(){
+ explode.onclick = function(){
    const on = panel.classList.toggle('bb-exploded');
    this.setAttribute('aria-pressed', String(on));
    this.textContent = on ? 'Stack view' : 'Explode view';
@@ -110,9 +125,11 @@ window.buildCustomiseBody = function(type){
    show3D(false);
    render();
  };
- import('./burger-3d.js').then(({mountBurger3D}) => {
+ import('./burger-3d.js').then(async ({mountBurger3D, loadHalfPounderModels}) => {
    if(active !== session)return;
-   session.viewer = mountBurger3D(stage, showFallback);
+   const ingredients = featured ? await loadHalfPounderModels() : undefined;
+   if(active !== session)return;
+   session.viewer = mountBurger3D(stage, showFallback, ingredients);
    show3D(true);
    render();
  }).catch(showFallback);

@@ -11,8 +11,12 @@
 - [x] 360 px mobil emülasyonda dokunarak döndürmeyi doğrula. Normal burger ve içecekli menü için sepet içeriğini ve burger ek malzeme fiyatını kontrol et.
 - [x] WebGL başlangıçta kullanılamadığında, bağlam kaybolduğunda ve 3D modülü yüklenemediğinde SVG yedeğini doğrula.
 
+- [x] Half Pounder with Cheese için menü fotoğrafını referans alan dokuz malzemeli GLB üret ve özelleştirme penceresine bağla. Khronos glTF Validator sıfır hata ve uyarı bildirdi.
+- [x] Katmanların düşüşünü, sos şişesi ve sos izini, ekran dışında animasyonu bekletmeyi ve azaltılmış hareket seçeneğini ekle.
+- [x] Playwright 1.65.1 ve Chromium 156 ile masaüstü ve 360 px dokunmatik mobil emülasyonda GLB yükleme, döndürme, katman ayırma, sos değiştirme ve sepeti kontrol et. GLB ve WebGL hatalarında fotoğraf yedeğini doğrula.
+
 ## Sonraki adımlar
 
 - [ ] Netlify önizlemesine yetkili erişim sağlandığında `burger-builder` dalının yayınını doğrula.
 - [ ] Fiziksel iOS ve Android cihazlarda yükleme süresini ve etkileşimi ölç.
-- [ ] Gerçek menü fotoğraflarıyla ekmek, köfte ve sebze görünümünü karşılaştır. Fotoğraf eşlemesi gerektiren malzemeler için GLB veya fotoğraf dokusu seçeneklerini değerlendir.
+- [ ] Half Pounder with Cheese için elde edilen görsel sonucu diğer ürünlerin menü fotoğraflarıyla karşılaştır ve uygun GLB modellerini planla.

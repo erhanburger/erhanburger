@@ -15,7 +15,26 @@
 #bb-rotate-help { margin: 4px 0 0; text-align: center; color: #e4c6b0; font-size: 11px; }
 @media (max-width: 360px) {
   .bb-heading { letter-spacing: .65px; }
-  .bb-heading button { padding: 7px 8px; }
+  .bb-actions { flex-wrap: nowrap; }
+  .bb-heading button { padding: 7px 8px; white-space: nowrap; }
   .bb-stage { height: 205px; }
   .bb-exploded .bb-stage { height: 325px; }
 }
+.bb-photo { height: 235px; display: grid; place-items: center; }
+.bb-photo img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+@media (max-width: 360px) {
+  .bb-photo { height: 205px; }
+}
+.bb-view-sauce {
+  display: block;
+  margin: 0 0 10px;
+  padding: 6px 10px;
+  border: 1px solid #ffd18b80;
+  border-radius: 18px;
+  background: transparent;
+  color: #ffd18b;
+  font: inherit;
+  font-size: .78rem;
+  cursor: pointer;
+}
+.bb-view-sauce[hidden] { display: none; }

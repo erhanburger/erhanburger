@@ -298,27 +298,47 @@ function halloumi(group, material) {
   group.rotation.y = .6;
 }
 
-const sauceColors = {
+export const sauceColors = {
   'Chilli Sauce': 0xb92e15, 'Garlic Mayo': 0xffe8bd, 'Burger Sauce': 0xd97c49,
   'BBQ Sauce': 0x682715, Ketchup: 0xd92615, Mayo: 0xffefcc, Mustard: 0xe4a519,
 };
 
+export const sauceSegments = 120;
+const sauceSides = 10;
+export const sauceIndicesPerSegment = sauceSides * 6;
+
+export function saucePoint(angle, index, target) {
+  const radius = .83 + .17 * Math.sin(angle * 4 + .2) + .065 * Math.cos(angle * 7);
+  return target.set(radius * Math.cos(angle), .027 + index * .017, radius * Math.sin(angle));
+}
+
 function sauce(group, material, names) {
   const colors = names.map(name => sauceColors[name]).filter(Boolean);
+  const point = new T.Vector3();
   colors.forEach((base, index) => {
     const tones = palette(new T.Color(base).multiplyScalar(.52), base, new T.Color(base).lerp(new T.Color(0xffe3ad), .24));
     const line = new T.Group();
     line.rotation.y = index * 1.35;
     line.position.y = index * .017;
     group.add(line);
-    surface(line, material, 120, 10, (u, v, color) => {
+    const mesh = surface(line, material, sauceSegments, sauceSides, (u, v, color) => {
       const a = u * TAU, b = v * TAU;
-      const middle = .83 + .17 * Math.sin(a * 4 + .2) + .065 * Math.cos(a * 7);
+      saucePoint(a, 0, point);
       const thickness = .036 + .012 * Math.sin(a * 9 + index);
-      const r = middle + Math.cos(b) * thickness;
+      const radial = Math.cos(b) * thickness;
       tint(tones, .65 + .11 * Math.sin(a * 13), color);
-      return [r * Math.cos(a), .017 + Math.sin(b) * thickness, r * Math.sin(a)];
+      return [point.x + radial * Math.cos(a), point.y + Math.sin(b) * thickness, point.z + radial * Math.sin(a)];
     });
+    // Put all faces for each successive cross-section together for the pour reveal.
+    const grid = mesh.geometry.index.array;
+    const ordered = [];
+    for (let segment = 0; segment < sauceSegments; segment++) {
+      for (let row = 0; row < sauceSides; row++) {
+        const offset = (row * sauceSegments + segment) * 6;
+        ordered.push(...grid.subarray(offset, offset + 6));
+      }
+    }
+    mesh.geometry.setIndex(ordered);
   });
 }
 

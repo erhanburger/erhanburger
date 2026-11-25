@@ -1,5 +1,6 @@
 import * as T from './vendor/three-burger.js';
-import { createBurgerModels } from './burger-model.js';
+import { dropIngredients, createSauceApplication } from './burger-assembly.js';
+import { createBurgerModels, sauceColors } from './burger-model.js';
 
 const heights = {
   bun: .337, beef: .244, chicken: .275, veggie: .244, cheese: .049,
@@ -9,7 +10,25 @@ const heights = {
 const initialAngle = -.32;
 const initialTilt = .29;
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
-let preview;
+let preview, halfPounderModels;
+
+export function loadHalfPounderModels() {
+  halfPounderModels ??= new T.GLTFLoader().loadAsync(new URL('./assets/half-pounder.glb', import.meta.url).href)
+    .then(({ scene }) => {
+      const ingredients = new Map(scene.children.map(node => [node.name, node]));
+      for (const name of ['bun', 'beef', 'cheese', 'top']) {
+        if (!ingredients.has(name)) throw new Error(`Missing burger ingredient: ${name}`);
+      }
+      scene.traverse(node => {
+        if (node.isMesh) node.castShadow = node.receiveShadow = true;
+      });
+      return ingredients;
+    }).catch(error => {
+      halfPounderModels = undefined;
+      throw error;
+    });
+  return halfPounderModels;
+}
 
 function studio() {
   const renderer = new T.WebGLRenderer({ alpha: true, antialias: true });
@@ -66,6 +85,7 @@ function studio() {
 
 function makePreview() {
   const { renderer, scene, camera, stack, model } = studio();
+  const applySauce = createSauceApplication(stack);
   const canvas = renderer.domElement;
   canvas.className = 'bb-canvas';
   canvas.tabIndex = 0;
@@ -73,41 +93,59 @@ function makePreview() {
   canvas.setAttribute('role', 'group');
   canvas.setAttribute('aria-describedby', 'bb-rotate-help');
 
-  let host, fallback, pointer, frame, observer, layers = new Map();
+  let host, fallback, pointer, frame, observer, visibilityObserver, animation, assets, wasExploded;
+  let layers = new Map(), previousSauces = [];
   let angle = initialAngle, tilt = initialTilt;
   let height = 1.5, targetHeight = height;
   let setImmediately = true;
   let lost = false;
   let lastWidth, lastHeight;
   let shadowDirty = true;
+  let framing = 0, inView = true;
 
   function schedule() {
     if (host && !lost && !frame) frame = requestAnimationFrame(draw);
   }
 
-  function draw() {
+  function draw(now) {
     frame = 0;
     const width = host.clientWidth, viewHeight = host.clientHeight;
     if (!width || !viewHeight) return;
     const amount = motion.matches || setImmediately ? 1 : .23;
     let moving = false;
-    for (const { mesh, y } of layers.values()) {
-      if (mesh.position.y === y) continue;
-      const position = T.MathUtils.lerp(mesh.position.y, y, amount);
-      const needsFrame = Math.abs(y - position) > .002;
-      mesh.position.y = needsFrame ? position : y;
-      shadowDirty = true;
-      moving ||= needsFrame;
+    if (animation && inView) {
+      const elapsed = animation.lastFrame === undefined ? 0 : now - animation.lastFrame;
+      animation.elapsed = (animation.elapsed ?? 0) + elapsed;
+      animation.lastFrame = now;
+      if (motion.matches || animation.elapsed >= animation.duration) {
+        finishAnimation();
+      } else {
+        animation.draw(animation.elapsed);
+        moving = shadowDirty = true;
+      }
+    }
+    if (!animation) {
+      for (const { mesh, y } of layers.values()) {
+        if (mesh.position.y === y) continue;
+        const position = T.MathUtils.lerp(mesh.position.y, y, amount);
+        const needsFrame = Math.abs(y - position) > .002;
+        mesh.position.y = needsFrame ? position : y;
+        shadowDirty = true;
+        moving ||= needsFrame;
+      }
     }
     height = T.MathUtils.lerp(height, targetHeight, amount);
     moving ||= Math.abs(targetHeight - height) > .002;
     setImmediately = false;
 
     const aspect = width / viewHeight;
-    const fit = Math.max(3.00 / aspect, height + .91) / 2;
+    const targetFraming = animation?.wide ? 1 : 0;
+    framing = T.MathUtils.lerp(framing, targetFraming, amount);
+    moving ||= Math.abs(framing - targetFraming) > .002;
+    const fit = Math.max((3 + framing * 1.55) / aspect, height + .91 + framing * 1.45) / 2;
     Object.assign(camera, { left: -fit * aspect, right: fit * aspect, top: fit, bottom: -fit, near: .1, far: 25 });
     camera.updateProjectionMatrix();
-    const center = height * .50;
+    const center = height * .50 + framing * .38;
     const distance = 8;
     camera.position.set(
       distance * Math.sin(angle) * Math.cos(tilt),
@@ -130,12 +168,29 @@ function makePreview() {
     stack.remove(layer.mesh);
     layer.mesh.traverse(node => {
       if (node.isInstancedMesh) node.dispose();
-      if (layer.mesh.name === 'sauce') node.geometry?.dispose();
+      if (layer.type === 'sauce') node.geometry?.dispose();
     });
   }
 
+  function finishAnimation() {
+    if (!animation) return;
+    animation.draw(animation.duration);
+    animation.finish?.();
+    animation = undefined;
+    shadowDirty = true;
+  }
+
   function update(order, exploded, sauces) {
+    sauces = sauces.filter(name => Object.hasOwn(sauceColors, name));
     const next = new Map();
+    const added = [];
+    const unfinishedSauces = animation?.unfinished?.(animation.elapsed ?? 0) ?? [];
+    const newSauces = sauces.filter(name => !previousSauces.includes(name) || unfinishedSauces.includes(name));
+    const changed = exploded !== wasExploded || order.length !== layers.size ||
+      order.some(([type, key]) => layers.get(key)?.signature !== (type === 'sauce' ? sauces.join('|') : type));
+    if (!changed) return;
+    finishAnimation();
+    wasExploded = exploded;
     const gap = exploded ? Math.min(.29, 2.25 / (order.length - 1)) : 0;
     let y = 0;
     for (const [type, key] of order) {
@@ -143,19 +198,38 @@ function makePreview() {
       let layer = layers.get(key);
       if (layer?.signature !== signature) {
         if (layer) remove(layer);
-        const mesh = model(type, sauces);
+        const mesh = assets?.get(type)?.clone() ?? model(type, sauces);
+        if (assets && type === 'beef' && key === 'patty2') {
+          mesh.rotation.y += .64;
+          mesh.position.z = .025;
+        }
         mesh.position.y = y;
         stack.add(mesh);
-        layer = { mesh, signature };
+        layer = { mesh, signature, type, pitch: next.size % 2 ? .12 : -.09, roll: next.size % 2 ? -.18 : .11 };
+        if (type !== 'sauce') added.push(layer);
       }
       layer.y = y;
       next.set(key, layer);
-      y += (type === 'sauce' ? heights.sauce + Math.max(0, sauces.length - 1) * .017 : heights[type]) + gap;
+      const thickness = type === 'sauce' ? heights.sauce + Math.max(0, sauces.length - 1) * .017 :
+        layer.mesh.userData.stackHeight ?? heights[type];
+      y += thickness + gap;
     }
     for (const [key, layer] of layers) if (!next.has(key)) remove(layer);
     layers = next;
     shadowDirty = true;
     targetHeight = y - gap;
+    previousSauces = sauces;
+    if (assets && !exploded && !motion.matches) {
+      if (newSauces.length && next.has('sauce')) {
+        animation = applySauce(next.get('sauce'), next.get('top'), sauces, newSauces);
+      } else if (added.length) {
+        animation = dropIngredients([...next.values()], added);
+      }
+      if (animation) {
+        for (const layer of next.values()) layer.mesh.position.y = layer.y;
+        animation.draw(0);
+      }
+    }
     schedule();
   }
 
@@ -172,13 +246,17 @@ function makePreview() {
   }
 
   function unmount() {
+    finishAnimation();
     observer?.disconnect();
+    visibilityObserver?.disconnect();
     cancelAnimationFrame(frame);
     frame = 0;
     canvas.remove();
     for (const layer of layers.values()) remove(layer);
     layers.clear();
-    host = fallback = pointer = undefined;
+    host = fallback = pointer = assets = wasExploded = undefined;
+    previousSauces = [];
+    framing = 0;
   }
 
   canvas.addEventListener('pointerdown', event => {
@@ -209,12 +287,22 @@ function makePreview() {
   });
 
   return {
-    mount(target, showFallback) {
+    mount(target, showFallback, ingredients) {
       host = target;
+      assets = ingredients;
       fallback = showFallback;
       host.append(canvas);
       observer = new ResizeObserver(schedule);
       observer.observe(host);
+      inView = !assets;
+      if (assets) {
+        visibilityObserver = new IntersectionObserver(([entry]) => {
+          inView = entry.intersectionRatio >= .64;
+          if (!inView && animation) animation.lastFrame = undefined;
+          if (inView) schedule();
+        }, { threshold: .64 });
+        visibilityObserver.observe(host);
+      }
       setImmediately = true;
       reset();
       return { update, reset, unmount };
@@ -222,7 +310,7 @@ function makePreview() {
   };
 }
 
-export function mountBurger3D(host, fallback) {
+export function mountBurger3D(host, fallback, ingredients) {
   preview ??= makePreview();
-  return preview.mount(host, fallback);
+  return preview.mount(host, fallback, ingredients);
 }
