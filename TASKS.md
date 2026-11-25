@@ -20,3 +20,11 @@
 - [ ] Netlify önizlemesine yetkili erişim sağlandığında `burger-builder` dalının yayınını doğrula.
 - [ ] Fiziksel iOS ve Android cihazlarda yükleme süresini ve etkileşimi ölç.
 - [ ] Half Pounder with Cheese için elde edilen görsel sonucu diğer ürünlerin menü fotoğraflarıyla karşılaştır ve uygun GLB modellerini planla.
+
+## Bağımsız demo
+
+- [x] `burger-builder` dalını, son commitleri, çalışma ağacını ve proje hafızasını doğrula.
+- [ ] Ayrı, fotoğraf görünümlü malzeme katmanlarını hazırla.
+- [ ] Malzeme düşüşü, ekleme ve çıkarma, sos şişesi ve üst ekmek sırasını bağımsız demoda uygula.
+- [ ] Masaüstü, mobil, klavye ve azaltılmış hareket akışlarını doğrula.
+- [ ] Çalışan önizlemeyi kullanıcı onayına sun.
