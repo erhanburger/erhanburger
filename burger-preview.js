@@ -1,11 +1,12 @@
-/* Isolated visual preview; existing order logic remains authoritative. */
+/* Both previews use the customisation form's current ingredient selections. */
 (function(){
 const original=window.buildCustomiseBody, topping=window.toggleTopping, sauce=window.toggleSauce;
+const close=window.closeCustomise;
+let active;
 const colors={bun:['#f9c579','#a6531e'],beef:['#81503a','#29140e'],chicken:['#eab05a','#995022'],veggie:['#9d8c49','#4c4621'],cheese:['#ffd65b','#ed9209'],lettuce:['#9bd64b','#286c24'],tomato:['#ff6951','#a51e16'],onion:['#e9b7e4','#88407f'],cucumber:['#d9e9a1','#4d8a32'],pickle:['#b4c75a','#596a23'],egg:['#fffdf0','#d9c8a0'],halloumi:['#fff1c8','#bc783b'],sauce:['#f3ae75','#a64a28']};
 function layer(type,key){
  const [a,b]=colors[type]; const g='g-'+key;
  let shape='', details='';
- if(type==='bunTop'){return '';}
  if(type==='bun'){shape='<path d="M20 45 Q24 78 65 80 H235 Q276 78 280 45 Q270 18 150 18 Q30 18 20 45Z"/>'; }
  else if(type==='cheese'){shape='<path d="M20 35 Q150 12 280 35 L258 54 220 48 180 70 139 49 92 61 48 49Z"/>';}
  else if(type==='lettuce'){shape='<path d="M15 40 Q5 20 30 24 Q40 4 64 24 Q85 7 104 22 Q130 2 151 22 Q175 4 198 22 Q225 6 246 24 Q280 8 285 38 L269 55 244 46 222 59 193 47 169 60 145 47 120 59 94 47 70 59 44 47Z"/>';}
@@ -16,8 +17,7 @@ function layer(type,key){
  return '<svg viewBox="0 0 300 85" aria-hidden="true"><defs><linearGradient id="'+g+'" x2="0" y2="1"><stop stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></linearGradient></defs><g fill="url(#'+g+')">'+shape+'</g>'+details+'</svg>';
 }
 function top(){return '<svg viewBox="0 0 300 110" aria-hidden="true"><defs><linearGradient id="bb-top" x2="0" y2="1"><stop stop-color="#ffcf88"/><stop offset=".55" stop-color="#d78b36"/><stop offset="1" stop-color="#96501e"/></linearGradient></defs><path fill="url(#bb-top)" d="M17 83 C18 32 70 6 150 6 S282 32 283 83 Q280 104 150 104 Q20 104 17 83Z"/>'+Array.from({length:35},(_,i)=>{let x=48+(i*37)%204,y=28+(i*13)%49;return '<ellipse cx="'+x+'" cy="'+y+'" rx="4" ry="1.7" fill="#fff0c7" transform="rotate('+((i*19)%100-50)+' '+x+' '+y+')"/>';}).join('')+'</svg>';}
-function render(){
- const host=document.getElementById('bb-stack');if(!host||!currentItem)return;
+function orderLayers(){
  const n=currentItem.name.toLowerCase(), t=selectedToppings, all=t.has('All Salad')&&!t.has('Plain')&&!t.has('No Veggie');
  const patty=n.includes('chicken')?'chicken':n.includes('vegg')?'veggie':'beef';
  const layers=[['bun','base'],[patty,'patty1']];
@@ -33,14 +33,91 @@ function render(){
  if(t.has('Pickle'))layers.push(['pickle','pickle']);
  if([...selectedSauces].some(x=>!['Salt','Vinegar'].includes(x)))layers.push(['sauce','sauce']);
  layers.push(['top','top']);
+ return layers;
+}
+
+function render(){
+ if(!active)return;
+ const {panel, fallback, summary, viewer} = active;
+ const layers = orderLayers();
+ const spread = panel.classList.contains('bb-exploded');
+ if(viewer) {
+   viewer.update(layers, spread, [...selectedSauces].filter(name => !['Salt','Vinegar'].includes(name)));
+ } else {
+   renderFallback(fallback, layers, spread);
+ }
+ summary.textContent = [...selectedToppings, ...selectedSauces].join(' · ') || 'Choose your favourite toppings below';
+}
+
+function renderFallback(host, layers, spread){
  const existing=new Map([...host.children].map(el=>[el.dataset.key,el]));
- const spread=host.closest('.bb-preview').classList.contains('bb-exploded');
  const step=Math.min(spread?36:20, (spread?220:145)/(layers.length-1));
  layers.forEach(([type,key],i)=>{let el=existing.get(key);if(!el){el=document.createElement('div');el.className='bb-layer';el.dataset.key=key;el.innerHTML=type==='top'?top():layer(type,key);host.append(el);el.animate?.([{opacity:0},{opacity:1}],{duration:300});}existing.delete(key);el.style.bottom=(14+i*step)+'px';el.style.zIndex=i+1;});
  existing.forEach(el=>el.remove());
- document.getElementById('bb-summary').textContent=[...t,...selectedSauces].join(' · ')||'Choose your favourite toppings below';
 }
-window.buildCustomiseBody=function(type){original(type);if(!/burger|pounder/i.test(currentItem.name))return;const body=document.getElementById('customiseBody');const panel=document.createElement('section');panel.className='bb-preview';panel.innerHTML='<div class="bb-heading"><span>BUILD YOUR BURGER</span><button type="button" aria-pressed="false">Explode view</button></div><div id="bb-stack" role="img" aria-label="Illustrative burger preview"></div><p id="bb-summary" aria-live="polite"></p>';body.prepend(panel);panel.querySelector('button').onclick=function(){const on=panel.classList.toggle('bb-exploded');this.setAttribute('aria-pressed',String(on));this.textContent=on?'Stack view':'Explode view';render();};render();};
-window.toggleTopping=function(...args){topping(...args);render();};
-window.toggleSauce=function(...args){sauce(...args);render();};
+
+function unmount(){
+ active?.viewer?.unmount();
+ active = undefined;
+}
+
+window.buildCustomiseBody = function(type){
+ unmount();
+ original(type);
+ if(!/burger|pounder/i.test(currentItem.name))return;
+
+ const panel = document.createElement('section');
+ panel.className = 'bb-preview';
+ panel.innerHTML = `
+   <div class="bb-heading">
+     <span>BUILD YOUR BURGER</span>
+     <div class="bb-actions">
+       <button type="button" class="bb-reset" hidden>Reset view</button>
+       <button type="button" class="bb-explode" aria-pressed="false">Explode view</button>
+     </div>
+   </div>
+   <div id="bb-stack" role="img" aria-label="Illustrative burger preview"></div>
+   <div class="bb-stage" hidden></div>
+   <p id="bb-rotate-help" hidden>Drag to rotate · Arrow keys to adjust</p>
+   <p id="bb-summary" aria-live="polite"></p>`;
+
+ const fallback = panel.querySelector('#bb-stack');
+ const stage = panel.querySelector('.bb-stage');
+ const reset = panel.querySelector('.bb-reset');
+ const help = panel.querySelector('#bb-rotate-help');
+ const session = {panel, fallback, summary: panel.querySelector('#bb-summary')};
+ active = session;
+ document.getElementById('customiseBody').prepend(panel);
+
+ function show3D(enabled){
+   stage.hidden = reset.hidden = help.hidden = !enabled;
+   fallback.hidden = enabled;
+ }
+
+ panel.querySelector('.bb-explode').onclick = function(){
+   const on = panel.classList.toggle('bb-exploded');
+   this.setAttribute('aria-pressed', String(on));
+   this.textContent = on ? 'Stack view' : 'Explode view';
+   render();
+ };
+ reset.onclick = () => session.viewer?.reset();
+ render();
+
+ const showFallback = () => {
+   if(active !== session)return;
+   session.viewer?.unmount();
+   session.viewer = undefined;
+   show3D(false);
+   render();
+ };
+ import('./burger-3d.js').then(({mountBurger3D}) => {
+   if(active !== session)return;
+   session.viewer = mountBurger3D(stage, showFallback);
+   show3D(true);
+   render();
+ }).catch(showFallback);
+};
+window.closeCustomise = function(...args){unmount();return close(...args);};
+window.toggleTopping = function(...args){topping(...args);render();};
+window.toggleSauce = function(...args){sauce(...args);render();};
 })();
