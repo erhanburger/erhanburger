@@ -25,6 +25,7 @@
 
 - [x] `burger-builder` dalını, son commitleri, çalışma ağacını ve proje hafızasını doğrula.
 - [x] Ayrı, fotoğraf görünümlü malzeme katmanlarını hazırla.
-- [ ] Malzeme düşüşü, ekleme ve çıkarma, sos şişesi ve üst ekmek sırasını bağımsız demoda uygula.
-- [ ] Masaüstü, mobil, klavye ve azaltılmış hareket akışlarını doğrula.
-- [ ] Çalışan önizlemeyi kullanıcı onayına sun.
+- [x] Malzeme düşüşü, ekleme ve çıkarma, sos şişesi ve üst ekmek sırasını bağımsız demoda uygula.
+- [x] Masaüstü, mobil, klavye ve azaltılmış hareket akışlarını doğrula.
+- [x] Çalışan önizlemeyi kullanıcı onayına sun.
+- [ ] Kullanıcının bağımsız demo onayını al.

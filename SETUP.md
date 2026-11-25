@@ -55,3 +55,13 @@ python3 -m venv /tmp/burger-model-venv
 ## Bilinen erişim kısıtı
 
 Netlify önizlemesi bu çalışma ortamından HTTP 401 döndürdü. Dalın canlı önizlemeyle bağlantısı ve canlı ortamın davranışı doğrulanamadı.
+
+## Bağımsız Burger Atölyesi
+
+`burger-builder-demo/` klasöründe demo için gereken HTML, CSS, JavaScript ve görseller bulunur. Kurulum, derleme ve API anahtarı gerekmez. GitHub'dan `burger-builder` dalının ZIP dosyasını indirip açtıktan sonra terminalde arşiv köküne geç:
+
+```sh
+python3 -m http.server 3000 --bind 127.0.0.1 --directory burger-builder-demo
+```
+
+Tarayıcıda `http://127.0.0.1:3000/` adresini aç. Sunucu yalnızca demo klasörünü servis eder.

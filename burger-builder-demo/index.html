@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171615">
+  <title>Burger Atölyesi · Erhan Burger</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <span class="brand">ERHAN<span>BURGER</span></span>
+    <h1 id="builder-title">Burgerini <em>hazırla.</em></h1>
+  </header>
+  <main class="layout">
+    <section class="preview" aria-labelledby="builder-title">
+      <div class="scene" id="scene" role="img" aria-label="Burger hazırlanıyor">
+        <div class="surface" aria-hidden="true"></div>
+        <div class="stack" id="stack" aria-hidden="true"></div>
+        <div class="dispenser" id="dispenser" aria-hidden="true">
+          <img src="./assets/bottle.webp" alt="" draggable="false">
+        </div>
+        <div class="sauce-stream" id="stream" aria-hidden="true"></div>
+      </div>
+      <div class="preview-footer">
+        <span class="stage-status" id="stage-status">Görseller yükleniyor</span>
+        <button class="replay" type="button" id="replay" disabled>
+          <span aria-hidden="true">↻</span> Tekrar hazırla
+        </button>
+      </div>
+    </section>
+    <section class="options" aria-labelledby="options-title">
+      <div class="options-heading">
+        <div>
+          <h2 id="options-title">Malzemeler</h2>
+          <p id="options-description">Eklemek veya çıkarmak için dokun.</p>
+        </div>
+        <button type="button" class="reset" id="reset" disabled>Sıfırla</button>
+      </div>
+      <div class="ingredient-list" id="ingredients" aria-describedby="options-description"></div>
+      <div class="selection-summary">
+        <span><strong id="count">0</strong> seçim</span><span>Ekmek dahil</span>
+      </div>
+      <p class="visually-hidden" id="announcement" role="status"></p>
+      <noscript>Bu demo için JavaScript’i etkinleştir.</noscript>
+    </section>
+  </main>
+</body>
+</html>
