@@ -65,3 +65,7 @@ python3 -m http.server 3000 --bind 127.0.0.1 --directory burger-builder-demo
 ```
 
 Tarayıcıda `http://127.0.0.1:3000/` adresini aç. Sunucu yalnızca demo klasörünü servis eder.
+
+## Kömür Stüdyosu
+
+`charcoal-demo/index.html` görselleri, stilleri ve animasyon betiğini içerir. Depo kökünden `python3 -m http.server 3000 --bind 127.0.0.1` komutunu çalıştır ve tarayıcıda `http://127.0.0.1:3000/charcoal-demo/` adresini aç. Netlify önizleme hedefi aynı `/charcoal-demo/` yolunu kullanır.

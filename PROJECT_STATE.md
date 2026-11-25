@@ -25,3 +25,7 @@
 
 - Daha önce kayıtlı Kömür Stüdyosu sürümünün `2de8bdc` commit'indeki HTML dosyası, gömülü WebP görselleri, CSS ve animasyon betiğiyle birlikte bayt düzeyinde aynı kopya olarak `charcoal-demo/index.html` yoluna alındı. Netlify hedefi `/charcoal-demo/`.
 - Chromium ile 1440×900 masaüstü ve 390×844 dokunmatik görünümde bu yolun açılması, görsellerin yüklenmesi, malzeme seçimi, tekrar oynatma ve sos animasyonu doğrulandı.
+- 25 Kasım 2026 kapanışı. Kullanıcı mevcut Kömür Stüdyosu demosunu şimdilik beğendi ve çalışmayı duraklattı. Bu onay bağımsız önizleme içindir. Ana site entegrasyonu ayrı onay gerektirir.
+- GitHub'daki `ce67e94` commit'inde `charcoal-demo/index.html`, önceki bağımsız prototipin kaynakları ve 16 WebP dosyası, GLB ve üretim betiği doğrulandı. Kömür Stüdyosu HTML dosyası kayıtlı özgün sürümle aynı.
+- Netlify hedefi `https://erhanburger-preview.netlify.app/charcoal-demo/`. Kullanıcı önizleme sitesinin `burger-builder` dalına bağlı olduğunu belirtti. Yerel yol test edildi, uzaktaki otomatik dağıtım bu ortamın ağ kısıtı nedeniyle doğrulanamadı. ChatGPT Sites üzerinden yeni yayın denemesi yapılmayacak.
+- `main` ve yayındaki ana site değişmedi. Harici harcama £0. Çalışma ancak kullanıcı döndüğünde devam edecek.

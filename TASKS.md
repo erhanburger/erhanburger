@@ -28,8 +28,15 @@
 - [x] Malzeme düşüşü, ekleme ve çıkarma, sos şişesi ve üst ekmek sırasını bağımsız demoda uygula.
 - [x] Masaüstü, mobil, klavye ve azaltılmış hareket akışlarını doğrula.
 - [x] Çalışan önizlemeyi kullanıcı onayına sun.
-- [ ] Kullanıcının bağımsız demo onayını al.
+- [x] Mevcut Kömür Stüdyosu demosu için kullanıcının geçici onayını kaydet.
 
 ## Kömür Stüdyosu Netlify önizlemesi
 
 - [x] Kayıtlı sürümü `charcoal-demo/` altında koru ve yerel statik önizlemeyi masaüstü ve mobilde doğrula.
+- [x] GitHub'da Kömür Stüdyosu dosyasını, önceki prototipi, görselleri ve model kaynaklarını doğrula.
+
+## Kullanıcı döndüğünde
+
+- [ ] Yetkili oturumdan Netlify `/charcoal-demo/` önizlemesinin `burger-builder` dalındaki demo sürümünü sunduğunu doğrula.
+- [ ] Fiziksel iOS ve Android cihazlarda yükleme, dokunmatik seçim, sos akışı ve tekrar oynatmayı kontrol et.
+- [ ] Geri bildirimlere göre sonraki geliştirme kapsamını kullanıcıyla belirle. Ana site entegrasyonu için ayrı onay al.
