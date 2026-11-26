@@ -1,3 +1,11 @@
+.menu-page { scroll-padding-top: 98px; }
+.menu-page .masthead {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #141312;
+}
+.menu-picker { display: none; }
 .wordmark { text-decoration: none; color: var(--ink); }
 .menu-basket {
   display: inline-flex;
@@ -44,7 +52,6 @@
   display: grid;
   grid-template-rows: 145px 1fr;
   height: 100%;
-  overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--panel);
@@ -52,12 +59,25 @@
   text-decoration: none;
 }
 .menu-card:hover { border-color: var(--accent); background: #2b221c; }
+.menu-card-media {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  height: 100%;
+  padding: 9px 12px;
+  overflow: hidden;
+  border-radius: 11px 11px 0 0;
+  border-bottom: 1px solid var(--border);
+  background: radial-gradient(ellipse at 50% 60%, #403126 0%, #261e19 56%, #1c1917 100%);
+}
 .menu-card-photo {
+  display: block;
   width: 100%;
   height: 100%;
+  min-height: 0;
+  max-width: 168px;
+  max-height: 118px;
   object-fit: contain;
-  background: radial-gradient(ellipse, #423125, transparent 76%);
-  padding: 10px;
 }
 .menu-card-details { display: grid; gap: 4px; align-content: start; padding: 12px 13px; }
 .menu-card-name { font-weight: 700; }
@@ -65,9 +85,30 @@
 @media (max-width: 550px) {
   .menu { padding: 22px 14px 48px; }
   .menu h1 { margin-bottom: 14px; }
-  .menu-categories { flex-wrap: nowrap; overflow-x: auto; padding: 4px 4px 12px; margin-inline: -4px; }
-  .menu-categories a { white-space: nowrap; font-size: .83rem; }
+  .menu-page { scroll-padding-top: 132px; }
+  .menu-categories { display: none; }
+  .menu-picker:not([hidden]) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    padding: 0 14px 9px;
+    color: var(--muted);
+    font-size: .82rem;
+  }
+  .menu-picker select {
+    min-height: 44px;
+    width: 100%;
+    padding-inline: 10px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--panel);
+    color: var(--ink);
+    font: inherit;
+  }
+  .menu-picker select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
   .menu-card { grid-template-rows: 105px 1fr; }
+  .menu-card-photo { max-width: 130px; max-height: 86px; }
   .menu-card-details { padding: 8px 9px; font-size: .86rem; }
 }

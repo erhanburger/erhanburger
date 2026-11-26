@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" class="menu-page">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,6 +15,12 @@
     <div class="masthead-inner">
       <a class="wordmark" href="./menu.html">Er-Han <span>Burger</span></a>
       <a class="basket-button menu-basket" href="./?basket=1">Basket <span id="basket-count">0</span></a>
+    </div>
+    <div class="menu-picker" hidden>
+      <label for="menu-category">Jump to</label>
+      <select id="menu-category">
+        <option value="">Choose a category</option>
+      </select>
     </div>
   </header>
   <main class="menu">

@@ -4,6 +4,7 @@ import { readBasket } from './basket-storage.js';
 const categories = document.querySelector('.menu-categories');
 const products = document.querySelector('#menu-products');
 const basketCount = document.querySelector('#basket-count');
+const categoryPicker = document.querySelector('#menu-category');
 
 function make(tag, className, label) {
   const node = document.createElement(tag);
@@ -22,6 +23,7 @@ for (const { id, name } of catalog.categories) {
   const shortcut = make('a', '', name);
   shortcut.href = '#' + id;
   categories.append(shortcut);
+  categoryPicker.add(new Option(name, id));
 
   const section = make('section', 'menu-group');
   section.id = id;
@@ -33,6 +35,7 @@ for (const { id, name } of catalog.categories) {
     const item = make('li');
     const link = make('a', 'menu-card');
     link.href = './?product=' + encodeURIComponent(product.id);
+    const photoWell = make('div', 'menu-card-media');
     const image = make('img', 'menu-card-photo');
     image.src = product.image;
     image.alt = '';
@@ -41,7 +44,8 @@ for (const { id, name } of catalog.categories) {
     const details = make('div', 'menu-card-details');
     details.append(make('span', 'menu-card-name', product.name),
       make('span', 'menu-card-price', formatPrice(product.basePricePence)));
-    link.append(image, details);
+    photoWell.append(image);
+    link.append(photoWell, details);
     item.append(link);
     grid.append(item);
   }
@@ -52,3 +56,19 @@ for (const { id, name } of catalog.categories) {
 window.addEventListener('pageshow', showBasketCount);
 window.addEventListener('storage', showBasketCount);
 showBasketCount();
+
+function syncCategoryPicker() {
+  const id = location.hash.slice(1);
+  categoryPicker.value = document.getElementById(id)?.classList.contains('menu-group') ? id : '';
+}
+
+categoryPicker.addEventListener('change', () => {
+  const section = document.getElementById(categoryPicker.value);
+  if (!section) return;
+  if (location.hash === '#' + section.id) section.scrollIntoView();
+  else location.hash = section.id;
+});
+categoryPicker.closest('.menu-picker').hidden = false;
+window.addEventListener('hashchange', syncCategoryPicker);
+window.addEventListener('pageshow', syncCategoryPicker);
+syncCategoryPicker();
