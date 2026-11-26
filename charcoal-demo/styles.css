@@ -557,3 +557,24 @@ h1, h2, h3, p { margin: 0; }
   .basket-item-details { flex: 1 1 100%; }
   .basket-item-amount { display: flex; flex: 1 1 100%; flex-direction: row-reverse; align-items: center; justify-content: space-between; }
 }
+.basket-pay {
+  position: sticky;
+  bottom: -20px;
+  display: grid;
+  gap: 10px;
+  margin: 14px -20px 0;
+  padding: 12px 20px 20px;
+  border-top: 1px solid var(--border);
+  background: #211c18;
+  box-shadow: 0 -8px 14px #211c18;
+}
+.basket-pay .basket-subtotal { padding-top: 0; border-top: 0; }
+.basket-pay .order-button { inline-size: 100%; justify-content: center; }
+.basket-pay .order-button[hidden] { display: none; }
+.last-order { margin-top: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; }
+.last-order h3 { font-size: .95rem; margin-bottom: 6px; }
+.last-order ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: .86rem; }
+.last-order-total { margin-top: 8px; font-weight: 750; }
+.last-order-help { margin-top: 4px; color: var(--muted); font-size: .8rem; }
+/* Let the order bar stick to the dialog's scroll area rather than its wrapper. */
+.basket-review:not([hidden]) { display: contents; }

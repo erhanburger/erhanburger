@@ -23,3 +23,27 @@ export function saveBasket(basket) {
     // The in-memory basket still works when storage is unavailable.
   }
 }
+
+const lastOrderKey = 'erhan_product_builder_last_order_v1';
+
+export function readLastOrder() {
+  try {
+    const order = JSON.parse(localStorage.getItem(lastOrderKey));
+    if (!order || !Array.isArray(order.lines) || !Number.isSafeInteger(order.totalPence)) return null;
+    const lines = order.lines.filter(line => line && typeof line.name === 'string' &&
+      Number.isSafeInteger(line.quantity) && line.quantity > 0 &&
+      Number.isSafeInteger(line.unitPricePence) && Array.isArray(line.options) &&
+      line.options.every(option => typeof option === 'string'));
+    return lines.length ? { sentAt: String(order.sentAt), totalPence: order.totalPence, lines } : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveLastOrder(order) {
+  try {
+    localStorage.setItem(lastOrderKey, JSON.stringify(order));
+  } catch {
+    // The confirmation is still shown when storage is unavailable.
+  }
+}

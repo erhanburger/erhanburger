@@ -2,7 +2,7 @@
 // the WhatsApp collection order. The basket is only cleared once the customer
 // confirms that they sent the WhatsApp message.
 import { formatPrice } from './catalog.js'
-import { readBasket, saveBasket, maxQuantity } from './basket-storage.js'
+import { readBasket, saveBasket, maxQuantity, readLastOrder, saveLastOrder } from './basket-storage.js'
 import { orderContact } from './order-config.js'
 
 function make(tag, className, label) {
@@ -19,17 +19,19 @@ export const basketDialogMarkup = `
   </div>
   <div id="basket-items"></div>
   <div class="basket-review" id="basket-review">
-    <div class="basket-subtotal">
-      <span>Subtotal</span>
-      <strong id="basket-subtotal">£0.00</strong>
-    </div>
     <div class="basket-checkout" id="basket-checkout" hidden>
       <label for="order-note">Order notes <span>(optional)</span></label>
       <textarea id="order-note" rows="2" maxlength="300" placeholder="For example, extra napkins or no salt on chips"></textarea>
       <p class="checkout-hint">Collection only. Your order opens in WhatsApp for you to send, and we confirm it there. Allergies or dietary needs? Please call us before ordering.</p>
-      <button type="button" class="order-button" id="order-whatsapp">Order via WhatsApp</button>
-      <a class="call-link" id="call-link"></a>
     </div>
+    <div class="basket-pay">
+      <div class="basket-subtotal">
+        <span>Subtotal</span>
+        <strong id="basket-subtotal">£0.00</strong>
+      </div>
+      <button type="button" class="order-button" id="order-whatsapp" hidden>Order via WhatsApp</button>
+    </div>
+    <a class="call-link" id="call-link"></a>
   </div>
   <div class="basket-sent-check" id="basket-sent-check" hidden>
     <p><strong>Did you send your order on WhatsApp?</strong></p>
@@ -77,9 +79,12 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
     countNode.textContent = String(basket.reduce((sum, line) => sum + line.quantity, 0))
     subtotal.textContent = formatPrice(total())
     checkout.hidden = !basket.length
+    $('#order-whatsapp').hidden = !basket.length
     items.replaceChildren()
     if (!basket.length) {
       items.append(make('p', 'basket-empty', 'Your basket is empty.'))
+      const last = readLastOrder()
+      if (last) items.append(orderSummary(last, 'Your last order'))
       return
     }
     const list = make('ul', '')
@@ -119,6 +124,23 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
       list.append(item)
     }
     items.append(list)
+  }
+
+  function orderSummary(order, title) {
+    const box = make('section', 'last-order')
+    const sent = new Date(order.sentAt)
+    const time = Number.isNaN(sent.getTime()) ? '' : ', sent ' +
+      sent.toLocaleString('en-GB', { weekday: 'short', hour: '2-digit', minute: '2-digit' })
+    box.append(make('h3', '', title + time))
+    const list = make('ul', '')
+    for (const line of order.lines) {
+      list.append(make('li', '', line.quantity + ' × ' + line.name +
+        (line.options.length ? ' (' + line.options.join(', ') + ')' : '') + ' — ' +
+        formatPrice(line.quantity * line.unitPricePence)))
+    }
+    box.append(list, make('p', 'last-order-total', 'Total ' + formatPrice(order.totalPence)))
+    box.append(make('p', 'last-order-help', 'Questions about this order? Call ' + orderContact.phoneLabel + '.'))
+    return box
   }
 
   function changeQuantity(index, delta, action) {
@@ -167,6 +189,9 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
 
   $('#order-whatsapp').addEventListener('click', orderViaWhatsApp)
   $('#confirm-sent').addEventListener('click', () => {
+    const order = { sentAt: new Date().toISOString(), totalPence: total(),
+      lines: basket.map(({ name, quantity, unitPricePence, options }) => ({ name, quantity, unitPricePence, options })) }
+    saveLastOrder(order)
     basket = []
     saveBasket(basket)
     note.value = ''
@@ -174,7 +199,7 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
     render()
     const message = 'Thank you. We will confirm your order and collection time on WhatsApp.'
     status.textContent = message
-    items.replaceChildren(make('p', 'basket-confirmation', message))
+    items.replaceChildren(make('p', 'basket-confirmation', message), orderSummary(order, 'Your order'))
     keepBrowsing.textContent = 'Start a new order'
     keepBrowsing.focus()
   })

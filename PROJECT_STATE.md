@@ -102,6 +102,11 @@
 - Ortak bulgular ve uygulanan en küçük iyileştirmeler (`3afe109`): sepet menü ve ürün sayfalarında ortak pencere (`basket-ui.js`); menüdeki Basket düğmesi artık ürün sayfası açmıyor; WhatsApp sonrası sepet, müşteri "Yes, I’ve sent it" diyene kadar korunur; "Keep browsing" ürünün menü kategorisine döner; çelişen seçimler (`optionConflicts`, `catalog.js`) birbirini kaldırır; zorunlu seçim hatası grubun içinde görünür ve oraya kaydırılır; yalnızca fotoğraflı ürünlerde Replay gizli; kayıtlı adetler en fazla 20; menüde ve sepette gel-al, telefon ve alerji yönlendirmesi.
 - Regresyon: masaüstü, iPhone 13 ve 844×390 yatay (azaltılmış hareket) görünümlerinde 46 ürünün tamamı sepete eklendi; taşma ve konsol hatası yok.
 
+### Yeniden test ve tur 2
+
+- Müşteri ajanları yeniden test etti: sepetin korunması, menüdeki sepet, Keep browsing, çakışan seçimler ve satır içi uyarı düzeldi; yeni sorun bildirilmedi.
+- Tur 2 (kalan iki işlevsel bulgu): sepet penceresinde Subtotal ve "Order via WhatsApp" alt kısımda yapışkan; 4 ürünle iPhone SE'de bile kaydırmadan görünür. "Yes, I’ve sent it" sonrası sipariş özeti gösterilir ve son sipariş (`erhan_product_builder_last_order_v1`) boş sepette "Your last order" olarak kalır. 3 görünümde 46 ürün regresyonu temiz.
+
 ### Kullanıcı kararı bekleyen konular
 
 - Ürüne özel seçenek listeleri: canlı sitede de shish, hot dog, veggie ve Meal Deal 4 (nuggets) burger malzemelerini (Extra cheese, Halloumi, Egg, No Veggie) sunuyor. Hangi ürünün neyi değiştirebileceği mutfak kuralıdır.

@@ -84,6 +84,7 @@
 - [x] Sepet adetleri, sipariş notu ve WhatsApp ile sipariş.
 - [x] Bilinmeyen ürün durumu, başlık düzeltmesi, mobil ilk ekran.
 - [x] Bağımsız müşteri, UX eleştirmeni ve QA incelemesi (tur 1) ve bulguların uygulanması.
-- [ ] Müşteri ajanlarıyla tur 1 yeniden testi.
+- [x] Müşteri ajanlarıyla tur 1 yeniden testi.
+- [x] Tur 2: yapışkan sipariş çubuğu ve son sipariş özeti.
 - [ ] Kullanıcı kararları: ürüne özel seçenekler, isim/saat alanı, hızlı ekleme, shish sahnesi.
 - [ ] Kullanıcı: Claude GitHub App yazma izni ve `erhanburger-claude-preview` Netlify sitesi.
