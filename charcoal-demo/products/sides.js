@@ -4,17 +4,17 @@ function menuItem(categoryId, id, name, basePricePence, image, presentation = {}
 }
 
 const sides = [
-  menuItem('nuggets', 'chicken-nuggets-6', '6 Chicken Nuggets', 390, '../IMG_0373.jpeg', {
-    visual: 'plate', portionCount: 6, components: Array(6).fill('nugget'),
+  // One card per item. The menu prices 6pcs at £3.90 and 9pcs at £4.90, and
+  // small chips at £2.90 and large at £3.90, so each upgrade is the difference.
+  menuItem('nuggets', 'chicken-nuggets', 'Chicken Nuggets', 390, '../IMG_0373.jpeg', {
+    visual: 'plate', policy: 'nuggets', components: Array(6).fill('nugget'),
+    aliases: { 'chicken-nuggets-6': [], 'chicken-nuggets-9': ['nuggets-9'] },
+    builderDescription: '6 pieces as standard, or make it 9.',
   }),
-  menuItem('nuggets', 'chicken-nuggets-9', '9 Chicken Nuggets', 490, '../IMG_0373.jpeg', {
-    visual: 'plate', portionCount: 9, components: Array(9).fill('nugget'),
-  }),
-  menuItem('chips', 'chips-small', 'Chips – Small', 290, '../IMG_0356.jpeg', {
-    visual: 'plate', portion: 'small', components: ['chips'],
-  }),
-  menuItem('chips', 'chips-large', 'Chips – Large', 390, '../IMG_0356.jpeg', {
-    visual: 'plate', portion: 'large', components: ['chips'],
+  menuItem('chips', 'chips', 'Chips', 290, '../IMG_0356.jpeg', {
+    visual: 'plate', policy: 'chips', components: ['chips'],
+    aliases: { 'chips-small': [], 'chips-large': ['chips-large'] },
+    builderDescription: 'Regular portion as standard. Make it large, then season it.',
   }),
   menuItem('sides', 'snickers', 'Snickers', 90, './assets/menu/snickers.webp'),
   menuItem('sides', 'kit-kat', 'Kit Kat', 90, './assets/menu/kit-kat.webp'),

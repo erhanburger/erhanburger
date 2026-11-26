@@ -20,6 +20,8 @@ export const basketDialogMarkup = `
   <div id="basket-items"></div>
   <div class="basket-review" id="basket-review">
     <div class="basket-checkout" id="basket-checkout" hidden>
+      <label for="order-name">Name for the order <span>(optional)</span></label>
+      <input id="order-name" type="text" maxlength="40" autocomplete="given-name" placeholder="So we know who it’s for">
       <label for="order-note">Order notes <span>(optional)</span></label>
       <textarea id="order-note" rows="2" maxlength="300" placeholder="For example, extra napkins or no salt on chips"></textarea>
       <p class="checkout-hint">Collection only. Your order opens in WhatsApp for you to send, and we confirm it there. Allergies or dietary needs? Please call us before ordering.</p>
@@ -51,10 +53,20 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
   const checkout = $('#basket-checkout')
   const sentCheck = $('#basket-sent-check')
   const note = $('#order-note')
+  const nameField = $('#order-name')
+  try { nameField.value = localStorage.getItem('erhan_order_name') ?? '' } catch {}
+  nameField.addEventListener('input', () => {
+    try { localStorage.setItem('erhan_order_name', nameField.value.trim()) } catch {}
+    refreshOrderLink()
+  })
   const status = $('#basket-status')
   const keepBrowsing = $('#keep-browsing')
   const callLink = $('#call-link')
   let basket = readBasket()
+  const quietStatus = document.createElement('p')
+  quietStatus.className = 'visually-hidden'
+  quietStatus.setAttribute('role', 'status')
+  dialog.after(quietStatus)
 
   callLink.href = orderContact.phoneHref
   callLink.textContent = 'Or call to order: ' + orderContact.phoneLabel
@@ -173,6 +185,8 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
     }
     message += rule + '\n*TOTAL:  ' + formatPrice(total()) + '*\n' + rule
     if (text) message += '\n\n📝 *Note:* ' + text
+    const who = nameField.value.trim()
+    if (who) message = message.replace('\n' + rule, '\n👤 *Name:* ' + who + '\n' + rule)
     return message + '\n\n_' + orderContact.closingLine + '_'
   }
 
@@ -232,7 +246,7 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
     dialog.showModal()
   }
 
-  function add(line) {
+  function merge(line) {
     basket = readBasket()
     const existing = basket.find(item => item.productId === line.productId &&
       item.unitPricePence === line.unitPricePence &&
@@ -240,8 +254,20 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
     if (existing) existing.quantity = Math.min(maxQuantity, existing.quantity + 1)
     else basket.push({ ...line, quantity: 1 })
     saveBasket(basket)
+  }
+
+  function add(line) {
+    merge(line)
     open()
     status.textContent = line.name + ' added to your basket.'
+  }
+
+  // Adds without opening the dialog (quick add from the menu) and announces it.
+  function addQuietly(line) {
+    merge(line)
+    render()
+    status.textContent = ''
+    quietStatus.textContent = line.name + ' added to your basket.'
   }
 
   window.addEventListener('pageshow', () => {
@@ -253,5 +279,5 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
     render()
   })
   render()
-  return { open, add }
+  return { open, add, addQuietly }
 }

@@ -14,6 +14,12 @@ function make(tag, className, label) {
 }
 
 
+const basketUI = createBasketUI({
+  dialog: document.querySelector('#basket-dialog'),
+  countNode: basketCount,
+  onKeepBrowsing: () => document.querySelector('#open-basket').focus(),
+});
+
 for (const { id, name } of catalog.categories) {
   const items = catalog.products.filter(product => product.categoryId === id);
   if (!items.length) continue;
@@ -30,7 +36,7 @@ for (const { id, name } of catalog.categories) {
   for (const product of items) {
     const item = make('li');
     const link = make('a', 'menu-card');
-    link.href = './?product=' + encodeURIComponent(product.id);
+    link.href = './product.html?product=' + encodeURIComponent(product.id);
     const image = make('img', 'menu-card-photo');
     image.src = product.image;
     image.alt = '';
@@ -41,17 +47,27 @@ for (const { id, name } of catalog.categories) {
       make('span', 'menu-card-price', formatPrice(product.basePricePence)));
     link.append(image, details);
     item.append(link);
+    // Items with nothing to choose are added straight from the menu.
+    if (!product.optionGroups.length) {
+      item.classList.add('menu-item--quick');
+      const add = make('button', 'menu-quick-add', 'Add');
+      add.type = 'button';
+      add.setAttribute('aria-label', 'Add ' + product.name + ' to basket, ' + formatPrice(product.basePricePence));
+      add.addEventListener('click', () => {
+        basketUI.addQuietly({ productId: product.id, name: product.name,
+          unitPricePence: product.basePricePence, optionIds: [], options: [] });
+        add.textContent = 'Added';
+        add.classList.add('is-added');
+        setTimeout(() => { add.textContent = 'Add'; add.classList.remove('is-added'); }, 1400);
+      });
+      item.append(add);
+    }
     grid.append(item);
   }
   section.append(heading, grid);
   products.append(section);
 }
 
-const basketUI = createBasketUI({
-  dialog: document.querySelector('#basket-dialog'),
-  countNode: basketCount,
-  onKeepBrowsing: () => document.querySelector('#open-basket').focus(),
-});
 document.querySelector('#open-basket').addEventListener('click', () => basketUI.open());
 const menuCall = document.querySelector('#menu-call');
 menuCall.href = orderContact.phoneHref;

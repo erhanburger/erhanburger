@@ -140,7 +140,24 @@ const mealDrink = { ...group('drink', 'Choose your drink', mealDrinkIds.map(id =
 // Mirrors the source's openCustomise item types. A new menu entry supplies
 // its own price, photo and preview profile, and may provide its own groups
 // for variants such as portions. Choice IDs are unique within a product.
+const sideSauces = {
+  ...group('sauces', 'Sauces', sauces.filter(({ id }) => id !== 'salt' && id !== 'vinegar'), 'photos'),
+  featuredCount: 3,
+  moreLabel: 'More sauces',
+}
+const seasoning = group('seasoning', 'Seasoning', [option('salt', 'Salt'), option('vinegar', 'Vinegar')])
+const chipsSize = { ...group('size', 'Size', [
+  option('chips-regular', 'Regular', 0, { image: './assets/menu/chips.webp', layerKeys: ['chips-regular'] }),
+  option('chips-large', 'Make it large', 100, { image: './assets/menu/chips.webp', layerKeys: ['chips-large'] }),
+], 'photos', 1, 1), defaultOptionIds: ['chips-regular'], hideInSummary: ['chips-regular'] }
+const nuggetCount = { ...group('pieces', 'Pieces', [
+  option('nuggets-6', '6 pieces', 0, { image: './assets/menu/nugget.webp' }),
+  option('nuggets-9', '9 pieces', 100, { image: './assets/menu/nugget.webp', layerKeys: ['nuggets-extra-0', 'nuggets-extra-1', 'nuggets-extra-2'] }),
+], 'photos', 1, 1), defaultOptionIds: ['nuggets-6'] }
+
 export const optionPolicies = {
+  chips: [chipsSize, seasoning, sideSauces],
+  nuggets: [nuggetCount, sideSauces],
   burger: toppingsGroups,
   kebab: [kebabChilli, ...toppingsGroups],
   meal: [
@@ -182,12 +199,25 @@ export function formatPrice(pence) {
   return pounds.format(pence / 100);
 }
 
-export function createDefaultSelections(product) {
-  return new Set(
-    product.optionGroups.flatMap(({ options }) =>
-      options.filter(({ defaultSelected }) => defaultSelected).map(({ id }) => id),
-    ),
-  );
+export function createDefaultSelections(product, extraIds = []) {
+  const selected = new Set(product.optionGroups.flatMap(({ options, defaultOptionIds = [] }) =>
+    options.filter(({ id, defaultSelected }) => defaultSelected || defaultOptionIds.includes(id)).map(({ id }) => id)))
+  for (const id of extraIds) {
+    const group = product.optionGroups.find(({ options }) => options.some(option => option.id === id))
+    if (!group) continue
+    if (group.max === 1) for (const { id: other } of group.options) selected.delete(other)
+    selected.add(id)
+  }
+  return selected
+}
+
+// Old menu links (e.g. chips-large) open the merged product with that choice made.
+export function findProduct(id) {
+  for (const product of catalog.products) {
+    if (product.id === id) return { product, preset: [] }
+    if (product.aliases && Object.hasOwn(product.aliases, id)) return { product, preset: product.aliases[id] }
+  }
+  return null
 }
 
 export function getUnitPricePence(product, selections) {

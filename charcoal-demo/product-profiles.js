@@ -55,9 +55,12 @@ export function productProfile(product, burgerProfile) {
     };
     if (roundClosers.has(key)) {
       cover = configured;
+    } else if (key === 'chips' && optionKeys.has('chips-large')) {
+      // Chips sold on their own: the portion choice swaps the regular and large serving.
+      add(accessories, { ...configured, key: 'chips-regular', width: .80, positionY: 0, offset: 0 }, false);
+      add(accessories, { ...configured, key: 'chips-large', width: 1.03, positionY: 0, offset: 0 }, false);
     } else if (key === 'chips') {
-      const small = product.portion === 'small';
-      const width = meal ? .46 : shish ? .52 : small ? .80 : 1.03;
+      const width = meal ? .46 : shish ? .52 : 1.03;
       add(accessories, { ...configured, width, positionY: 0, offset: meal ? .36 : shish ? .38 : 0 });
     } else if (key === 'nugget') {
       const row = Math.floor(nuggets / 3);
@@ -70,6 +73,17 @@ export function productProfile(product, burgerProfile) {
     } else {
       add(main, key === 'shish' && product.name.includes('Large') ?
         { ...configured, width: configured.width * 1.12 } : configured);
+    }
+  }
+
+  // A larger nugget portion adds pieces to the same serving.
+  if (optionKeys.has('nuggets-extra-0')) {
+    for (let extra = 0; extra < 3; extra++) {
+      const index = nuggets++
+      add(accessories, {
+        ...componentPhotos.nugget, key: 'nuggets-extra-' + extra, width: .285,
+        offset: (extra - 1) * .30 + .035, positionY: 3 * .188, restingAngle: ((index * 17) % 29) - 14,
+      }, false)
     }
   }
 

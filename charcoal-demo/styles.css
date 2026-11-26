@@ -579,3 +579,15 @@ h1, h2, h3, p { margin: 0; }
 /* Let the order bar stick to the dialog's scroll area rather than its wrapper. */
 .basket-review:not([hidden]) { display: contents; }
 a.order-button { text-decoration: none; }
+.wordmark { color: var(--ink); text-decoration: none; }
+.basket-checkout input {
+  inline-size: 100%;
+  min-block-size: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #171310;
+  color: var(--ink);
+  font: inherit;
+  font-size: max(16px, .9rem);
+}

@@ -1,0 +1,132 @@
+.home-nav { display: flex; gap: 6px; margin-inline-start: auto; }
+.home-nav a { display: grid; align-items: center; min-height: 44px; padding-inline: 10px; color: var(--muted); text-decoration: none; }
+.home-nav a:hover { color: var(--accent); }
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: clamp(20px, 4vw, 56px);
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: clamp(28px, 5vw, 64px) 5% clamp(24px, 4vw, 48px);
+}
+.open-status { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 18px; color: var(--muted); font-size: .9rem; font-weight: 600; }
+.open-status::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #8a7f75; }
+.open-status[data-open="true"]::before { background: #7bd389; box-shadow: 0 0 0 4px #7bd38926; }
+.hero h1 { font: 500 clamp(2.6rem, 5.6vw, 5rem)/1.02 Georgia, 'Times New Roman', serif; letter-spacing: -.035em; }
+.hero h1 em { color: var(--accent); }
+.hero-lede { max-width: 46ch; margin-top: 18px; color: var(--muted); font-size: clamp(1rem, 1.3vw, 1.12rem); line-height: 1.55; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 28px; }
+.hero-actions .order-button { text-decoration: none; min-width: 0; padding-inline: 20px; gap: 14px; }
+.hero-secondary { display: grid; align-items: center; min-height: 44px; color: var(--ink); font-weight: 650; text-underline-offset: 4px; }
+.hero-secondary:hover { color: var(--accent); }
+.hero-picture {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: radial-gradient(ellipse at 35% 30%, #5a3b24 0, #2a201a 45%, #141110 80%);
+  color: var(--ink);
+  text-decoration: none;
+}
+.hero-picture img { width: 82%; height: 82%; object-fit: contain; filter: drop-shadow(0 26px 22px #000a); transition: transform .4s ease; }
+.hero-picture:hover img { transform: scale(1.03); }
+.hero-price {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  display: grid;
+  padding: 10px 14px;
+  border: 1px solid #ffffff1f;
+  border-radius: 12px;
+  background: #141110d9;
+  font-size: .85rem;
+}
+.hero-price strong { color: var(--accent); font-size: 1.2rem; }
+
+.home-band { max-width: 1440px; margin-inline: auto; padding: clamp(24px, 4vw, 44px) 5%; }
+.home-band h2 { margin-bottom: 18px; font-size: clamp(1.3rem, 2.4vw, 1.8rem); letter-spacing: -.015em; }
+.band-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.band-heading a { color: var(--accent); font-weight: 650; }
+
+.deal-row, .category-grid, .steps, #visit-hours { margin: 0; padding: 0; list-style: none; }
+.deal-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.deal-card {
+  display: grid;
+  grid-template-columns: 42% minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  height: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--ink);
+  text-decoration: none;
+}
+.deal-card:hover, .category-card:hover { border-color: var(--accent); }
+.deal-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; background: #2a221c; }
+.deal-text { display: grid; gap: 3px; }
+.deal-tag { justify-self: start; padding: 2px 8px; border-radius: 99px; background: #3b2a1f; color: var(--accent); font-size: .75rem; font-weight: 700; }
+.deal-text strong { font-size: 1.02rem; line-height: 1.25; }
+.deal-meta { color: var(--muted); font-size: .82rem; }
+.deal-price { margin-top: 4px; color: var(--accent); font-weight: 750; font-size: 1.1rem; }
+
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; counter-reset: step; }
+.steps li { display: grid; gap: 6px; padding: 18px; border-top: 2px solid var(--accent); background: var(--panel); border-radius: 0 0 12px 12px; counter-increment: step; }
+.steps strong::before { content: counter(step) ". "; color: var(--accent); }
+.steps span { color: var(--muted); line-height: 1.5; }
+.steps a { color: var(--accent); white-space: nowrap; }
+
+.category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr)); gap: 12px; }
+.category-card {
+  display: grid;
+  grid-template-rows: 110px auto auto;
+  gap: 4px;
+  height: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--ink);
+  text-decoration: none;
+}
+.category-card img { width: 100%; height: 100%; object-fit: contain; background: radial-gradient(ellipse, #3d2d22, transparent 72%); }
+.category-card span { color: var(--muted); font-size: .84rem; }
+
+.visit { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; border-top: 1px solid var(--border); }
+.visit h2 { margin-bottom: 8px; }
+.visit h3 { margin-bottom: 8px; font-size: 1.05rem; }
+.visit p, .visit li { color: var(--muted); line-height: 1.6; }
+.visit a { color: var(--accent); font-weight: 650; }
+.visit-note { margin-top: 6px; font-size: .88rem; }
+.home-footer { padding: 22px 5% calc(28px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); color: var(--muted); font-size: .85rem; text-align: center; }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .hero-picture { order: -1; aspect-ratio: 16 / 10; }
+  .deal-row, .steps, .visit { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .home-nav a[href$="#meal-deals"] { display: none; }
+  .home-nav a { padding-inline: 6px; font-size: .9rem; }
+  .hero { padding: 14px 14px 20px; gap: 18px; }
+  .hero-actions .order-button { flex: 1 1 100%; justify-content: space-between; }
+  .home-band { padding: 22px 14px; }
+  .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .category-card { grid-template-rows: 84px auto auto; }
+}
+@media (max-width: 760px) {
+  .hero-picture { aspect-ratio: 16 / 9; border-radius: 16px; }
+  .hero-picture img { width: 74%; height: 92%; }
+  .hero-price { left: auto; right: 10px; bottom: 10px; padding: 6px 10px; font-size: .72rem; }
+  .hero-price strong { font-size: 1rem; }
+  .open-status { margin-bottom: 8px; font-size: .82rem; }
+  .hero h1 { font-size: clamp(2rem, 9vw, 2.8rem); }
+  .hero-lede { margin-top: 10px; font-size: .95rem; line-height: 1.45; }
+  .hero-actions { margin-top: 16px; }
+}

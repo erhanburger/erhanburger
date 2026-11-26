@@ -1,15 +1,15 @@
 import {
-  catalog, halfPounder, optionConflicts, createDefaultSelections, formatPrice, getUnitPricePence,
+  catalog, halfPounder, optionConflicts, findProduct, createDefaultSelections, formatPrice, getUnitPricePence,
 } from './catalog.js'
 import { CharcoalScene } from './scene.js'
 import { productProfile } from './product-profiles.js'
 import { createBasketUI } from './basket-ui.js'
 
 const requestedProduct = new URLSearchParams(location.search).get('product')
-const foundProduct = requestedProduct === null ? halfPounder :
-  catalog.products.find(item => item.id === requestedProduct)
+const match = requestedProduct === null ? { product: halfPounder, preset: [] } : findProduct(requestedProduct)
+const foundProduct = match?.product
 const product = foundProduct ?? halfPounder
-const selected = createDefaultSelections(product)
+const selected = createDefaultSelections(product, match?.preset)
 const preview = productProfile(product, CharcoalScene.defaultProfile)
 const options = product.optionGroups.flatMap(group => group.options)
 const groups = document.querySelector('#choice-groups')
@@ -164,6 +164,8 @@ function setGroupError(group, message) {
 function changeChoice(group, option) {
   const cleared = []
   if (selected.has(option.id)) {
+    // A required single choice (e.g. a portion size) stays chosen, like a radio button.
+    if (group.min === 1 && group.max === 1) return
     selected.delete(option.id)
   } else {
     const active = group.options.filter(choice => selected.has(choice.id))

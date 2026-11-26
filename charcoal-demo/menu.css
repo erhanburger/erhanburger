@@ -74,3 +74,19 @@
 .menu-service { max-width: 60ch; margin: -12px 0 22px; color: var(--muted); font-size: .95rem; }
 .menu-service a { color: var(--accent); font-weight: 650; white-space: nowrap; }
 button.menu-basket { font: inherit; cursor: pointer; }
+.menu-grid > li { position: relative; }
+.menu-quick-add {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  min-width: 64px;
+  min-height: 40px;
+  padding-inline: 14px;
+  border: 1px solid var(--accent);
+  border-radius: 9px;
+  background: var(--accent);
+  color: #281b13;
+  font-weight: 750;
+}
+.menu-quick-add.is-added { background: #2d4a34; border-color: #7bd389; color: #e9f8ec; }
+.menu-item--quick .menu-card-details { padding-right: 84px; }
