@@ -1,20 +1,12 @@
-'use strict';
+import { paintSaucePour, paintSauceTrail, preloadSauceBottles, sauceProfiles } from './sauce-motion.js';
+import { ingredientPose, ingredientTiming } from './ingredient-motion.js';
 
 export const CharcoalScene = (() => {
   // Width, stacking step and offset are fractions of the rig width.
-  const approvedKetchup = {
-    label: 'Ketchup',
-    surfaceLift: .126,
-    traceColours: ['#9b1c08', '#d63f19', '#ffb076ac'],
-    flowColours: ['#b51c0b', '#ff944c9c'],
-  };
   const assets = '../burger-builder-demo/assets/';
-  const genericSauces = [
-    { key: 'chilli-sauce', label: 'Chilli sauce', colours: ['#912c13', '#cf4922', '#f89a5f'] },
-    { key: 'garlic-mayo', label: 'Garlic mayonnaise', colours: ['#aa9878', '#eadcb9', '#fff5df'] },
-    { key: 'bbq-sauce', label: 'BBQ sauce', colours: ['#432316', '#773b26', '#ad7057'] },
-    { key: 'mustard', label: 'Mustard', colours: ['#966215', '#d89b25', '#f4cc65'] },
-  ];
+  const sauceLayers = Object.entries(sauceProfiles).map(([key, sauce], index) => ({
+    key, width: .63, step: .005, offset: (index - 3) * .008, sauce,
+  }));
   const defaultProfile = {
     id: 'half-pounder',
     closingLayerKey: 'top',
@@ -32,25 +24,13 @@ export const CharcoalScene = (() => {
       { key: 'cucumber', asset: assets + 'cucumber.webp', width: .91, step: .035, offset: -.012 },
       { key: 'gherkin', asset: assets + 'pickle.webp', width: .88, step: .033, offset: .014 },
       { key: 'onion', asset: assets + 'onion.webp', width: .90, step: .036, offset: .018 },
-      { key: 'ketchup', embeddedKey: 'sauce', width: .67, step: .005, offset: .013, sauce: approvedKetchup },
-      { key: 'mayo', asset: assets + 'mayo.webp', width: .61, step: .005, offset: -.014, sauce: {
-        label: 'Mayonnaise', traceColours: ['#bca482', '#e9d5a8', '#fff2d8bd'], flowColours: ['#e1caa1', '#ffefdaca'],
-      } },
-      { key: 'burger-sauce', asset: assets + 'burger-sauce.webp', width: .60, step: .005, offset: .018, sauce: {
-        label: 'Burger sauce', traceColours: ['#a66743', '#df975f', '#f9c8a991'], flowColours: ['#d98b55', '#ffd3adad'],
-      } },
-      ...genericSauces.map(({ key, label, colours }) => ({
-        key, width: .61, step: .005, offset: .01, sauce: {
-          label, traceColours: colours, flowColours: colours.slice(1), generic: true,
-        },
-      })),
+      ...sauceLayers,
       { key: 'top', width: .98, step: 0, offset: .003, required: true },
     ],
   };
 
   const defaultTimings = { drop: 285, settle: 95, enter: 240, pour: 650, exit: 215 };
   let timings = defaultTimings;
-  let fallDuration = defaultTimings.drop + defaultTimings.settle;
   let pourDuration = defaultTimings.enter + defaultTimings.pour + defaultTimings.exit;
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const rig = document.querySelector('#rig');
@@ -64,6 +44,7 @@ export const CharcoalScene = (() => {
   ));
   const elements = new Map();
   const generated = new Set();
+  const landingShadows = new Map();
   let photo;
 
   let profile = defaultProfile;
@@ -88,10 +69,12 @@ export const CharcoalScene = (() => {
     for (const image of elements.values()) image.style.visibility = 'hidden';
     for (const image of generated) image.remove();
     generated.clear();
+    for (const shadow of landingShadows.values()) shadow.remove();
+    landingShadows.clear();
     elements.clear();
     const claimed = new Set();
     profile.layers?.forEach((layer, index) => {
-      if (layer.sauce?.generic) return;
+      if (layer.sauce) return;
       const existing = embedded.get(layer.embeddedKey ?? layer.key);
       const reuse = existing && !claimed.has(existing.image);
       const image = reuse ? existing.image : document.createElement('img');
@@ -101,7 +84,6 @@ export const CharcoalScene = (() => {
       image.draggable = false;
       image.dataset.layer = layer.key;
       image.classList.add('ingredient');
-      image.classList.toggle('sauce', Boolean(layer.sauce));
       image.style.zIndex = (index + 1) * 2;
       if (reuse) claimed.add(image);
       else {
@@ -119,9 +101,8 @@ export const CharcoalScene = (() => {
   function layout() {
     let height = 0;
     const layers = (profile.layers ?? []).filter(({ key, required }) => required || selection.has(key));
-    const multipleSauces = layers.filter(layer => layer.sauce).length > 1;
     return layers.map(layer => {
-      const surface = layer.sauce ? (layer.sauce.surfaceLift ?? .126) - (multipleSauces ? .04 : 0) : 0;
+      const surface = layer.sauce ? layer.sauce.surfaceLift ?? .015 : 0;
       const y = height + surface;
       height += layer.step;
       return { ...layer, y };
@@ -137,31 +118,58 @@ export const CharcoalScene = (() => {
     measure();
   }
 
-  function place(layer, { lift = 0, move = 0, angle = 0, squash = 1, yaw = 0, opacity = 1 } = {}) {
-    if (layer.sauce?.generic) {
+  function paintLandingShadow(layer, image, strength, lift) {
+    let shadow = landingShadows.get(layer.key);
+    if (!strength) {
+      if (shadow) shadow.style.visibility = 'hidden';
+      return;
+    }
+    if (!shadow) {
+      shadow = document.createElement('div');
+      shadow.dataset.landingShadow = layer.key;
+      Object.assign(shadow.style, {
+        position: 'absolute',
+        pointerEvents: 'none',
+        transform: 'translateX(-50%)',
+        background: 'radial-gradient(ellipse, #170b06b0 2%, #20100a75 40%, transparent 72%)',
+      });
+      rig.append(shadow);
+      landingShadows.set(layer.key, shadow);
+    }
+    Object.assign(shadow.style, {
+      visibility: 'visible',
+      width: `${layer.width * width * (.76 + lift * .27)}px`,
+      height: `${width * (.087 + lift * .06)}px`,
+      bottom: `${(layer.y - .018) * width}px`,
+      left: `calc(50% + ${layer.offset * width}px)`,
+      opacity: String(strength * .43),
+      zIndex: String(Number(image.style.zIndex) - 1),
+    });
+  }
+
+  function place(layer, {
+    lift = 0, move = 0, angle = 0, squash = 1, spread = 1, skew = 0, yaw = 0, opacity = 1, shadow = 0,
+  } = {}) {
+    if (layer.sauce) {
       paintTrail({ ...layer, y: layer.y + lift, offset: layer.offset + move }, 1, opacity);
       return;
     }
     const image = elements.get(layer.key);
+    if (!image) return;
     image.style.visibility = opacity > 0 ? 'visible' : 'hidden';
     image.style.opacity = opacity;
     image.style.setProperty('--width', `${layer.width * 100}%`);
+    image.style.transformOrigin = squash !== 1 || spread !== 1 ? '50% 100%' : '';
     image.style.transform =
-      `translate3d(calc(-50% + ${(layer.offset + move) * width}px), ${-(layer.y + lift) * width}px, 0) rotate(${angle}deg) rotateY(${yaw}deg) scaleY(${squash})`;
+      `translate3d(calc(-50% + ${(layer.offset + move) * width}px), ${-(layer.y + lift) * width}px, 0) rotate(${angle}deg) rotateY(${yaw}deg) skewX(${skew}deg) scale(${spread}, ${squash})`;
+    paintLandingShadow(layer, image, shadow * opacity, lift);
   }
 
   function hide(key) {
     const image = elements.get(key);
     if (image) image.style.visibility = 'hidden';
-  }
-
-  function getSaucePoint(layer, progress) {
-    const rotation = .35 + progress * Math.PI * 4.05;
-    const radius = .48 - progress * .426;
-    return {
-      x: (layer.offset + Math.cos(rotation) * radius * layer.width) * width,
-      y: (layer.y + (.22 + Math.sin(rotation) * radius * .39) * layer.width) * width,
-    };
+    const shadow = landingShadows.get(key);
+    if (shadow) shadow.style.visibility = 'hidden';
   }
 
   function resetDispenser() {
@@ -170,75 +178,12 @@ export const CharcoalScene = (() => {
     context?.clearRect(0, 0, canvasSize, canvasSize);
   }
 
-  function trace(points, color, lineWidth, shine = 0) {
-    context.beginPath();
-    points.forEach((point, index) => {
-      const x = canvasSize * .5 + point.x;
-      const y = canvasSize - point.y - shine;
-      if (index === 0) context.moveTo(x, y);
-      else context.lineTo(x, y);
-    });
-    context.strokeStyle = color;
-    context.lineWidth = lineWidth;
-    context.lineCap = 'round';
-    context.lineJoin = 'round';
-    context.stroke();
-  }
-
   function paintTrail(layer, progress, opacity) {
-    if (!context || progress <= 0 || opacity <= 0) return;
-    const [shadow, colour, shine] = layer.sauce.traceColours ?? approvedKetchup.traceColours;
-    const points = Array.from({ length: 38 }, (_, index) => getSaucePoint(layer, progress * index / 37));
-    context.globalAlpha = opacity;
-    trace(points, shadow, width * .023);
-    trace(points, colour, width * .016);
-    trace(points, shine, width * .004, width * .003);
-    context.globalAlpha = 1;
+    paintSauceTrail(context, layer, progress, opacity, width, canvasSize);
   }
 
   function drawSauce(layer, elapsed) {
-    const flow = clamp((elapsed - timings.enter) / timings.pour);
-    const arrival = 1 - ease(clamp(elapsed / timings.enter));
-    const departure = ease(clamp((elapsed - timings.enter - timings.pour) / timings.exit));
-    const travel = arrival + departure;
-    const impact = getSaucePoint(layer, flow);
-    const aspect = bottle.naturalWidth ? bottle.naturalHeight / bottle.naturalWidth : 1.6;
-    const roomAboveSauce = verticalRoom - impact.y - 7;
-    const bottleWidth = Math.max(width * .108, Math.min(width * .188, (roomAboveSauce - width * .055) / aspect));
-    const bottleHeight = bottleWidth * aspect;
-    const gap = Math.max(width * .048, Math.min(width * (.145 + .17 * travel), roomAboveSauce - bottleHeight));
-    const nozzle = {
-      x: impact.x + (.015 + .205 * travel) * width,
-      y: impact.y + gap,
-    };
-
-    bottle.style.setProperty('--width', `${bottleWidth}px`);
-    bottle.style.visibility = travel < .99 ? 'visible' : 'hidden';
-    // The nozzle tip in the approved bottle image is at (7.8%, 99.4%).
-    bottle.style.transform = `translate3d(${nozzle.x - bottleWidth * .078}px, ${-nozzle.y + bottleHeight * .006}px, 0)`;
-    bottle.style.opacity = clamp((1 - travel) * 3);
-
-    if (layer.sauce.generic) {
-      paintTrail(layer, flow, 1);
-    } else {
-      const imprint = ease(clamp((flow - .82) / .18));
-      place(layer, { opacity: context ? imprint : flow });
-      paintTrail(layer, flow, 1 - imprint);
-    }
-    if (!context || flow <= 0 || flow >= 1) return;
-
-    // The lifted bun sits behind the bottle and stream while they cross its open edge.
-    canvas.style.zIndex = traceDepth + 2;
-    const line = Array.from({ length: 10 }, (_, index) => {
-      const t = index / 9;
-      return {
-        x: nozzle.x + (impact.x - nozzle.x) * t - Math.sin(t * Math.PI) * width * .008,
-        y: nozzle.y + (impact.y - nozzle.y) * (t * .7 + t * t * .3),
-      };
-    });
-    const [flowColour, flowShine] = layer.sauce.flowColours ?? approvedKetchup.flowColours;
-    trace(line, flowColour, Math.max(1.5, width * .0105));
-    trace(line, flowShine, Math.max(.5, width * .003), width * .001);
+    paintSaucePour({ context, bottle, canvas, traceDepth, layer, elapsed, timings, width, canvasSize, verticalRoom });
   }
 
   function measure() {
@@ -262,22 +207,53 @@ export const CharcoalScene = (() => {
     setStatus('ready', 'Ready');
   }
 
-  function drop(layer, elapsed) {
-    if (elapsed < 0) {
-      hide(layer.key);
+  function stackPressures(layers, poses) {
+    const pressures = new Map();
+    let load = 0;
+    for (let index = layers.length - 1; index >= 0; index -= 1) {
+      const { key, sauce } = layers[index];
+      if (sauce) continue;
+      pressures.set(key, load);
+      load = Math.max(poses.get(key)?.pressure ?? 0, load * .38);
+    }
+    return pressures;
+  }
+
+  function placeWithLanding(layer, pose, pressure) {
+    if (!pressure) {
+      place(layer, pose);
       return;
     }
-    const fall = clamp(elapsed / timings.drop);
-    const settle = clamp((elapsed - timings.drop) / timings.settle);
-    const impact = fall === 1 ? Math.sin(Math.PI * settle) : 0;
-    const initialLift = layer.key === profile.closingLayerKey ? .39 : .44;
     place(layer, {
-      lift: initialLift * (1 - fall * fall) + impact * .012,
-      move: (1 - ease(fall)) * (layer.key === 'patty-b' ? .044 : -.038),
-      angle: (1 - ease(fall)) * (layer.key === 'patty-b' ? 8 : -7),
-      squash: 1 - .03 * impact,
-      opacity: ease(clamp(elapsed / 90)),
+      ...pose,
+      lift: (pose?.lift ?? 0) - (layer.y > 0 ? pressure * .011 : 0),
+      squash: (pose?.squash ?? 1) * (1 - pressure * .023),
     });
+  }
+
+  function landingPose(layer, motion, elapsed, start) {
+    const pose = ingredientPose(motion, elapsed, start);
+    if (!pose || !width) return pose;
+    const image = elements.get(layer.key);
+    const aspect = image.naturalWidth ? image.naturalHeight / image.naturalWidth : .56;
+    const angle = Math.abs(pose.angle) * Math.PI / 180;
+    const footprint = layer.width * (aspect + Math.sin(angle) * .55);
+    const headroom = (verticalRoom - 8) / width - layer.y - footprint;
+    // Keep the airborne photo inside the studio on shallow mobile viewports.
+    return { ...pose, lift: Math.min(pose.lift, Math.max(0, headroom)) };
+  }
+
+  function parkedCover(layer, opening, hasSauce) {
+    const capLift = opening * (hasSauce ? .43 : .31);
+    const image = elements.get(layer.key);
+    const aspect = image.naturalWidth ? image.naturalHeight / image.naturalWidth : .56;
+    const margin = width > 0 ? (verticalRoom - 9) / width - layer.y - layer.width * aspect : 0;
+    return {
+      lift: Math.min(capLift, Math.max(0, margin - capLift * .07)),
+      move: -capLift * .78,
+      angle: -capLift * 9,
+      yaw: -capLift * 76,
+    };
   }
 
   function paintSauce(layer, elapsed) {
@@ -291,15 +267,23 @@ export const CharcoalScene = (() => {
     else setStatus('assembling', fallback);
   }
 
-  function paintReplay(elapsed, plan) {
+  function paintReplay(elapsed, next, plan) {
     resetDispenser();
+    const poses = new Map();
+    for (const { layer, start, motion } of plan) {
+      if (motion) poses.set(layer.key, landingPose(layer, motion, elapsed - start));
+    }
+    const pressures = stackPressures(next, poses);
     let pouring;
     for (const { layer, start } of plan) {
       const time = elapsed - start;
-      if (!layer.sauce) drop(layer, time);
-      else {
+      if (layer.sauce) {
         paintSauce(layer, time);
         if (time >= 0 && time < pourDuration) pouring = layer.sauce.label;
+      } else if (time < 0) {
+        hide(layer.key);
+      } else {
+        placeWithLanding(layer, poses.get(layer.key) ?? undefined, pressures.get(layer.key));
       }
     }
     updateStatusForPour(pouring, 'Building your burger…');
@@ -307,37 +291,45 @@ export const CharcoalScene = (() => {
 
   function paintChange(elapsed, plan) {
     resetDispenser();
-    const { next, previousByKey, removed, additions, duration, clearanceKeys, hasSauce } = plan;
+    const {
+      next, previousByKey, removed, additions, clearanceKeys, clearAt, cover, closeAt, hasSauce,
+    } = plan;
     const opening = ease(clamp(elapsed / 210));
-    const closing = ease(clamp((elapsed - (duration - 260)) / 260));
-    const capLift = (opening - closing) * (hasSauce ? .43 : .31);
+    const clearance = opening * (1 - ease(clamp((elapsed - clearAt) / 170)));
     const movement = ease(clamp((elapsed - 135) / 420));
+    const poses = new Map();
+    for (const [key, { layer, start, motion }] of additions) {
+      if (motion) poses.set(key, landingPose(layer, motion, elapsed - start));
+    }
+    if (cover && elapsed >= closeAt) {
+      const parked = parkedCover(cover.layer, 1, hasSauce);
+      poses.set(cover.layer.key, landingPose(cover.layer, cover.motion, elapsed - closeAt, parked));
+    }
+    const pressures = stackPressures(next, poses);
     let pouring;
 
     for (const layer of next) {
       const old = previousByKey.get(layer.key);
       const scheduled = additions.get(layer.key);
-      if (scheduled !== undefined) {
-        if (!layer.sauce) drop(layer, elapsed - scheduled);
-        else {
-          const local = elapsed - scheduled;
+      if (scheduled) {
+        const local = elapsed - scheduled.start;
+        if (layer.sauce) {
           paintSauce(layer, local);
           if (local >= 0 && local < pourDuration) pouring = layer.sauce.label;
+        } else if (local < 0) {
+          hide(layer.key);
+        } else {
+          placeWithLanding(layer, poses.get(layer.key) ?? undefined, pressures.get(layer.key));
         }
         continue;
       }
-      const y = old.y + (layer.y - old.y) * movement;
-      if (layer.key === profile.closingLayerKey) {
-        const image = elements.get(layer.key);
-        const aspect = image.naturalWidth ? image.naturalHeight / image.naturalWidth : .56;
-        const margin = width > 0 ? (verticalRoom - 9) / width - y - layer.width * aspect : 0;
-        const lift = Math.min(capLift, Math.max(0, margin - capLift * .07));
-        place({ ...layer, y }, { lift, move: -capLift * .78, angle: -capLift * 9, yaw: -capLift * 76 });
+      const position = { ...layer, y: old.y + (layer.y - old.y) * movement };
+      if (layer.key === cover?.layer.key) {
+        place(position, elapsed < closeAt ? parkedCover(position, opening, hasSauce) : poses.get(layer.key) ?? undefined);
       } else if (clearanceKeys.has(layer.key)) {
-        const lift = opening * (1 - ease(clamp((elapsed - 410) / 170)));
-        place({ ...layer, y }, { lift: lift * .09, move: lift * .20, angle: lift * 6 });
+        placeWithLanding(position, { lift: clearance * .09, move: clearance * .26, angle: clearance * 6 }, pressures.get(layer.key));
       } else {
-        place({ ...layer, y });
+        placeWithLanding(position, undefined, pressures.get(layer.key));
       }
     }
     for (const layer of removed) {
@@ -373,13 +365,17 @@ export const CharcoalScene = (() => {
     if (reducedMotion.matches || !next.length) return;
 
     let start = 0;
+    let landedAt = 0;
     const plan = next.map(layer => {
-      const entry = { layer, start };
-      // Leave a short beat after each landing and before the bun closes.
-      start += layer.sauce ? pourDuration + 90 : fallDuration - 65;
+      const motion = layer.sauce ? null : ingredientTiming(layer, timings, profile.closingLayerKey);
+      if (layer.sauce || layer.key === profile.closingLayerKey) start = Math.max(start, landedAt);
+      const entry = { layer, start, motion };
+      landedAt = start + (motion?.duration ?? pourDuration);
+      // Only overlap the next release with the previous layer's final settling.
+      start += motion ? motion.fall + Math.round(motion.settle * .5) : pourDuration + 75;
       return entry;
     });
-    startSequence(next, start + 105, elapsed => paintReplay(elapsed, plan));
+    startSequence(next, Math.max(start, landedAt) + 70, elapsed => paintReplay(elapsed, next, plan));
   }
 
   function update(nextSelection) {
@@ -403,20 +399,35 @@ export const CharcoalScene = (() => {
     const firstEdit = profile.layers.findIndex(({ key }) => edited.has(key));
     const clearanceKeys = new Set(firstEdit < 0 ? [] : profile.layers.slice(firstEdit + 1).map(({ key }) => key));
     const additions = new Map();
-    const ingredients = added.filter(layer => !layer.sauce);
-    ingredients.forEach((layer, index) => additions.set(layer.key, 175 + index * 100));
+    let releaseAt = 185;
+    let landedAt = removed.length ? 350 : releaseAt;
+    for (const layer of added.filter(item => !item.sauce)) {
+      const motion = ingredientTiming(layer, timings, profile.closingLayerKey);
+      additions.set(layer.key, { layer, start: releaseAt, motion });
+      landedAt = Math.max(landedAt, releaseAt + motion.duration);
+      releaseAt += motion.fall + Math.round(motion.settle * .35);
+    }
     const sauces = added.filter(layer => layer.sauce);
-    const sauceStart = ingredients.length ? 175 + (ingredients.length - 1) * 100 + fallDuration : 155;
-    sauces.forEach((layer, index) => additions.set(layer.key, sauceStart + index * pourDuration));
-    const duration = Math.max(820 + 100 * Math.max(0, ingredients.length - 1), sauceStart + sauces.length * pourDuration + 260);
-    const plan = { next, previousByKey, removed, additions, duration, clearanceKeys, hasSauce: sauces.length > 0 };
+    let sauceAt = added.some(layer => !layer.sauce) || removed.length ? landedAt + 35 : 165;
+    for (const layer of sauces) {
+      additions.set(layer.key, { layer, start: sauceAt });
+      sauceAt += pourDuration + 65;
+    }
+    const coverLayer = next.find(layer => layer.key === profile.closingLayerKey && previousByKey.has(layer.key));
+    const cover = coverLayer ? {
+      layer: coverLayer, motion: ingredientTiming(coverLayer, timings, profile.closingLayerKey),
+    } : null;
+    const clearAt = Math.max(365, landedAt - 115);
+    const closeAt = Math.max(565, clearAt + 155, sauces.length ? sauceAt : 0);
+    const duration = closeAt + (cover?.motion.duration ?? 0) + 45;
+    const plan = { next, previousByKey, removed, additions, duration, clearanceKeys, clearAt, cover, closeAt, hasSauce: sauces.length > 0 };
     startSequence(next, duration, elapsed => paintChange(elapsed, plan));
   }
 
   function init({ profile: product = defaultProfile, selection: selected = [] } = {}) {
     profile = product.id === defaultProfile.id ? { ...defaultProfile, ...product } : product;
+    if (!reducedMotion.matches) preloadSauceBottles(profile.layers ?? []);
     timings = { ...defaultTimings, ...profile.timings };
-    fallDuration = timings.drop + timings.settle;
     pourDuration = timings.enter + timings.pour + timings.exit;
     selection = new Set(selected);
     stage.setAttribute('aria-label', `${profile.name} preview`);

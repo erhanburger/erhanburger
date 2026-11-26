@@ -50,3 +50,10 @@
 - [x] Charcoal Studio'yu `charcoal-demo/` içinde Half Pounder with Cheese ve mevcut menü fiyatlarıyla uygula.
 - [x] Görsel ve işlevsel kaliteyi masaüstü, mobil ve yatay mobil Chromium görünümlerinde kontrol et.
 - [ ] Netlify önizlemesindeki uygulamayı kullanıcı onayına sun. Diğer ürünlerin görsellerine ve canlı site entegrasyonuna ayrı onayla geç.
+
+## Half Pounder animasyonları
+
+- [x] Gerçek reklam çekimlerini, sos sıkma yakın planlarını ve malzeme düşüşünü referans al.
+- [x] Yedi ayrı şişeyi, sos dokularını ve malzemeye göre değişen düşüş, temas ve yerleşme hareketlerini uygula.
+- [x] Görsel ve işlevsel Chromium kontrollerini tamamla.
+- [ ] Netlify önizlemesini kullanıcıyla değerlendir. Sonraki ürünlere ayrı onayla geç.
