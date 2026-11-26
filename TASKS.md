@@ -72,3 +72,12 @@
 - [x] Masaüstü ve mobilde her ürünün açılmasını, doğru fiyatı, görselleri, zorunlu seçimleri ve sepeti doğrula.
 - [x] Geçici görseller için ürün bazlı `VISUAL_BACKLOG.md` listesini kaydet.
 - [ ] Netlify önizlemesini kullanıcıyla değerlendir. Son görsel iyileştirmelerini site tamamlandıktan sonra ele al.
+
+## Claude devralması
+
+- [x] `claude-burger-builder` dalını `burger-builder` `f7c06c4` üzerinden aç.
+- [x] Proje dosyalarını, kodu, görselleri, ürün yapılandırmasını ve menüyü incele.
+- [x] Masaüstü ve mobil Chromium emülasyonunda ilk tarayıcı testini yap.
+- [x] `CLAUDE.md` kalıcı talimatlarını oluştur.
+- [ ] GitHub erişimi düzeldiğinde `claude-burger-builder` dalını push et.
+- [ ] Kullanıcının çalışma organizasyonu ve ilk geliştirme kapsamı onayını al.

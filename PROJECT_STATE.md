@@ -78,3 +78,10 @@
 
 - Kullanıcı, bağımsız tarayıcı incelemesi, bulguların ekip içinde değerlendirilmesi, uygulama ve bağımsız yeniden test sırasını kalıcı olarak onayladı. İki müşteri rolü tasarım ve uygulamadan bağımsızdır. Her görev en fazla üç iyileştirme turu kullanır.
 - Uzman rol dağılımı, müşteri senaryoları ve doğrulama ilkeleri `AGENTS.md` dosyasında. İnceleme, teknik hatalarla birlikte menü mantığını, mobil gezinmeyi, görsel tutarlılığı ve hazırlama hareketlerinin ürüne uygunluğunu kapsar.
+
+## Claude devralması (26 Kasım 2026)
+
+- Kullanıcı projeyi Claude'a devretti. Claude `burger-builder` dalının `f7c06c4` commit'inden `claude-burger-builder` dalını açtı ve yalnızca bu dalda çalışır. `main` ve `burger-builder` değişmez. Kalıcı Claude talimatları `CLAUDE.md` dosyasında.
+- İlk incelemede uygulama kodu ve tasarım değiştirilmedi. Yerel statik sunucuda Chromium 1440×900 ve iPhone 13 emülasyonunda menü (46 ürün), Half Pounder fiyatı (£6.90 → £7.20 Extra cheese ile), sepet, Meal Deal ve Chicken Shish zorunlu seçimleri, klavye sırası ve azaltılmış hareket kontrol edildi. Konsol hatası ve yatay taşma bulunmadı. Müşteri metninde Türkçe veya `£` dışı para birimi bulunmadı.
+- Tespit edilen açıklar: Product Builder sepeti ana sitenin WhatsApp sipariş sepetine bağlı değil; bilinmeyen `?product=` değeri sessizce Half Pounder açıyor; mobilde seçenekler ilk ekranın altında kalıyor; sepette adet değiştirme yok; Chicken Shish sahnesi tabak yerine burger yığını gibi görünüyor; çeyrek pounder ürünleri aynı menü fotoğrafını paylaşıyor; onion rings ve mozzarella sticks kaynakta yok.
+- Bu oturumdan GitHub push erişimi ve Netlify önizlemesi engelli. Commit'ler yerelde tutuldu.
