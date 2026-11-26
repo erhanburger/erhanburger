@@ -64,3 +64,11 @@
 - [x] Half Pounder seçenek adlarını kaynakla eşleştir, ek malzeme ve soslara erişimi iyileştir.
 - [x] 1440×900 masaüstü ve 390×844 dokunmatik emülasyonda 23 seçeneği tek tek seç, £6.90–£9.80 fiyatı ve sepetteki 23 etiketi doğrula. Örnek malzeme ve sos animasyonlarını kontrol et.
 - [ ] Yetkili erişimle canlı menü ve Netlify önizlemesini doğrula.
+
+## 46 ürünlü menü önizlemesi
+
+- [x] Yedi çalışma grubunun ürünlerini ve sipariş kurallarını ana dalın menü koduyla karşılaştır.
+- [x] 46 ürünün tamamını menüye, ortak sepete ve ürün animasyon profillerine bağla.
+- [x] Masaüstü ve mobilde her ürünün açılmasını, doğru fiyatı, görselleri, zorunlu seçimleri ve sepeti doğrula.
+- [x] Geçici görseller için ürün bazlı `VISUAL_BACKLOG.md` listesini kaydet.
+- [ ] Netlify önizlemesini kullanıcıyla değerlendir. Son görsel iyileştirmelerini site tamamlandıktan sonra ele al.
