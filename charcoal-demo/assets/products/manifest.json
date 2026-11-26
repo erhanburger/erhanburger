@@ -1,0 +1,272 @@
+[
+  {
+    "file": "burger-quarter.webp",
+    "source": "IMG_0351.png",
+    "type": "burger",
+    "keying": "native alpha",
+    "quality_verdict": "clean",
+    "webp_quality": 82,
+    "bytes": 50930,
+    "notes": "Source has real alpha. Used for Quarter beef and (currently) veggie products."
+  },
+  {
+    "file": "burger-half.webp",
+    "source": "IMG_0352.png",
+    "type": "burger",
+    "keying": "native alpha",
+    "quality_verdict": "clean",
+    "webp_quality": 82,
+    "bytes": 62452,
+    "notes": "Source has real alpha. Double patty."
+  },
+  {
+    "file": "burger-veggie.webp",
+    "source": "IMG_0354.png",
+    "type": "burger",
+    "keying": "flood-fill off-white",
+    "quality_verdict": "usable",
+    "webp_quality": 82,
+    "bytes": 67764,
+    "notes": "Genuine veggie burger photo (unused by catalogue today). Soft grey ground shadow removed with background."
+  },
+  {
+    "file": "chicken-burger.webp",
+    "source": "IMG_0350.png",
+    "type": "burger",
+    "keying": "checkerboard tones",
+    "quality_verdict": "poor",
+    "webp_quality": 82,
+    "bytes": 48604,
+    "notes": "Splash/explosion shot, not a plain 3/4 hero. Loose crumbs/sauce debris removed where detached; scale differs visually from other burgers."
+  },
+  {
+    "file": "hot-dog.webp",
+    "source": "IMG_0353.png",
+    "type": "hotdog",
+    "keying": "native alpha",
+    "quality_verdict": "clean",
+    "webp_quality": 82,
+    "bytes": 36586,
+    "notes": "Source has real alpha. Also serves Deal 5 (hot dog meal) which has no combo photo."
+  },
+  {
+    "file": "halloumi-sandwich.webp",
+    "source": "IMG_0355.jpeg",
+    "type": "photo",
+    "keying": "none (full photo, cover-cropped)",
+    "quality_verdict": "poor \u2013 needs new photo",
+    "webp_quality": 82,
+    "bytes": 74908,
+    "notes": "Overhead food-styling photo with table/foliage background; cannot be cut out. Square crop only, opaque."
+  },
+  {
+    "file": "chips.webp",
+    "source": "IMG_0356.jpeg",
+    "type": "chips",
+    "keying": "flood-fill white + grey shadow + interior gaps",
+    "quality_verdict": "usable",
+    "webp_quality": 82,
+    "bytes": 22970,
+    "notes": "White JPEG, gaps between chips keyed; faint jagged grey shadow remnant under the pile (visible on dark)."
+  },
+  {
+    "file": "drink-pepsi.webp",
+    "source": "IMG_0357.png",
+    "type": "can",
+    "keying": "checkerboard tones",
+    "quality_verdict": "clean",
+    "webp_quality": 82,
+    "bytes": 35774,
+    "notes": ""
+  },
+  {
+    "file": "drink-coke-classic.webp",
+    "source": "IMG_0358.jpeg",
+    "type": "can",
+    "keying": "flood-fill white",
+    "quality_verdict": "clean",
+    "webp_quality": 82,
+    "bytes": 23758,
+    "notes": "Tall crop (480x608); small source."
+  },
+  {
+    "file": "drink-coke-zero.webp",
+    "source": "IMG_0359.webp",
+    "type": "can",
+    "keying": "flood-fill white",
+    "quality_verdict": "clean",
+    "webp_quality": 82,
+    "bytes": 14490,
+    "notes": "Source can is small in frame so upscaled; softer than others."
+  },
+  {
+    "file": "drink-diet-coke.webp",
+    "source": "IMG_0360.png",
+    "type": "can",
+    "keying": "checkerboard tones",
+    "quality_verdict": "usable",
+    "webp_quality": 82,
+    "bytes": 28694,
+    "notes": "Silver can is close in tone to the checkerboard; check edge."
+  },
+  {
+    "file": "drink-tango.webp",
+    "source": "IMG_0361.jpeg",
+    "type": "can",
+    "keying": "flood-fill white",
+    "quality_verdict": "clean",
+    "webp_quality": 82,
+    "bytes": 19590,
+    "notes": ""
+  },
+  {
+    "file": "drink-fanta.webp",
+    "source": "IMG_0362.jpeg",
+    "type": "can",
+    "keying": "flood-fill white",
+    "quality_verdict": "clean",
+    "webp_quality": 82,
+    "bytes": 23394,
+    "notes": ""
+  },
+  {
+    "file": "drink-mirinda.webp",
+    "source": "IMG_0363.png",
+    "type": "can",
+    "keying": "native alpha",
+    "quality_verdict": "usable",
+    "webp_quality": 82,
+    "bytes": 26020,
+    "notes": "Real alpha but only 270 px source, upscaled ~2x, soft."
+  },
+  {
+    "file": "drink-red-bull.webp",
+    "source": "IMG_0364.png",
+    "type": "can",
+    "keying": "checkerboard tones",
+    "quality_verdict": "usable",
+    "webp_quality": 82,
+    "bytes": 23828,
+    "notes": "Painted checkerboard keyed; slim can crop cuts through left/right edges of the can."
+  },
+  {
+    "file": "drink-water.webp",
+    "source": "IMG_0365.webp",
+    "type": "bottle",
+    "keying": "native alpha",
+    "quality_verdict": "clean",
+    "webp_quality": 82,
+    "bytes": 14314,
+    "notes": "Real alpha, preferred water photo."
+  },
+  {
+    "file": "drink-water-0397.webp",
+    "source": "IMG_0397.jpeg",
+    "type": "bottle",
+    "keying": "flood-fill black",
+    "quality_verdict": "poor \u2013 needs new photo",
+    "webp_quality": 82,
+    "bytes": 16976,
+    "notes": "Black background JPEG; catalogue currently points at this. Pale bottle edge keyed against black leaves dark fringe; prefer drink-water.webp."
+  },
+  {
+    "file": "drink-lucozade.webp",
+    "source": "IMG_0366.jpeg",
+    "type": "bottle",
+    "keying": "flood-fill white",
+    "quality_verdict": "clean",
+    "webp_quality": 82,
+    "bytes": 26484,
+    "notes": ""
+  },
+  {
+    "file": "drink-ribena-strawberry.webp",
+    "source": "IMG_0368.webp",
+    "type": "carton",
+    "keying": "flood-fill white",
+    "quality_verdict": "clean",
+    "webp_quality": 82,
+    "bytes": 33704,
+    "notes": "Carton shown at 66% height."
+  },
+  {
+    "file": "drink-ribena-blackcurrant.webp",
+    "source": "IMG_0369.jpeg",
+    "type": "carton",
+    "keying": "flood-fill white",
+    "quality_verdict": "clean",
+    "webp_quality": 82,
+    "bytes": 25622,
+    "notes": "Carton shown at 66% height."
+  },
+  {
+    "file": "nuggets.webp",
+    "source": "IMG_0373.jpeg",
+    "type": "nuggets",
+    "keying": "checkerboard tones + grey mat removal",
+    "quality_verdict": "usable",
+    "webp_quality": 82,
+    "bytes": 27774,
+    "notes": "Checkerboard baked into JPEG, so tones are noisy; grey mat under nuggets removed; slight edge roughness."
+  },
+  {
+    "file": "deal-1.webp",
+    "source": "IMG_0401.jpeg",
+    "type": "deal",
+    "keying": "flood-fill white + light grey shadow",
+    "quality_verdict": "usable",
+    "webp_quality": 82,
+    "bytes": 74074,
+    "notes": "Quarter burger meal combo; white fries box partly merges with background."
+  },
+  {
+    "file": "deal-2.webp",
+    "source": "IMG_0405.jpeg",
+    "type": "deal",
+    "keying": "flood-fill white + light grey shadow",
+    "quality_verdict": "usable",
+    "webp_quality": 82,
+    "bytes": 57660,
+    "notes": "Half burger meal combo; mirrored vs deal-1 layout (Diet Pepsi, not Pepsi)."
+  },
+  {
+    "file": "deal-3.webp",
+    "source": "IMG_0400.jpeg",
+    "type": "deal",
+    "keying": "flood-fill white + light grey shadow",
+    "quality_verdict": "usable",
+    "webp_quality": 82,
+    "bytes": 62712,
+    "notes": "Chicken burger meal; photo is very tightly cropped (can/chips cut by frame edge)."
+  },
+  {
+    "file": "deal-4.webp",
+    "source": "IMG_0404.webp",
+    "type": "deal",
+    "keying": "flood-fill white + light grey shadow",
+    "quality_verdict": "usable",
+    "webp_quality": 82,
+    "bytes": 52616,
+    "notes": "Nuggets plate combo; white plate on white ground, keyed on plate rim shadow."
+  },
+  {
+    "file": "deal-6.webp",
+    "source": "IMG_0403.jpeg",
+    "type": "deal",
+    "keying": "flood-fill white + light grey shadow",
+    "quality_verdict": "usable",
+    "webp_quality": 82,
+    "bytes": 63002,
+    "notes": "Veggie meal deal uses a beef burger and a Coca-Cola can: wrong product, needs new photo."
+  },
+  {
+    "file": "shish-griddle.jpg",
+    "source": "IMG_0457.jpeg",
+    "type": "photo",
+    "keying": "none (downscaled raw photo)",
+    "quality_verdict": "usable",
+    "webp_quality": null,
+    "bytes": 278646,
+    "notes": "Raw griddle photo, 1600 px wide JPEG for hero/editorial use; not a cut-out."
+  }
+]
