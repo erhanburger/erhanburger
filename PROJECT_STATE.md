@@ -138,3 +138,10 @@
 - Canlı sitedeki Deal 5 fotoğrafı (`IMG_0402.jpeg`) stok fotoğraf filigranı taşıyor; lisans riski. Önizlemede hot dog fotoğrafı (`IMG_0353.png`) kullanıldı. Canlı site için kullanıcıya bildirildi.
 - Ürüne özel sunum: shish tabakta (salata solda, tavuk sağda, chips tabakta), nuggets ve chips kâğıtlı tepside, hot dog açık ekmek (arka yarı sosisin arkasında, peynir ve yumurta sosis boyunca), hot dog ve shish soslarında zikzak iz (`path: 'zigzag'`). Tabak/tepsi aksesuarları Visual Design ajanı tarafından Pillow ile üretildi (`assets/props/`).
 - Regresyon: 3 görünümde 44 ürün sepete eklendi, hata yok. Önizleme sürüm 2 yayınlandı.
+
+## Yeni aşama: Professional Design Research & Creative Redesign (26 Kasım 2026)
+
+- Kullanıcı genel tasarım kalitesini yetersiz buldu ve araştırma, bağımsız değerlendirme, en az üç farklı tasarım konsepti ve ortak tasarım sistemiyle yeniden tasarım istedi. Ana fikir (interaktif hazırlama, animasyonlu önizleme, sepet, WhatsApp siparişi), ürünler, fiyatlar ve doğrulanmış kurallar korunur. Güçlü ortak karar çıkarsa uygulama için ayrıca onay gerekmez; seçim kişisel zevke kalırsa alternatifler kullanıcıya sunulur.
+- Yeniden tasarım öncesi güvenli nokta: `92ae6d9` (Claude dalı, GitHub'a push edildi). Önizleme sürüm 3 aynı içerik.
+- Araştırma için kişisel "erhanburger (design research)" ortamı oluşturuldu (kullanıcı onayıyla); referans siteler ve görsel sunucuları izinli. Erişilebilen: Shake Shack, Five Guys, Honest Burgers, Black Bear, Burger King, Wendy's, Burger & Lobster, Byron, GBK. Erişilemeyen: McDonald's ve Behance (bot koruması, 403), Awwwards (502), Dirty Burger, Bleecker, Patty & Bun (bağlantı yok).
+- Araştırma ekibi: marka/yaratıcı yön, sipariş UX/dönüşüm, yemek görselleri/hareket, frontend/erişilebilirlik/performans. Bulgular `docs/design/` altına kalıcı olarak yazılacak.
