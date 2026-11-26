@@ -1,3 +1,11 @@
+import beefProducts from './products/beef.js';
+import chickenProducts from './products/chicken.js';
+import veggieProducts from './products/veggie.js';
+import hotDogs from './products/hot-dogs.js';
+import shishProducts from './products/shish.js';
+import sidesAndDrinks from './products/sides.js';
+import mealDeals from './products/deals.js';
+
 const pounds = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
 const ingredientImage = id => `../burger-builder-demo/assets/${id}.webp`;
 const option = (id, name, pricePence = 0, presentation = {}) => ({
@@ -17,6 +25,7 @@ const categories = [
   { id: 'chips', name: 'Chips' },
   { id: 'sides', name: 'Sides and snacks' },
   { id: 'meal-deals', name: 'Meal deals' },
+  { id: 'drinks', name: 'Drinks' },
   { id: 'other', name: 'Other items' },
 ];
 
@@ -109,26 +118,24 @@ export const halfPounder = {
   optionGroups: [includedPatties, ...toppingsGroups],
 };
 
-const kebabChilli = group('chilli', 'Chilli preference', [
-  option('chilli', 'Chilli'),
-  option('extra-chilli', 'Extra chilli'),
-  option('little-chilli', 'Little chilli'),
+const kebabChilli = { ...group('chilli', 'Chilli preference', [
+  option('chilli', 'Chilli', 0, { layerKeys: ['chilli-sauce'] }),
+  option('extra-chilli', 'Extra chilli', 0, { layerKeys: ['chilli-sauce'] }),
+  option('little-chilli', 'Little chilli', 0, { layerKeys: ['chilli-sauce'] }),
   option('no-chilli', 'No chilli'),
-  option('bbq', 'BBQ'),
-], 'text', 1);
+  option('bbq', 'BBQ', 0, { layerKeys: ['bbq-sauce'] }),
+], 'text', 1), requiredMessage: 'Please choose a chilli preference.' };
 
-const mealDrink = group('drink', 'Choose your drink', [
-  option('water', 'Water'),
-  option('coca-cola-classic', 'Coca-Cola Classic'),
-  option('coca-cola-zero', 'Coca-Cola Zero'),
-  option('diet-coke', 'Coca-Cola Diet'),
-  option('pepsi', 'Pepsi'),
-  option('tango-orange', 'Tango Orange'),
-  option('fanta-orange', 'Fanta Orange'),
-  option('mirinda-strawberry', 'Mirinda Strawberry'),
-  option('ribena-strawberry', 'Ribena Strawberry'),
-  option('ribena-blackcurrant', 'Ribena Blackcurrant'),
-], 'text', 1, 1);
+const mealDrinkIds = [
+  'water', 'coca-cola-classic', 'coca-cola-zero', 'diet-coke', 'pepsi',
+  'tango-orange', 'fanta-orange', 'mirinda-strawberry', 'ribena-strawberry', 'ribena-blackcurrant',
+];
+const drinksById = new Map(sidesAndDrinks.filter(item => item.categoryId === 'drinks')
+  .map(item => [item.id, item]));
+const mealDrink = { ...group('drink', 'Choose your drink', mealDrinkIds.map(id => {
+  const { name, image } = drinksById.get(id);
+  return option(id, name, 0, { image, layerKeys: ['drink-' + id] });
+}), 'photos', 1, 1), requiredMessage: 'Please choose a drink.' };
 
 // Mirrors the source's openCustomise item types. A new menu entry supplies
 // its own price, photo and preview profile, and may provide its own groups
@@ -138,17 +145,25 @@ export const optionPolicies = {
   kebab: [kebabChilli, ...toppingsGroups],
   meal: [
     mealDrink,
-    group('toppings', 'Toppings', [...salad, ...extras, option('cheese', 'Cheese')], 'photos'),
+    group('toppings', 'Toppings', [...salad, ...extras, option('cheese', 'Cheese', 0, { image: ingredientImage('cheese'), layerKeys: ['cheese'] })], 'photos'),
     sauceGroup,
     preferenceGroup,
   ],
   none: [],
 };
 
+const otherProducts = [
+  ...beefProducts, ...chickenProducts, ...veggieProducts, ...hotDogs,
+  ...shishProducts, ...sidesAndDrinks, ...mealDeals,
+].map(product => ({
+  ...product,
+  optionGroups: optionPolicies[product.policy],
+}));
+
 export const catalog = {
   currency: 'GBP',
   categories,
-  products: [halfPounder],
+  products: [...otherProducts, halfPounder],
 };
 
 export function formatPrice(pence) {

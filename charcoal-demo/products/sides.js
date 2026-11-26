@@ -16,10 +16,10 @@ const sides = [
   menuItem('chips', 'chips-large', 'Chips – Large', 390, '../IMG_0356.jpeg', {
     visual: 'plate', portion: 'large', components: ['chips'],
   }),
-  menuItem('sides', 'snickers', 'Snickers', 90, null),
-  menuItem('sides', 'kit-kat', 'Kit Kat', 90, null),
-  menuItem('sides', 'mars', 'Mars', 90, null),
-  menuItem('sides', 'bounty', 'Bounty', 90, null),
+  menuItem('sides', 'snickers', 'Snickers', 90, './assets/menu/snickers.webp'),
+  menuItem('sides', 'kit-kat', 'Kit Kat', 90, './assets/menu/kit-kat.webp'),
+  menuItem('sides', 'mars', 'Mars', 90, './assets/menu/mars.webp'),
+  menuItem('sides', 'bounty', 'Bounty', 90, './assets/menu/bounty.webp'),
   menuItem('other', 'halloumi-cheese-sandwich', 'Halloumi Cheese Sandwich', 550, '../IMG_0355.jpeg', {
     policy: 'burger', components: ['sandwich'],
   }),

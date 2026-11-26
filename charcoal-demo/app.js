@@ -2,10 +2,12 @@ import {
   catalog, halfPounder, createDefaultSelections, formatPrice, getUnitPricePence,
 } from './catalog.js'
 import { CharcoalScene } from './scene.js'
+import { productProfile } from './product-profiles.js'
 
 const requestedProduct = new URLSearchParams(location.search).get('product')
 const product = catalog.products.find(item => item.id === requestedProduct) ?? halfPounder
 const selected = createDefaultSelections(product)
+const preview = productProfile(product, CharcoalScene.defaultProfile)
 const options = product.optionGroups.flatMap(group => group.options)
 const groups = document.querySelector('#choice-groups')
 const navigation = document.querySelector('.category-nav')
@@ -55,15 +57,18 @@ function make(tag, className, label) {
 function renderProduct() {
   const title = document.querySelector('#product-title')
   const name = product.displayName ?? product.name
-  document.querySelector('#controls-title').textContent = product.builderTitle ?? 'Customise your order'
-  document.querySelector('.intro p').textContent = product.builderDescription ?? 'Choose your options.'
+  document.querySelector('#controls-title').textContent = product.builderTitle ?? (product.optionGroups.length ? 'Customise your order' : 'Your order')
+  document.querySelector('.intro p').textContent = product.builderDescription ?? (product.optionGroups.length ? 'Choose your options.' : product.name)
   if (title) {
-    const [first, emphasis] = product.titleLines ?? [name]
+    const splitAt = name.search(/ (?=with |– )/i)
+    const [first, emphasis] = product.titleLines ?? (splitAt < 0 ? [name] :
+      [name.slice(0, splitAt), name.slice(splitAt + 1)])
     title.replaceChildren(document.createTextNode(first))
     if (emphasis) title.append(make('em', '', emphasis))
   }
   document.title = product.name + ' · Er-Han Burger'
   navigation.replaceChildren()
+  navigation.hidden = !product.optionGroups.length
   groups.replaceChildren()
   for (const group of product.optionGroups) {
     const link = make('a', '', group.name)
@@ -83,7 +88,12 @@ function renderProduct() {
     section.setAttribute('aria-labelledby', heading.id)
     const grid = make('div', 'choice-grid')
     grid.id = group.id + '-choices'
-    section.append(heading, grid)
+    section.append(heading)
+    if (group.min) {
+      const instruction = group.max === 1 ? 'Choose one. Included in the price.' : 'Choose at least ' + group.min + '.'
+      section.append(make('p', 'group-instruction', instruction))
+    }
+    section.append(grid)
     let secondaryGrid
     if (group.featuredCount < group.options.length) {
       const details = make('details', 'choice-more')
@@ -126,7 +136,7 @@ function renderProduct() {
 
 function getSceneSelection() {
   const active = options.filter(option => selected.has(option.id))
-  const keys = new Set(product.preview?.fixedLayerKeys)
+  const keys = new Set(preview.fixedLayerKeys)
   for (const option of active) {
     for (const key of option.layerKeys ?? []) keys.add(key)
   }
@@ -163,6 +173,7 @@ function changeChoice(group, option) {
   }
   updatePriceAndControls()
   basketFeedback.textContent = ''
+  basketFeedback.classList.remove('basket-feedback--visible')
   CharcoalScene.update(getSceneSelection())
 }
 
@@ -204,7 +215,8 @@ function addToBasket() {
   const missingGroup = product.optionGroups.find(group =>
     group.options.filter(option => selected.has(option.id)).length < group.min)
   if (missingGroup) {
-    basketFeedback.textContent = 'Choose ' + missingGroup.min + ' from ' + missingGroup.name + '.'
+    basketFeedback.textContent = missingGroup.requiredMessage ?? 'Please complete ' + missingGroup.name.toLowerCase() + '.'
+    basketFeedback.classList.add('basket-feedback--visible')
     groups.querySelector('#' + CSS.escape(missingGroup.id) + ' button:not(:disabled)')?.focus()
     return
   }
@@ -232,7 +244,7 @@ renderProduct()
 updatePriceAndControls()
 renderBasket()
 CharcoalScene.init({
-  profile: { image: product.image, name: product.name, ...product.preview },
+  profile: preview,
   selection: getSceneSelection(),
 })
 document.querySelector('#replay').addEventListener('click', () => CharcoalScene.replay())

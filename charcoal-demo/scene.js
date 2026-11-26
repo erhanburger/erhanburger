@@ -84,6 +84,7 @@ export const CharcoalScene = (() => {
       image.draggable = false;
       image.dataset.layer = layer.key;
       image.classList.add('ingredient');
+      image.classList.toggle('menu-photo', Boolean(layer.menuPhoto));
       image.style.zIndex = (index + 1) * 2;
       if (reuse) claimed.add(image);
       else {
@@ -103,7 +104,7 @@ export const CharcoalScene = (() => {
     const layers = (profile.layers ?? []).filter(({ key, required }) => required || selection.has(key));
     return layers.map(layer => {
       const surface = layer.sauce ? layer.sauce.surfaceLift ?? .015 : 0;
-      const y = height + surface;
+      const y = layer.positionY ?? height + surface;
       height += layer.step;
       return { ...layer, y };
     });
@@ -161,7 +162,7 @@ export const CharcoalScene = (() => {
     image.style.setProperty('--width', `${layer.width * 100}%`);
     image.style.transformOrigin = squash !== 1 || spread !== 1 ? '50% 100%' : '';
     image.style.transform =
-      `translate3d(calc(-50% + ${(layer.offset + move) * width}px), ${-(layer.y + lift) * width}px, 0) rotate(${angle}deg) rotateY(${yaw}deg) skewX(${skew}deg) scale(${spread}, ${squash})`;
+      `translate3d(calc(-50% + ${(layer.offset + move) * width}px), ${-(layer.y + lift) * width}px, 0) rotate(${angle + (layer.restingAngle ?? 0)}deg) rotateY(${yaw}deg) skewX(${skew}deg) scale(${spread}, ${squash})`;
     paintLandingShadow(layer, image, shadow * opacity, lift);
   }
 
@@ -430,6 +431,8 @@ export const CharcoalScene = (() => {
     timings = { ...defaultTimings, ...profile.timings };
     pourDuration = timings.enter + timings.pour + timings.exit;
     selection = new Set(selected);
+    if (profile.visual) stage.dataset.visual = profile.visual;
+    else stage.removeAttribute('data-visual');
     stage.setAttribute('aria-label', `${profile.name} preview`);
     mountLayers();
     photo?.remove();
