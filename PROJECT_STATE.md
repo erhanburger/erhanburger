@@ -116,3 +116,8 @@
 - Shish sahnesinin tabak sunumu ve yumurta/marul görünürlüğü (animasyon sistemi işi).
 - Nugget adları: canlı sitede sepete "6pcs Chicken Nuggets" olarak gidiyor, önizlemede "6 Chicken Nuggets".
 - Açılış saatleri kaynakta yok; sitede gösterilmedi.
+
+## GitHub erişimi düzeldi (26 Kasım 2026)
+
+- Kullanıcı Claude GitHub App yazma iznini verdi. 6 commit `claude/erhan-burger-takeover-rhmow7` dalına push edildi ve uzakta `5d44715` doğrulandı. `main` (`c41bf50`) ve `burger-builder` (`f7c06c4`) değişmedi.
+- Sıradaki adım ayrı Claude Netlify önizlemesi `erhanburger-claude-preview`. Bu çalışma ortamı Netlify'a erişemediği için site kullanıcı tarafından panelden oluşturulur.

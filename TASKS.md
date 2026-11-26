@@ -79,7 +79,7 @@
 - [x] Proje dosyalarını, kodu, görselleri, ürün yapılandırmasını ve menüyü incele.
 - [x] Masaüstü ve mobil Chromium emülasyonunda ilk tarayıcı testini yap.
 - [x] `CLAUDE.md` kalıcı talimatlarını oluştur.
-- [ ] GitHub erişimi düzeldiğinde `claude-burger-builder` dalını push et.
+- [x] GitHub erişimi düzeldi; Claude dalı `claude/erhan-burger-takeover-rhmow7` push edildi (`5d44715`).
 - [x] Kullanıcının çalışma organizasyonu ve ilk geliştirme kapsamı onayını al.
 - [x] Sepet adetleri, sipariş notu ve WhatsApp ile sipariş.
 - [x] Bilinmeyen ürün durumu, başlık düzeltmesi, mobil ilk ekran.
@@ -87,4 +87,5 @@
 - [x] Müşteri ajanlarıyla tur 1 yeniden testi.
 - [x] Tur 2: yapışkan sipariş çubuğu ve son sipariş özeti.
 - [ ] Kullanıcı kararları: ürüne özel seçenekler, isim/saat alanı, hızlı ekleme, shish sahnesi.
-- [ ] Kullanıcı: Claude GitHub App yazma izni ve `erhanburger-claude-preview` Netlify sitesi.
+- [x] Kullanıcı: Claude GitHub App yazma izni.
+- [ ] Kullanıcı: `erhanburger-claude-preview` Netlify sitesi; ardından Claude önizlemeyi doğrular.
