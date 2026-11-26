@@ -426,7 +426,7 @@ h1, h2, h3, p { margin: 0; }
 }
 
 @media (max-width: 760px) and (max-height: 555px) {
-  :root { --stage-height: clamp(120px, 43svh, 220px); }
+  :root { --stage-height: clamp(100px, 34svh, 200px); }
   .stage { position: sticky; height: var(--stage-height); }
   .controls { height: auto; }
   .stage h1 { font-size: clamp(1.27rem, 5.1vw, 1.9rem); }

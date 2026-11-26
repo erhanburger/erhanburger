@@ -44,6 +44,12 @@ export function preloadSauceBottles(layers) {
 }
 
 function surfacePoint(layer, width, progress) {
+  if (layer.trace === 'lengthwise') {
+    return {
+      x: (layer.offset + (progress - .5) * layer.width) * width,
+      y: (layer.y + Math.sin(progress * Math.PI * 8) * .023 * layer.width) * width,
+    };
+  }
   const rotation = .55 + progress * Math.PI * 3.55;
   const radius = .47 - progress * (.403 - layer.sauce.spread * .12);
   return {

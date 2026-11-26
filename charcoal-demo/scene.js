@@ -210,6 +210,7 @@ export const CharcoalScene = (() => {
 
   function stackPressures(layers, poses) {
     const pressures = new Map();
+    if (profile.planar) return pressures;
     let load = 0;
     for (let index = layers.length - 1; index >= 0; index -= 1) {
       const { key, sauce } = layers[index];
@@ -287,7 +288,7 @@ export const CharcoalScene = (() => {
         placeWithLanding(layer, poses.get(layer.key) ?? undefined, pressures.get(layer.key));
       }
     }
-    updateStatusForPour(pouring, 'Building your burger…');
+    updateStatusForPour(pouring, profile.planar ? 'Preparing your order…' : 'Building your burger…');
   }
 
   function paintChange(elapsed, plan) {
@@ -337,7 +338,7 @@ export const CharcoalScene = (() => {
       const exit = ease(clamp((elapsed - 110) / 240));
       place(layer, { lift: exit * .12, move: -exit * .31, angle: -exit * 9, opacity: 1 - exit });
     }
-    updateStatusForPour(pouring, 'Adjusting your burger…');
+    updateStatusForPour(pouring, profile.planar ? 'Updating your selection…' : 'Adjusting your burger…');
   }
 
   function advance(now) {
@@ -398,7 +399,7 @@ export const CharcoalScene = (() => {
 
     const edited = new Set([...removed, ...added].filter(layer => !layer.sauce).map(layer => layer.key));
     const firstEdit = profile.layers.findIndex(({ key }) => edited.has(key));
-    const clearanceKeys = new Set(firstEdit < 0 ? [] : profile.layers.slice(firstEdit + 1).map(({ key }) => key));
+    const clearanceKeys = new Set(firstEdit < 0 || profile.planar ? [] : profile.layers.slice(firstEdit + 1).map(({ key }) => key));
     const additions = new Map();
     let releaseAt = 185;
     let landedAt = removed.length ? 350 : releaseAt;

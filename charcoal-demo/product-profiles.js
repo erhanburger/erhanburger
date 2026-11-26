@@ -7,16 +7,30 @@ const componentPhotos = {
   beef: { asset: sharedAssets + 'beef.webp', width: .98, step: .125, offset: 0, motion: 'patty' },
   chicken: photo('chicken', .91, .17, 'patty'),
   veggie: photo('veggie', .92, .147, 'patty'),
-  'dog-bottom': photo('roll-bottom', 1.08, .096, 'bread'),
-  sausage: photo('sausage', .99, .058, 'patty'),
-  'dog-top': photo('roll-top', 1.08, 0, 'crown'),
+  'dog-bottom': photo('dog-open-roll', 1.08, 0, 'bread'),
+  sausage: photo('dog-overhead-sausage', .91, 0, 'patty'),
   chips: photo('chips', .97),
   nugget: photo('nugget', .31, 0, 'patty'),
-  shish: photo('shish', .98, .18, 'patty'),
+  shish: photo('shish-grilled-chicken', .98, 0, 'patty'),
 };
 
-const roundClosers = new Set(['top', 'dog-top']);
-const shishSalad = new Set(['lettuce', 'tomato', 'cucumber', 'onion']);
+const shishSalad = {
+  lettuce: { width: .48, offset: .43, positionY: .29 },
+  tomato: { width: .30, offset: .48, positionY: .24 },
+  cucumber: { width: .29, offset: .35, positionY: .26 },
+  onion: { width: .30, offset: .42, positionY: .36 },
+};
+const dogToppings = {
+  cheese: { width: .54, offset: -.09, positionY: .105 },
+  'extra-cheese': { width: .51, offset: -.08, positionY: .112 },
+  egg: { width: .35, offset: .17, positionY: .10 },
+  halloumi: { width: .40, offset: -.17, positionY: .11 },
+  lettuce: { width: .48, offset: .11, positionY: .125 },
+  tomato: { width: .36, offset: -.15, positionY: .12 },
+  cucumber: { width: .32, offset: .13, positionY: .13 },
+  gherkin: { width: .30, offset: .18, positionY: .115 },
+  onion: { width: .36, offset: -.08, positionY: .15 },
+};
 const foodTypes = new Set(['burger', 'hot-dog', 'meal', 'plate']);
 
 export function productProfile(product, burgerProfile) {
@@ -29,8 +43,19 @@ export function productProfile(product, burgerProfile) {
   const shish = product.categoryId === 'shish';
   const hotDog = product.components.includes('dog-bottom');
   const withChips = product.components.includes('chips');
-  const mainOffset = meal ? -.20 : shish && withChips ? -.16 : 0;
-  const mainScale = meal ? .71 : shish && withChips ? .83 : 1;
+  const standaloneChips = product.categoryId === 'chips';
+  const mainOffset = meal ? -.20 : shish ? -.245 : 0;
+  const mainScale = meal ? .71 : 1;
+  const planar = hotDog || shish || product.visual === 'plate' || !product.components.includes('top');
+
+  function onDog(position) {
+    return {
+      width: position.width * mainScale,
+      offset: position.offset * mainScale + mainOffset,
+      positionY: position.positionY * mainScale,
+      step: 0,
+    };
+  }
   const fixedLayerKeys = [];
   const main = [];
   const accessories = [];
@@ -44,7 +69,7 @@ export function productProfile(product, burgerProfile) {
   }
 
   for (const [index, key] of product.components.entries()) {
-    if (key === 'drink') continue;
+    if (key === 'drink' || key === 'dog-top') continue;
     const component = componentPhotos[key] ?? reference.get(key);
     if (!component) continue;
     const layerKey = reference.has(key) ? key : key + '-' + index;
@@ -53,12 +78,15 @@ export function productProfile(product, burgerProfile) {
       offset: (component.offset ?? 0) * mainScale + mainOffset,
       width: component.width * mainScale, step: component.step * mainScale,
     };
-    if (roundClosers.has(key)) {
+    if (key === 'top') {
       cover = configured;
     } else if (key === 'chips') {
-      const small = product.portion === 'small';
-      const width = meal ? .46 : shish ? .52 : small ? .80 : 1.03;
-      add(accessories, { ...configured, width, positionY: 0, offset: meal ? .36 : shish ? .38 : 0 });
+      if (standaloneChips) {
+        add(accessories, { ...configured, key: 'chips-small', width: .80, positionY: 0, offset: 0 });
+        add(accessories, { ...configured, key: 'chips-large', width: 1.03, positionY: 0, offset: 0 }, false);
+      } else {
+        add(accessories, { ...configured, width: meal ? .46 : .53, positionY: 0, offset: meal ? .36 : .41 });
+      }
     } else if (key === 'nugget') {
       const row = Math.floor(nuggets / 3);
       const col = nuggets % 3;
@@ -67,9 +95,15 @@ export function productProfile(product, burgerProfile) {
         ...configured, width, offset: meal ? -.27 : (col - 1) * .30 + (row % 2) * .035,
         positionY: row * .188, restingAngle: ((nuggets++ * 17) % 29) - 14,
       });
+    } else if (key === 'shish') {
+      const width = product.name.includes('Large') ? 1.03 : .84;
+      add(main, { ...configured, width, positionY: 0, offset: -.22 });
+      add(main, { ...photo('shish-grilled-veg', width * .78), key: 'grilled-veg', offset: -.21, positionY: .15 });
     } else {
-      add(main, key === 'shish' && product.name.includes('Large') ?
-        { ...configured, width: configured.width * 1.12 } : configured);
+      const dogPosition = dogToppings[key] ?? (key === 'sausage' ?
+        { width: .91, offset: 0, positionY: .112 } :
+        key === 'dog-bottom' ? { width: 1.08, offset: 0, positionY: 0 } : null);
+      add(main, hotDog && dogPosition ? { ...configured, ...onDog(dogPosition) } : configured);
     }
   }
 
@@ -81,14 +115,25 @@ export function productProfile(product, burgerProfile) {
     });
   }
 
+  if (shish) {
+    add(main, { ...photo('shish-cabbage', .36, 0, 'leaf'), key: 'mixed-cabbage', offset: .46, positionY: .22 });
+    add(main, { ...photo('shish-long-chilli', .34), key: 'long-chilli', offset: .24, positionY: .40 });
+  }
   const represented = new Set(main.map(layer => layer.key));
   for (const layer of reference.values()) {
     if (!optionKeys.has(layer.key) || represented.has(layer.key)) continue;
-    const scale = mainScale * (hotDog && !layer.sauce ? .74 : 1);
-    add(main, {
-      ...layer, required: false, width: layer.width * scale,
-      step: layer.step * scale, offset: layer.offset * scale + mainOffset,
-    }, shish && shishSalad.has(layer.key));
+    let placement = { width: layer.width * mainScale, step: layer.step * mainScale,
+      offset: layer.offset * mainScale + mainOffset };
+    if (hotDog) {
+      const target = layer.sauce ? { width: .83, offset: 0, positionY: .21 } : dogToppings[layer.key];
+      if (target) placement = { ...onDog(target), trace: layer.sauce ? 'lengthwise' : undefined };
+    } else if (shish) {
+      placement = layer.sauce ? { width: .6, offset: -.23, positionY: .12, step: 0 } :
+        { width: layer.width * .46, offset: .34, positionY: .29, step: 0, ...shishSalad[layer.key] };
+    } else if (standaloneChips && layer.sauce) {
+      placement = { width: .63, offset: layer.offset, positionY: .14, step: 0 };
+    }
+    add(main, { ...layer, required: false, ...placement }, shish && !!shishSalad[layer.key]);
   }
   // Side dishes and a chosen drink stay beside the main during assembly.
   for (const choice of product.optionGroups.flatMap(group => group.options)) {
@@ -101,7 +146,7 @@ export function productProfile(product, burgerProfile) {
   }
   add(main, cover);
   return {
-    name: product.name, visual: product.visual, fixedLayerKeys,
+    name: product.name, visual: product.visual, fixedLayerKeys, planar,
     layers: [...accessories, ...main], closingLayerKey: cover?.key,
     timings: product.visual === 'photo' ? { drop: 360 } :
       product.visual === 'plate' ? { drop: 242, settle: 80 } : undefined,
