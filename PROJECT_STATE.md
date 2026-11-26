@@ -37,3 +37,9 @@
 - The next phase is visual design for approval. Preserve the approved Kömür Stüdyosu reference and burger imagery. User approval is required before implementing the selected design, integration or live website changes.
 - Onay için üç statik görsel yön hazırlandı. Charcoal Studio, Menu Board ve Build Counter tasarımlarının 1440×900 masaüstü ve 390×844 mobil PNG'leri `docs/burger-builder-designs/` altında. Mevcut burger ve malzeme görselleri kullanıldı. Mobil taslaklarda burger ve sepet çubuğu, kaydırılan malzeme alanını çevreler.
 - Fiyatlar tasarım örneğidir. £7.95 temel fiyat ve £1.25 ekstra dana köfte seçimi, £9.20 toplamı gösterir. Geliştirme onayından sonra gerçek menü fiyatları doğrulanacak.
+
+## Charcoal Studio uygulaması ve kalıcı Product Builder mimarisi
+
+- Kullanıcı Charcoal Studio masaüstü ve mobil tasarım yönünü onayladı. Geliştirme `charcoal-demo/` ve `burger-builder` dalıyla sınırlı. İlk uygulama ve kalite kontrol ürünü Half Pounder with Cheese. Diğer ürünlerin görselleri için ayrı onay gerekiyor.
+- Kalıcı hedef tüm Er-Han Burger menüsünü kapsayan veri odaklı Product Builder. Dana, tavuk ve sebze burgerleri, hot dog, chicken shish, nuggets, chips, onion rings, mozzarella sticks, meal deals, diğer mevcut ürünler ve soslar aynı altyapıyı kullanabilmeli.
+- Her ürün kendi veri kaydında porsiyon, pence cinsinden fiyat, seçim grupları ve kuralları, görseller ve gerektiğinde animasyon profili tanımlar. Ortak malzeme görselleri, sos animasyonları ve arayüz bileşenleri yeniden kullanılır. Desteklenen düzen ve animasyon türlerinde ürün eklemek için ortak uygulama kodu değişmez.

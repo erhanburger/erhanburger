@@ -14,3 +14,9 @@
 - Customer-facing interfaces must contain no Turkish text. Display all prices in pounds sterling (GBP) with the £ symbol. Use British English terms such as “Customise” and “Add to basket”.
 - Apply these rules to all future design and development tasks. Include them explicitly in every subagent brief and verify them during review.
 - Obtain the user's approval before implementing a proposed new interface, integrating it into the existing website or modifying the live website.
+
+## Permanent Product Builder architecture
+
+- Build a shared, data-driven Product Builder for the full Er-Han Burger menu. Support beef, chicken and veggie burgers, hot dogs, chicken shish, chicken nuggets, chips, onion rings, mozzarella sticks, meal deals and other existing products and sauces.
+- Product data defines portions, prices in integer pence, choice groups and rules, images, and optional animation profiles. Reuse approved ingredient assets, sauce animations and interface components across products. A new menu product should require catalogue data and its approved assets, with no changes to the shared builder for supported layouts and animation types.
+- Use the existing menu as the source for products, portions, ingredients and prices. Wait for user approval before generating other product imagery. Half Pounder with Cheese is the initial implementation and QA product.
