@@ -3,6 +3,7 @@ import {
 } from './catalog.js'
 import { CharcoalScene } from './scene.js'
 import { productProfile } from './product-profiles.js'
+import { readBasket, saveBasket } from './basket-storage.js'
 
 const requestedProduct = new URLSearchParams(location.search).get('product')
 const product = catalog.products.find(item => item.id === requestedProduct) ?? halfPounder
@@ -21,31 +22,7 @@ const priceTotal = document.querySelector('#basket-total')
 const priceBreakdown = document.querySelector('#price-breakdown')
 const controls = new Map()
 const optionsById = new Map(options.map(option => [option.id, option]))
-const basketKey = 'erhan_product_builder_basket_v1'
-
-function readBasket() {
-  try {
-    const records = JSON.parse(localStorage.getItem(basketKey))
-    if (!Array.isArray(records)) return []
-    return records.filter(line => line && typeof line.productId === 'string' &&
-      typeof line.name === 'string' && Number.isSafeInteger(line.unitPricePence) &&
-      line.unitPricePence >= 0 && Number.isSafeInteger(line.quantity) &&
-      line.quantity > 0 && Array.isArray(line.optionIds) && Array.isArray(line.options) &&
-      line.options.every(option => typeof option === 'string'))
-  } catch {
-    return []
-  }
-}
-
 let basket = readBasket()
-
-function saveBasket() {
-  try {
-    localStorage.setItem(basketKey, JSON.stringify(basket))
-  } catch {
-    // The in-memory basket still works when storage is unavailable.
-  }
-}
 
 function make(tag, className, label) {
   const node = document.createElement(tag)
@@ -199,7 +176,7 @@ function renderBasket() {
     remove.setAttribute('aria-label', 'Remove ' + line.name + ' from basket')
     remove.addEventListener('click', () => {
       basket = basket.filter((_, position) => position !== index)
-      saveBasket()
+      saveBasket(basket)
       renderBasket()
       const nextControl = basketItems.querySelector('.basket-remove') ?? document.querySelector('#close-basket')
       nextControl.focus()
@@ -234,7 +211,7 @@ function addToBasket() {
     optionIds,
     options: choices.map(option => option.name),
   })
-  saveBasket()
+  saveBasket(basket)
   renderBasket()
   basketFeedback.textContent = product.name + ' added to your basket.'
   basketDialog.showModal()
@@ -251,3 +228,5 @@ document.querySelector('#replay').addEventListener('click', () => CharcoalScene.
 document.querySelector('#open-basket').addEventListener('click', () => basketDialog.showModal())
 document.querySelector('#close-basket').addEventListener('click', () => basketDialog.close())
 addButton.addEventListener('click', addToBasket)
+
+if (new URLSearchParams(location.search).has('basket')) basketDialog.showModal()

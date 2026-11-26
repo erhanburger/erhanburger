@@ -64,8 +64,8 @@ export function productProfile(product, burgerProfile) {
       const col = nuggets % 3;
       const width = meal ? .54 : .285;
       add(accessories, {
-        ...configured, width, offset: meal ? -.27 : (col - 1) * .24 + (row % 2) * .045,
-        positionY: row * .135, restingAngle: ((nuggets++ * 17) % 29) - 14,
+        ...configured, width, offset: meal ? -.27 : (col - 1) * .30 + (row % 2) * .035,
+        positionY: row * .188, restingAngle: ((nuggets++ * 17) % 29) - 14,
       });
     } else {
       add(main, key === 'shish' && product.name.includes('Large') ?
@@ -95,7 +95,7 @@ export function productProfile(product, burgerProfile) {
     const key = choice.layerKeys?.find(id => id.startsWith('drink-'));
     if (!key) continue;
     add(accessories, {
-      key, asset: choice.image, width: .30, offset: .46, positionY: .39,
+      key, asset: choice.image, width: .255, offset: .57, positionY: .05,
       motion: 'slice', menuPhoto: true, step: 0,
     }, false);
   }
