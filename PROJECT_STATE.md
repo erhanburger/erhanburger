@@ -95,3 +95,19 @@
 - "Deal 1 – …" ve "Chicken Shish – …" başlıklarında ikinci satır tireyle başlamaz; tire yalnızca ekran okuyucuya okunur.
 - Mobilde dahil (değiştirilemez) seçenek grupları tek satıra iner ve sahne yüksekliği `clamp(220px, 60vw, 300px)` oldu. iPhone 13 ve Pixel 7'de ilk seçenek satırı alt sipariş çubuğunun üstünde; iPhone SE'de kısmen görünür.
 - Doğrulama: 1440×900 ve iPhone 13'te 46 ürün açılıyor, taşma ve konsol hatası yok; Egg ile 2 × £7.50 = £15.00 ve WhatsApp mesajı doğru.
+
+## Bağımsız inceleme turu 1 (26 Kasım 2026)
+
+- İki müşteri ajanı (masaüstü, mobil), bağımsız UX eleştirmeni ve QA ajanı yerel önizlemeyi test etti. QA 46 ürünün fiyatını `main` menüsüyle eşleştirdi; blocker veya major hata yok.
+- Ortak bulgular ve uygulanan en küçük iyileştirmeler (`3afe109`): sepet menü ve ürün sayfalarında ortak pencere (`basket-ui.js`); menüdeki Basket düğmesi artık ürün sayfası açmıyor; WhatsApp sonrası sepet, müşteri "Yes, I’ve sent it" diyene kadar korunur; "Keep browsing" ürünün menü kategorisine döner; çelişen seçimler (`optionConflicts`, `catalog.js`) birbirini kaldırır; zorunlu seçim hatası grubun içinde görünür ve oraya kaydırılır; yalnızca fotoğraflı ürünlerde Replay gizli; kayıtlı adetler en fazla 20; menüde ve sepette gel-al, telefon ve alerji yönlendirmesi.
+- Regresyon: masaüstü, iPhone 13 ve 844×390 yatay (azaltılmış hareket) görünümlerinde 46 ürünün tamamı sepete eklendi; taşma ve konsol hatası yok.
+
+### Kullanıcı kararı bekleyen konular
+
+- Ürüne özel seçenek listeleri: canlı sitede de shish, hot dog, veggie ve Meal Deal 4 (nuggets) burger malzemelerini (Extra cheese, Halloumi, Egg, No Veggie) sunuyor. Hangi ürünün neyi değiştirebileceği mutfak kuralıdır.
+- Chilli tercihi: canlı site "Select all that apply" diyor; turda yalnızca No chilli ile chilli seviyeleri ve seviyelerin kendi arasındaki çakışma engellendi, BBQ ile birlikte seçilebilir.
+- WhatsApp mesajına müşteri adı ve gel-al saati alanı eklenmesi.
+- Basit ürünler (içecek, çikolata, nuggets, chips) için menüden tek dokunuşla ekleme; menüde arama, "Popular" ve kart açıklamaları.
+- Shish sahnesinin tabak sunumu ve yumurta/marul görünürlüğü (animasyon sistemi işi).
+- Nugget adları: canlı sitede sepete "6pcs Chicken Nuggets" olarak gidiyor, önizlemede "6 Chicken Nuggets".
+- Açılış saatleri kaynakta yok; sitede gösterilmedi.

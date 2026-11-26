@@ -83,5 +83,7 @@
 - [x] Kullanıcının çalışma organizasyonu ve ilk geliştirme kapsamı onayını al.
 - [x] Sepet adetleri, sipariş notu ve WhatsApp ile sipariş.
 - [x] Bilinmeyen ürün durumu, başlık düzeltmesi, mobil ilk ekran.
-- [ ] Bağımsız müşteri, UX eleştirmeni ve QA incelemesi (tur 1) ve bulguların uygulanması.
+- [x] Bağımsız müşteri, UX eleştirmeni ve QA incelemesi (tur 1) ve bulguların uygulanması.
+- [ ] Müşteri ajanlarıyla tur 1 yeniden testi.
+- [ ] Kullanıcı kararları: ürüne özel seçenekler, isim/saat alanı, hızlı ekleme, shish sahnesi.
 - [ ] Kullanıcı: Claude GitHub App yazma izni ve `erhanburger-claude-preview` Netlify sitesi.
