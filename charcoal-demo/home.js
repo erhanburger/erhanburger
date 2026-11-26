@@ -15,6 +15,9 @@ const status = openingStatus()
 const statusNode = document.querySelector('#open-status')
 statusNode.textContent = status.text
 statusNode.dataset.open = String(status.open)
+if (!status.open && status.opensAt) {
+  document.querySelector('.hero-actions .order-button').firstChild.textContent = 'Pre-order for ' + status.opensAt + ' '
+}
 
 const halfPounder = catalog.products.find(({ id }) => id === 'half-pounder-with-cheese')
 if (halfPounder) document.querySelector('#hero-price').textContent = formatPrice(halfPounder.basePricePence)

@@ -1,6 +1,6 @@
 import { catalog, formatPrice } from './catalog.js';
 import { createBasketUI } from './basket-ui.js';
-import { orderContact } from './order-config.js';
+import { orderContact, openingStatus } from './order-config.js';
 
 const categories = document.querySelector('.menu-categories');
 const products = document.querySelector('#menu-products');
@@ -43,10 +43,13 @@ for (const { id, name } of catalog.categories) {
     image.loading = 'lazy';
     image.decoding = 'async';
     const details = make('div', 'menu-card-details');
+    if (product.popular) details.append(make('span', 'menu-card-tag', 'Popular'));
     details.append(make('span', 'menu-card-name', product.name),
       make('span', 'menu-card-price', formatPrice(product.basePricePence)));
     link.append(image, details);
     item.append(link);
+    item.dataset.search = [product.name, name, ...(product.optionGroups ?? []).flatMap(group =>
+      group.options.map(option => option.name))].join(' ').toLowerCase();
     // Items with nothing to choose are added straight from the menu.
     if (!product.optionGroups.length) {
       item.classList.add('menu-item--quick');
@@ -54,11 +57,12 @@ for (const { id, name } of catalog.categories) {
       add.type = 'button';
       add.setAttribute('aria-label', 'Add ' + product.name + ' to basket, ' + formatPrice(product.basePricePence));
       add.addEventListener('click', () => {
-        basketUI.addQuietly({ productId: product.id, name: product.name,
+        const quantity = basketUI.addQuietly({ productId: product.id, name: product.name,
           unitPricePence: product.basePricePence, optionIds: [], options: [] });
-        add.textContent = 'Added';
+        add.textContent = quantity > 1 ? quantity + ' in basket' : 'Added';
         add.classList.add('is-added');
-        setTimeout(() => { add.textContent = 'Add'; add.classList.remove('is-added'); }, 1400);
+        clearTimeout(add.reset);
+        add.reset = setTimeout(() => { add.textContent = 'Add'; add.classList.remove('is-added'); }, 1800);
       });
       item.append(add);
     }
@@ -73,3 +77,25 @@ const menuCall = document.querySelector('#menu-call');
 menuCall.href = orderContact.phoneHref;
 menuCall.textContent = orderContact.phoneLabel;
 if (new URLSearchParams(location.search).has('basket')) basketUI.open();
+
+const shop = openingStatus();
+const menuStatus = document.querySelector('#menu-status');
+menuStatus.textContent = shop.open ? shop.text + '.' : shop.text + '. You can still send an order for collection when we open.';
+menuStatus.dataset.open = String(shop.open);
+
+const search = document.querySelector('#menu-search');
+search.addEventListener('input', () => {
+  const words = search.value.toLowerCase().split(/\s+/).filter(Boolean);
+  let shown = 0;
+  for (const section of products.querySelectorAll('.menu-group')) {
+    let visible = 0;
+    for (const item of section.querySelectorAll('.menu-grid > li')) {
+      const match = words.every(word => item.dataset.search.includes(word));
+      item.hidden = !match;
+      if (match) visible++;
+    }
+    section.hidden = !visible;
+    shown += visible;
+  }
+  document.querySelector('#menu-no-results').hidden = shown > 0;
+});

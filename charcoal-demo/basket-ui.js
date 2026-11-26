@@ -3,7 +3,7 @@
 // confirms that they sent the WhatsApp message.
 import { formatPrice } from './catalog.js'
 import { readBasket, saveBasket, maxQuantity, readLastOrder, saveLastOrder } from './basket-storage.js'
-import { orderContact } from './order-config.js'
+import { orderContact, openingStatus } from './order-config.js'
 
 function make(tag, className, label) {
   const node = document.createElement(tag)
@@ -24,6 +24,7 @@ export const basketDialogMarkup = `
       <input id="order-name" type="text" maxlength="40" autocomplete="given-name" placeholder="So we know who it’s for">
       <label for="order-note">Order notes <span>(optional)</span></label>
       <textarea id="order-note" rows="2" maxlength="300" placeholder="For example, extra napkins or no salt on chips"></textarea>
+      <p class="checkout-closed" id="checkout-closed" hidden></p>
       <p class="checkout-hint">Collection only. Your order opens in WhatsApp for you to send, and we confirm it there. Allergies or dietary needs? Please call us before ordering.</p>
     </div>
     <div class="basket-pay">
@@ -184,6 +185,8 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
       message += '\n'
     }
     message += rule + '\n*TOTAL:  ' + formatPrice(total()) + '*\n' + rule
+    const shop = openingStatus()
+    if (!shop.open && shop.opensAt) message += '\n\n🕚 *Collection:* when you open (' + shop.opensAt + ')'
     if (text) message += '\n\n📝 *Note:* ' + text
     const who = nameField.value.trim()
     if (who) message = message.replace('\n' + rule, '\n👤 *Name:* ' + who + '\n' + rule)
@@ -237,7 +240,15 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
   })
   $('#close-basket').addEventListener('click', () => dialog.close())
 
+  function showOpeningNotice() {
+    const shop = openingStatus()
+    const notice = $('#checkout-closed')
+    notice.hidden = shop.open
+    if (!shop.open) notice.textContent = 'We’re closed now. Send your order and we’ll confirm it for collection when we open at ' + shop.opensAt + '.'
+  }
+
   function open() {
+    showOpeningNotice()
     basket = readBasket()
     status.textContent = ''
     keepBrowsing.textContent = 'Keep browsing'
@@ -267,7 +278,9 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
     merge(line)
     render()
     status.textContent = ''
-    quietStatus.textContent = line.name + ' added to your basket.'
+    const quantity = basket.find(item => item.productId === line.productId && !item.optionIds.length)?.quantity ?? 1
+    quietStatus.textContent = line.name + ' added. ' + quantity + ' in your basket.'
+    return quantity
   }
 
   window.addEventListener('pageshow', () => {

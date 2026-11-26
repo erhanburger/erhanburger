@@ -20,7 +20,13 @@
   <main class="menu">
     <h1>Menu</h1>
     <p class="menu-service">Collection only. Build your order here and send it to us on WhatsApp, or call <a id="menu-call"></a>.</p>
+    <p class="menu-status" id="menu-status"></p>
+    <div class="menu-search">
+      <label for="menu-search">Search the menu</label>
+      <input id="menu-search" type="search" placeholder="For example, nuggets, cheese or Pepsi" autocomplete="off">
+    </div>
     <nav class="menu-categories" aria-label="Menu categories"></nav>
+    <p class="menu-no-results" id="menu-no-results" hidden>No items match your search.</p>
     <div id="menu-products"></div>
     <noscript><p>Enable JavaScript to view the menu.</p></noscript>
   </main>

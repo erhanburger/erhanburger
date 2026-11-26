@@ -591,3 +591,16 @@ a.order-button { text-decoration: none; }
   font: inherit;
   font-size: max(16px, .9rem);
 }
+.checkout-closed { padding: 10px 12px; border-left: 3px solid #f0a46a; border-radius: 4px; background: #3a2416; color: #ffd9bd; font-size: .86rem; }
+.checkout-closed[hidden] { display: none; }
+.simple-back { display: inline-grid; align-items: center; min-height: 44px; margin-top: 8px; color: var(--accent); font-weight: 650; }
+.is-simple .category-nav, .is-simple #choice-groups { display: none; }
+.choice-card--text { min-height: 48px; justify-content: center; }
+.choice-card--text .choice-label { padding-top: 0; }
+@media (max-width: 760px) {
+  .replay { position: absolute; top: 8px; right: 8px; min-height: 40px; }
+  .stage-caption { pointer-events: none; }
+  .stage-caption .replay { pointer-events: auto; }
+  .category-nav { scroll-margin-top: calc(var(--stage-height) + 16px); }
+  .is-simple .intro p { display: block; }
+}

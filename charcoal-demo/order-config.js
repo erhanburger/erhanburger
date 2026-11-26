@@ -40,7 +40,8 @@ export function openingStatus(now = new Date()) {
     if (!next) continue
     const when = ahead === 0 ? 'today' : ahead === 1 ? 'tomorrow' :
       ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][(day + ahead) % 7]
-    return { open: false, text: 'Closed now · opens ' + clock(next.open) + ' ' + when }
+    return { open: false, text: 'Closed now · opens ' + clock(next.open) + ' ' + when,
+      opensAt: clock(next.open) + ' ' + when }
   }
   return { open: false, text: 'Closed now' }
 }

@@ -6,21 +6,21 @@ function menuItem(categoryId, id, name, basePricePence, image, presentation = {}
 const sides = [
   // One card per item. The menu prices 6pcs at £3.90 and 9pcs at £4.90, and
   // small chips at £2.90 and large at £3.90, so each upgrade is the difference.
-  menuItem('nuggets', 'chicken-nuggets', 'Chicken Nuggets', 390, '../IMG_0373.jpeg', {
-    visual: 'plate', policy: 'nuggets', components: Array(6).fill('nugget'),
-    aliases: { 'chicken-nuggets-6': [], 'chicken-nuggets-9': ['nuggets-9'] },
-    builderDescription: '6 pieces as standard, or make it 9.',
-  }),
-  menuItem('chips', 'chips', 'Chips', 290, '../IMG_0356.jpeg', {
+  menuItem('sides', 'chips', 'Chips', 290, '../IMG_0356.jpeg', {
     visual: 'plate', policy: 'chips', components: ['chips'],
     aliases: { 'chips-small': [], 'chips-large': ['chips-large'] },
     builderDescription: 'Regular portion as standard. Make it large, then season it.',
+  }),
+  menuItem('sides', 'chicken-nuggets', 'Chicken Nuggets', 390, '../IMG_0373.jpeg', {
+    visual: 'plate', policy: 'nuggets', components: Array(6).fill('nugget'),
+    aliases: { 'chicken-nuggets-6': [], 'chicken-nuggets-9': ['nuggets-9'] },
+    builderDescription: '6 pieces as standard, or make it 9.',
   }),
   menuItem('sides', 'snickers', 'Snickers', 90, './assets/menu/snickers.webp'),
   menuItem('sides', 'kit-kat', 'Kit Kat', 90, './assets/menu/kit-kat.webp'),
   menuItem('sides', 'mars', 'Mars', 90, './assets/menu/mars.webp'),
   menuItem('sides', 'bounty', 'Bounty', 90, './assets/menu/bounty.webp'),
-  menuItem('other', 'halloumi-cheese-sandwich', 'Halloumi Cheese Sandwich', 550, '../IMG_0355.jpeg', {
+  menuItem('hot-dogs', 'halloumi-cheese-sandwich', 'Halloumi Cheese Sandwich', 550, '../IMG_0355.jpeg', {
     policy: 'burger', components: ['sandwich'],
   }),
 ];
@@ -37,7 +37,9 @@ const drinks = [
   menuItem('drinks', 'ribena-strawberry', 'Ribena Strawberry', 150, '../IMG_0368.webp'),
   menuItem('drinks', 'ribena-blackcurrant', 'Ribena Blackcurrant', 150, '../IMG_0369.jpeg'),
   menuItem('drinks', 'lucozade-orange', 'Lucozade Orange', 190, '../IMG_0366.jpeg'),
-  menuItem('drinks', 'lucozade-original', 'Lucozade Original', 190, '../IMG_0367.jpeg'),
+  // The live site's Lucozade Original photo carries a stock-library watermark,
+  // so a neutral placeholder is shown until an approved photo is supplied.
+  menuItem('drinks', 'lucozade-original', 'Lucozade Original', 190, './assets/props/drink-placeholder.webp'),
   menuItem('drinks', 'red-bull', 'Red Bull', 230, '../IMG_0364.png'),
 ];
 

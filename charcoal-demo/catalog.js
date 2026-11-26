@@ -15,18 +15,17 @@ const option = (id, name, pricePence = 0, presentation = {}) => ({
   ...presentation,
 });
 
+// Grouped like the live menu: Meal deals, Burgers, Kebabs, Hot dogs (with the
+// halloumi sandwich), Sides & snacks and Drinks, with burgers split by type.
 const categories = [
+  { id: 'meal-deals', name: 'Meal deals' },
   { id: 'beef-burgers', name: 'Beef burgers' },
   { id: 'chicken-burgers', name: 'Chicken burgers' },
   { id: 'veggie-burgers', name: 'Veggie burgers' },
-  { id: 'hot-dogs', name: 'Hot dogs' },
-  { id: 'shish', name: 'Shish' },
-  { id: 'nuggets', name: 'Chicken nuggets' },
-  { id: 'chips', name: 'Chips' },
+  { id: 'shish', name: 'Chicken shish' },
+  { id: 'hot-dogs', name: 'Hot dogs and sandwiches' },
   { id: 'sides', name: 'Sides and snacks' },
-  { id: 'meal-deals', name: 'Meal deals' },
   { id: 'drinks', name: 'Drinks' },
-  { id: 'other', name: 'Other items' },
 ];
 
 const saladLayers = ['lettuce', 'tomato', 'cucumber', 'onion', 'gherkin'];

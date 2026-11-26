@@ -45,7 +45,14 @@ function renderProduct() {
   const title = document.querySelector('#product-title')
   const name = product.displayName ?? product.name
   document.querySelector('#controls-title').textContent = product.builderTitle ?? (product.optionGroups.length ? 'Customise your order' : 'Your order')
-  document.querySelector('.intro p').textContent = product.builderDescription ?? (product.optionGroups.length ? 'Choose your options.' : product.name)
+  const intro = document.querySelector('.intro p')
+  intro.textContent = product.builderDescription ?? (product.optionGroups.length ? 'Choose your options.' : 'Nothing to choose. Add it to your basket, or keep browsing.')
+  if (!product.optionGroups.length) {
+    document.body.classList.add('is-simple')
+    const back = make('a', 'simple-back', 'Back to ' + (catalog.categories.find(({ id }) => id === product.categoryId)?.name.toLowerCase() ?? 'the menu'))
+    back.href = './menu.html#' + product.categoryId
+    intro.after(back)
+  }
   if (title) {
     // "Deal 1 – Quarter Burger…" shows the dash only to assistive technology,
     // so the second line never starts with punctuation.
@@ -82,7 +89,9 @@ function renderProduct() {
     grid.id = group.id + '-choices'
     section.append(heading)
     if (group.min) {
-      const instruction = group.max === 1 ? 'Choose one. Included in the price.' : 'Choose at least ' + group.min + '.'
+      const free = group.options.every(({ pricePence }) => !pricePence)
+      const instruction = group.max === 1 ? (free ? 'Choose one. Included in the price.' : 'Choose one.') :
+        'Choose at least ' + group.min + '.'
       section.append(make('p', 'group-instruction', instruction))
     }
     section.append(grid)
