@@ -85,3 +85,13 @@
 - İlk incelemede uygulama kodu ve tasarım değiştirilmedi. Yerel statik sunucuda Chromium 1440×900 ve iPhone 13 emülasyonunda menü (46 ürün), Half Pounder fiyatı (£6.90 → £7.20 Extra cheese ile), sepet, Meal Deal ve Chicken Shish zorunlu seçimleri, klavye sırası ve azaltılmış hareket kontrol edildi. Konsol hatası ve yatay taşma bulunmadı. Müşteri metninde Türkçe veya `£` dışı para birimi bulunmadı.
 - Tespit edilen açıklar: Product Builder sepeti ana sitenin WhatsApp sipariş sepetine bağlı değil; bilinmeyen `?product=` değeri sessizce Half Pounder açıyor; mobilde seçenekler ilk ekranın altında kalıyor; sepette adet değiştirme yok; Chicken Shish sahnesi tabak yerine burger yığını gibi görünüyor; çeyrek pounder ürünleri aynı menü fotoğrafını paylaşıyor; onion rings ve mozzarella sticks kaynakta yok.
 - Bu oturumdan GitHub push erişimi ve Netlify önizlemesi engelli. Commit'ler yerelde tutuldu.
+- GitHub 403 araştırması: okuma çalışıyor (bağlı hesap `erhanburger`), git push ve GitHub API yazma (`create_branch`) `403 Resource not accessible by integration` döndürüyor. Sorun dal adı değil, Claude GitHub App'in depoda yazma izni olmaması. Kullanıcı ortamın tanımladığı `claude/erhan-burger-takeover-rhmow7` dalını onayladı; Claude dalı artık bu.
+- Netlify: Codex sitesi `erhanburger-preview` korunur. Claude için ayrı `erhanburger-claude-preview` sitesi önerildi (Claude dalı, build komutu yok, yayın dizini kök).
+
+## İlk geliştirme paketi (kullanıcı onayı 26 Kasım 2026)
+
+- Sepette adet artırma/azaltma (en fazla 20), sipariş notu ve ana sitedeki WhatsApp gönderimiyle aynı biçimde "Order via WhatsApp" eklendi. Numara ve kapanış satırı `charcoal-demo/order-config.js` içinde, kaynak `main` `index.html`. Gönderimden sonra sepet boşalır ve onay metni görünür; telefonla sipariş bağlantısı da var. Yalnızca gel-al (collection).
+- Bilinmeyen `?product=` değeri artık "Item not found" durumunu ve menü bağlantısını gösterir. Parametresiz adres Half Pounder açmaya devam eder.
+- "Deal 1 – …" ve "Chicken Shish – …" başlıklarında ikinci satır tireyle başlamaz; tire yalnızca ekran okuyucuya okunur.
+- Mobilde dahil (değiştirilemez) seçenek grupları tek satıra iner ve sahne yüksekliği `clamp(220px, 60vw, 300px)` oldu. iPhone 13 ve Pixel 7'de ilk seçenek satırı alt sipariş çubuğunun üstünde; iPhone SE'de kısmen görünür.
+- Doğrulama: 1440×900 ve iPhone 13'te 46 ürün açılıyor, taşma ve konsol hatası yok; Egg ile 2 × £7.50 = £15.00 ve WhatsApp mesajı doğru.

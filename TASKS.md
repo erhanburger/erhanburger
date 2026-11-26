@@ -80,4 +80,8 @@
 - [x] Masaüstü ve mobil Chromium emülasyonunda ilk tarayıcı testini yap.
 - [x] `CLAUDE.md` kalıcı talimatlarını oluştur.
 - [ ] GitHub erişimi düzeldiğinde `claude-burger-builder` dalını push et.
-- [ ] Kullanıcının çalışma organizasyonu ve ilk geliştirme kapsamı onayını al.
+- [x] Kullanıcının çalışma organizasyonu ve ilk geliştirme kapsamı onayını al.
+- [x] Sepet adetleri, sipariş notu ve WhatsApp ile sipariş.
+- [x] Bilinmeyen ürün durumu, başlık düzeltmesi, mobil ilk ekran.
+- [ ] Bağımsız müşteri, UX eleştirmeni ve QA incelemesi (tur 1) ve bulguların uygulanması.
+- [ ] Kullanıcı: Claude GitHub App yazma izni ve `erhanburger-claude-preview` Netlify sitesi.
