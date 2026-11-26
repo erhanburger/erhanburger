@@ -59,9 +59,12 @@ h1, h2, h3, p { margin: 0; }
 }
 
 .stage {
+  --heading-size: clamp(2.15rem, 4.04vw, 3.65rem);
+  --heading-top: clamp(25px, 2.5vw, 36px);
   position: sticky;
   top: 20px;
   height: var(--desktop-stage-height);
+  container-type: size;
   isolation: isolate;
   overflow: hidden;
   border: 1px solid #514235;
@@ -71,7 +74,7 @@ h1, h2, h3, p { margin: 0; }
 .stage-heading {
   position: absolute;
   z-index: 11;
-  top: clamp(25px, 2.5vw, 36px);
+  top: var(--heading-top);
   left: clamp(23px, 2.6vw, 38px);
   pointer-events: none;
 }
@@ -81,7 +84,7 @@ h1, h2, h3, p { margin: 0; }
   .stage-heading { transition: opacity 160ms ease; }
 }
 .stage h1 {
-  font: 500 clamp(2.15rem, 4.04vw, 3.65rem)/1.04 Georgia, "Times New Roman", serif;
+  font: 500 var(--heading-size)/1.04 Georgia, "Times New Roman", serif;
   letter-spacing: -.047em;
 }
 .stage h1 em { display: block; color: var(--accent); font-weight: 400; }
@@ -322,7 +325,10 @@ h1, h2, h3, p { margin: 0; }
 .visually-hidden { position: absolute; inline-size: 1px; block-size: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 @media (min-width: 761px) {
-  .stage[data-tall="true"] .rig { width: min(52%, 360px, calc((100svh - 295px) * .85)); }
+  .stage[data-tall="true"] .rig {
+    --heading-end: calc(var(--heading-top) + var(--heading-size) * 2.08);
+    width: min(52%, 330px, calc((90.7cqh - var(--heading-end) - 14px) / 1.43));
+  }
   .intro, .category-nav, .order-footer { flex: none; }
   .order-footer { margin-top: 19px; }
   #choice-groups {
@@ -363,6 +369,7 @@ h1, h2, h3, p { margin: 0; }
   .stage-heading { top: 13px; left: 15px; }
   .stage h1 { font-size: clamp(1.35rem, 6.9vw, 2.2rem); }
   .rig { left: 61%; width: min(44%, 192px, calc(var(--stage-height) * .58)); bottom: 10.4%; }
+  .stage[data-tall="true"] .rig { left: 67%; width: min(36%, 174px, calc(var(--stage-height) * .54)); }
   .stage-caption { inset: auto auto 7px 11px; align-items: flex-start; flex-direction: column; }
   #status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .replay { min-height: 44px; padding-inline: 8px; font-size: .67rem; }
@@ -403,6 +410,7 @@ h1, h2, h3, p { margin: 0; }
 }
 
 @media (max-width: 360px) {
+  .stage[data-tall="true"] .rig { left: 69%; width: min(32%, 174px, calc(var(--stage-height) * .54)); }
   .masthead-title { display: none; }
   #open-basket { margin-inline-start: auto; }
   #toppings .choice-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
