@@ -26,6 +26,12 @@ Claude için kalıcı proje talimatları. `AGENTS.md` tüm ajanlar için geçerl
 - Fotogerçekçi yeni ürün fotoğrafları son aşamaya kalır. Geçici sunum aksesuarları (tabak, tepsi) Pillow ile yerelde üretilebilir.
 - Kimlik bilgileri, API anahtarları ve kişisel veriler depoya yazılmaz.
 
+## Tasarım kaynakları (kalıcı)
+
+- Tasarım kararları: `docs/design/PRINCIPLES.md`. Araştırma kanıtları: `docs/design/research/` (brand, ordering-ux, imagery-motion, frontend, reference-carte). Yeni tasarım işinden önce bu dosyalar okunur; araştırma tekrarlanmaz, yalnızca eksik kalan konu araştırılır.
+- Kullanıcının referansı Carte (eat.brainy.ink): etkileşim fikirleri alınır, marka, renk, yazı tipi ve görseller kopyalanmaz.
+- Önizleme katmanı sayfayı açık renkli bir body içine sarar: her sayfa kendi `body` arka planını açıkça verir.
+
 ## Müşteriye görünen dil ve para birimi
 
 - Müşteriye görünen her metin British English olur: sayfalar, menü, ürün ve malzeme adları, düğmeler, animasyon durum metinleri, bildirimler, hata mesajları, sepet ve ödeme ekranları, erişilebilir adlar (`aria-label`, `alt`) ve yedek görünümler.
