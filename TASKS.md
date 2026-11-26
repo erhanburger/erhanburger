@@ -40,3 +40,9 @@
 - [ ] Yetkili oturumdan Netlify `/charcoal-demo/` önizlemesinin `burger-builder` dalındaki demo sürümünü sunduğunu doğrula.
 - [ ] Fiziksel iOS ve Android cihazlarda yükleme, dokunmatik seçim, sos akışı ve tekrar oynatmayı kontrol et.
 - [ ] Geri bildirimlere göre sonraki geliştirme kapsamını kullanıcıyla belirle. Ana site entegrasyonu için ayrı onay al.
+
+## Yeni Burger Builder arayüzü
+
+- [x] Kalıcı British English ve GBP (£) kuralını `AGENTS.md` ve `PROJECT_STATE.md` dosyalarına yaz.
+- [x] Mevcut onaylı görsellerle üç tasarımın masaüstü ve mobil taslaklarını hazırla ve kontrol et.
+- [ ] Kullanıcının tasarım seçimini ve uygulama onayını al.

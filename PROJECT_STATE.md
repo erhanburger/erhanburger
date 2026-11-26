@@ -35,3 +35,5 @@
 - British English is required throughout the entire Er-Han Burger website, including all pages, menus, product descriptions, ingredient names, buttons, animation text, notifications, error messages, basket and checkout screens, accessible names and fallback states.
 - Customer-facing interfaces must contain no Turkish text. All prices must be displayed in GBP (£). Apply and verify these rules on every future development task and brief every subagent on them.
 - The next phase is visual design for approval. Preserve the approved Kömür Stüdyosu reference and burger imagery. User approval is required before implementing the selected design, integration or live website changes.
+- Onay için üç statik görsel yön hazırlandı. Charcoal Studio, Menu Board ve Build Counter tasarımlarının 1440×900 masaüstü ve 390×844 mobil PNG'leri `docs/burger-builder-designs/` altında. Mevcut burger ve malzeme görselleri kullanıldı. Mobil taslaklarda burger ve sepet çubuğu, kaydırılan malzeme alanını çevreler.
+- Fiyatlar tasarım örneğidir. £7.95 temel fiyat ve £1.25 ekstra dana köfte seçimi, £9.20 toplamı gösterir. Geliştirme onayından sonra gerçek menü fiyatları doğrulanacak.
