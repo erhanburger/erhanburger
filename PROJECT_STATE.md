@@ -29,3 +29,9 @@
 - GitHub'daki `ce67e94` commit'inde `charcoal-demo/index.html`, önceki bağımsız prototipin kaynakları ve 16 WebP dosyası, GLB ve üretim betiği doğrulandı. Kömür Stüdyosu HTML dosyası kayıtlı özgün sürümle aynı.
 - Netlify hedefi `https://erhanburger-preview.netlify.app/charcoal-demo/`. Kullanıcı önizleme sitesinin `burger-builder` dalına bağlı olduğunu belirtti. Yerel yol test edildi, uzaktaki otomatik dağıtım bu ortamın ağ kısıtı nedeniyle doğrulanamadı. ChatGPT Sites üzerinden yeni yayın denemesi yapılmayacak.
 - `main` ve yayındaki ana site değişmedi. Harici harcama £0. Çalışma ancak kullanıcı döndüğünde devam edecek.
+
+## Permanent customer-facing language and currency decisions
+
+- British English is required throughout the entire Er-Han Burger website, including all pages, menus, product descriptions, ingredient names, buttons, animation text, notifications, error messages, basket and checkout screens, accessible names and fallback states.
+- Customer-facing interfaces must contain no Turkish text. All prices must be displayed in GBP (£). Apply and verify these rules on every future development task and brief every subagent on them.
+- The next phase is visual design for approval. Preserve the approved Kömür Stüdyosu reference and burger imagery. User approval is required before implementing the selected design, integration or live website changes.
