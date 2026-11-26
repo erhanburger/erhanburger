@@ -20,3 +20,10 @@
 - Build a shared, data-driven Product Builder for the full Er-Han Burger menu. Support beef, chicken and veggie burgers, hot dogs, chicken shish, chicken nuggets, chips, onion rings, mozzarella sticks, meal deals and other existing products and sauces.
 - Product data defines portions, prices in integer pence, choice groups and rules, images, and optional animation profiles. Reuse approved ingredient assets, sauce animations and interface components across products. A new menu product should require catalogue data and its approved assets, with no changes to the shared builder for supported layouts and animation types.
 - Use the existing menu as the source for products, portions, ingredients and prices. Wait for user approval before generating other product imagery. Half Pounder with Cheese is the initial implementation and QA product.
+
+## Permanent independent review workflow
+
+- The Master Agent coordinates eight specialist roles: UI/UX Designer, Frontend Developer, Animation Specialist, Food Visualisation Expert, Customer Experience Agent 1, Customer Experience Agent 2, Independent UX Critic, and QA & Testing Agent. When concurrency is limited, sequence the roles or pair related delivery roles. Keep the two customer agents independent of design and implementation.
+- Begin with independent browser journeys. Customer agents select products, customise and add to the preview basket on desktop and mobile. The critic and QA review discoverability, commercial and menu logic, accessibility, realism, motion and edge cases.
+- Share evidence across roles, agree the smallest verified improvements, implement on `burger-builder`, and ask independent agents to retest. Limit each development task to three improvement rounds. Verify facts against the approved menu or user instructions. Record unresolved prices, ingredients and commercial rules.
+- Match the preparation and animation to the actual product. Preserve the approved Charcoal Studio language, British English and GBP. Commit and push reviewed work as it is completed. Release or changes to the live site require separate user approval.

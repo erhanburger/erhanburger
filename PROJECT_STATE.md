@@ -73,3 +73,8 @@
 - 46 ürünün her biri 1440×900 ve 390×844 Chromium görünümlerinde menüden açıldı. Ad, fiyat, görsel yükleme ve sayfalar arası sepet doğrulandı. Altı Meal Deal ve dört Chicken Shish ürününde zorunlu seçimler test edildi. Menü ve ortak sepet 568×320 yatay mobil emülasyonda da test edildi.
 - Kaynak, patatesin ağırlığını, Meal Deal 4 nugget adedini, şiş porsiyon ağırlığını veya Half Pounder köfte adedini açıkça belirtmiyor. Sahne görselleri sunumu temsil eder. Yeni fiyat veya satın alma seçeneği eklenmedi. Canlı Netlify dağıtımı bu ortamın ağ geçidi nedeniyle doğrulanamadı.
 - 14 temsilî üründe tekrar oynatma doğrulandı. Kapsam burger, hot dog, shish, nuggets, chips, çikolata, sandviç, içecek ve üç Meal Deal sahnesini içeriyor. Sos sunulan örneklerde şişe animasyonu da doğrulandı.
+
+## Bağımsız müşteri incelemesi ve ekip çalışma yöntemi
+
+- Kullanıcı, bağımsız tarayıcı incelemesi, bulguların ekip içinde değerlendirilmesi, uygulama ve bağımsız yeniden test sırasını kalıcı olarak onayladı. İki müşteri rolü tasarım ve uygulamadan bağımsızdır. Her görev en fazla üç iyileştirme turu kullanır.
+- Uzman rol dağılımı, müşteri senaryoları ve doğrulama ilkeleri `AGENTS.md` dosyasında. İnceleme, teknik hatalarla birlikte menü mantığını, mobil gezinmeyi, görsel tutarlılığı ve hazırlama hareketlerinin ürüne uygunluğunu kapsar.
