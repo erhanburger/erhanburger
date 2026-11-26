@@ -21,8 +21,8 @@ const roundClosers = new Set(['top', 'dog-top']);
 // Serving layouts for products that are not stacked like a burger. Positions are
 // fractions of the rig width: offset is horizontal, positionY is height above the
 // surface. Earlier entries sit further back.
-const plate = { key: 'plate', asset: props + 'plate.webp', width: 1.34, offset: 0, positionY: -.035, step: 0, motion: 'slice' };
-const tray = { key: 'tray', asset: props + 'tray.webp', width: 1.22, offset: 0, positionY: -.03, step: 0, motion: 'slice' };
+const plate = { key: 'plate', asset: props + 'plate.webp', width: 1.34, offset: 0, positionY: -.035, step: 0, motion: 'plate' };
+const tray = { key: 'tray', asset: props + 'tray.webp', width: 1.22, offset: 0, positionY: -.03, step: 0, motion: 'tray' };
 const shishSaladLayout = {
   lettuce: { offset: -.27, positionY: .095, width: .50 },
   onion: { offset: -.36, positionY: .13, width: .30 },
@@ -32,9 +32,9 @@ const shishSaladLayout = {
 };
 // Fillings on an open hot dog lie along the sausage instead of covering it.
 const openRoll = {
-  cheese: { width: .50, offset: -.14, positionY: .075 },
-  'extra-cheese': { width: .44, offset: -.10, positionY: .08 },
-  egg: { width: .36, offset: .19, positionY: .085 },
+  cheese: { width: .50, offset: -.14, positionY: .075, motion: 'drape' },
+  'extra-cheese': { width: .44, offset: -.10, positionY: .08, motion: 'drape' },
+  egg: { width: .36, offset: .19, positionY: .085, motion: 'yolk' },
   halloumi: { width: .40, offset: -.02, positionY: .09 },
 };
 const nuggetSpots = [
@@ -81,22 +81,22 @@ export function productProfile(product, burgerProfile) {
     };
     if (roundClosers.has(key) && hotDog && !meal) {
       // An open roll seen from slightly above: the far half stands behind the sausage.
-      add(accessories, { ...configured, offset: .015, positionY: .14, width: configured.width * .97, step: 0 });
+      add(accessories, { ...configured, motion: 'roll', offset: .015, positionY: .14, width: configured.width * .97, step: 0 });
     } else if (roundClosers.has(key)) {
       cover = configured;
     } else if (key === 'chips' && optionKeys.has('chips-large')) {
       // Chips sold on their own: the portion choice swaps the regular and large serving.
       add(accessories, tray);
-      add(accessories, { ...configured, key: 'chips-regular', width: .78, positionY: .06, offset: 0 }, false);
-      add(accessories, { ...configured, key: 'chips-large', width: .98, positionY: .05, offset: 0 }, false);
+      add(accessories, { ...configured, key: 'chips-regular', motion: 'chips', width: .78, positionY: .06, offset: 0 }, false);
+      add(accessories, { ...configured, key: 'chips-large', motion: 'chips', width: .98, positionY: .05, offset: 0 }, false);
     } else if (key === 'chips') {
       const width = meal ? .46 : shish ? .52 : 1.03;
-      if (shish) add(main, { ...configured, width: .40, positionY: .095, offset: .37, step: 0 });
-      else add(accessories, { ...configured, width, positionY: 0, offset: meal ? .36 : 0 });
+      if (shish) add(main, { ...configured, motion: 'chips', width: .40, positionY: .095, offset: .37, step: 0 });
+      else add(accessories, { ...configured, motion: meal ? configured.motion : 'chips', width, positionY: 0, offset: meal ? .36 : 0 });
     } else if (key === 'nugget' && !meal) {
       if (!nuggets) add(accessories, tray);
       const [x, y, turn] = nuggetSpots[nuggets++];
-      add(accessories, { ...configured, width: .30, offset: x, positionY: y, restingAngle: turn });
+      add(accessories, { ...configured, motion: 'nugget', width: .30, offset: x, positionY: y, restingAngle: turn });
     } else if (key === 'nugget') {
       const row = Math.floor(nuggets / 3);
       const col = nuggets % 3;
@@ -113,10 +113,12 @@ export function productProfile(product, burgerProfile) {
           main.unshift(plate)
           fixedLayerKeys.push(plate.key)
         }
-        add(main, { ...configured, width: large ? .62 : .56, offset: withChips ? .08 : .2, positionY: .07, step: 0 })
+        add(main, { ...configured, motion: 'grill', width: large ? .62 : .56, offset: withChips ? .08 : .2, positionY: .07, step: 0 })
         continue
       }
-      add(main, hotDog && !meal && openRoll[key] ? { ...configured, ...openRoll[key], step: 0 } : configured);
+      const hotDogMotion = hotDog && !meal ? { dog: { 'dog-bottom': 'roll', sausage: 'sausage' }[key] } : {};
+      add(main, hotDog && !meal && openRoll[key] ? { ...configured, ...openRoll[key], step: 0 } :
+        hotDogMotion.dog ? { ...configured, motion: hotDogMotion.dog } : configured);
     }
   }
 
@@ -125,7 +127,7 @@ export function productProfile(product, burgerProfile) {
     for (let extra = 0; extra < 3; extra++) {
       const [x, y, turn] = nuggetSpots[6 + extra]
       add(accessories, {
-        ...componentPhotos.nugget, key: 'nuggets-extra-' + extra, width: .30,
+        ...componentPhotos.nugget, motion: 'nugget', key: 'nuggets-extra-' + extra, width: .30,
         offset: x, positionY: y, restingAngle: turn,
       }, false)
     }
@@ -143,7 +145,7 @@ export function productProfile(product, burgerProfile) {
   for (const layer of reference.values()) {
     if (!optionKeys.has(layer.key) || represented.has(layer.key)) continue;
     const scale = mainScale * (hotDog && !layer.sauce ? .74 : 1);
-    const placed = shish && shishSaladLayout[layer.key] ? { ...shishSaladLayout[layer.key], step: 0 } :
+    const placed = shish && shishSaladLayout[layer.key] ? { ...shishSaladLayout[layer.key], motion: 'salad', step: 0 } :
       shish && layer.sauce ? { offset: withChips ? .05 : .2, positionY: .15, width: .50, path: 'zigzag' } :
       hotDog && !meal && layer.sauce ? { offset: 0, positionY: .105, width: .80, path: 'zigzag' } :
       hotDog && !meal && openRoll[layer.key] ? { ...openRoll[layer.key], step: 0 } :
@@ -163,6 +165,12 @@ export function productProfile(product, burgerProfile) {
     }, false);
   }
   add(main, cover);
+  if (shish) {
+    // Plate, then salad, then grilled chicken, then chips, then sauce.
+    const rank = layer => layer.key === 'plate' ? 0 : layer.sauce ? 4 : layer.key.startsWith('shish') ? 2 :
+      layer.key.startsWith('chips') ? 3 : 1;
+    main.sort((a, b) => rank(a) - rank(b));
+  }
   return {
     name: product.name, visual: product.visual, fixedLayerKeys,
     layers: [...accessories, ...main], closingLayerKey: cover?.key,
