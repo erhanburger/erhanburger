@@ -26,7 +26,7 @@ const salad = [
   option('tomato', 'Tomato', 0, { image: ingredientImage('tomato'), layerKeys: ['tomato'] }),
   option('cucumber', 'Cucumber', 0, { image: ingredientImage('cucumber'), layerKeys: ['cucumber'] }),
   option('onion', 'Onion', 0, { image: ingredientImage('onion'), layerKeys: ['onion'] }),
-  option('gherkin', 'Gherkins', 0, { image: ingredientImage('pickle'), layerKeys: ['gherkin'] }),
+  option('gherkin', 'Pickle (gherkin)', 0, { image: ingredientImage('pickle'), layerKeys: ['gherkin'] }),
   option('all-salad', 'All salad', 0, { layerKeys: saladLayers }),
 ];
 
@@ -35,7 +35,7 @@ const extras = [
     image: ingredientImage('cheese'),
     layerKeys: ['extra-cheese'],
   }),
-  option('halloumi', 'Halloumi (two pieces)', 200, {
+  option('halloumi', 'Halloumi × 2', 200, {
     image: './assets/halloumi.webp', layerKeys: ['halloumi'],
   }),
   option('egg', 'Egg', 60, { image: './assets/egg.webp', layerKeys: ['egg'] }),
@@ -43,7 +43,7 @@ const extras = [
 
 const preferences = [
   option('plain', 'Plain', 0, { removeLayerKeys: saladLayers }),
-  option('no-salad', 'No salad', 0, { removeLayerKeys: saladLayers }),
+  option('no-salad', 'No Veggie'),
   option('no-onion', 'No onion', 0, { removeLayerKeys: ['onion'] }),
   option('no-pepper', 'No pepper'),
   option('no-cheese', 'No cheese', 0, { removeLayerKeys: ['cheese'] }),
@@ -53,10 +53,10 @@ const sauces = [
   option('burger-sauce', 'Burger sauce', 0, { image: ingredientImage('burger-sauce'), layerKeys: ['burger-sauce'] }),
   option('ketchup', 'Ketchup', 0, { image: ingredientImage('ketchup'), layerKeys: ['ketchup'] }),
   option('mayo', 'Mayonnaise', 0, { image: ingredientImage('mayo'), layerKeys: ['mayo'] }),
-  option('chilli-sauce', 'Chilli sauce', 0, { layerKeys: ['chilli-sauce'] }),
-  option('garlic-mayo', 'Garlic mayonnaise', 0, { layerKeys: ['garlic-mayo'] }),
-  option('bbq-sauce', 'BBQ sauce', 0, { layerKeys: ['bbq-sauce'] }),
-  option('mustard', 'Mustard', 0, { layerKeys: ['mustard'] }),
+  option('chilli-sauce', 'Chilli sauce', 0, { image: './assets/sauces/chilli-sauce.webp', layerKeys: ['chilli-sauce'] }),
+  option('garlic-mayo', 'Garlic mayonnaise', 0, { image: './assets/sauces/garlic-mayo.webp', layerKeys: ['garlic-mayo'] }),
+  option('bbq-sauce', 'BBQ sauce', 0, { image: './assets/sauces/bbq-sauce.webp', layerKeys: ['bbq-sauce'] }),
+  option('mustard', 'Mustard', 0, { image: './assets/sauces/mustard.webp', layerKeys: ['mustard'] }),
   option('salt', 'Salt'),
   option('vinegar', 'Vinegar'),
 ];
@@ -121,7 +121,7 @@ const mealDrink = group('drink', 'Choose your drink', [
   option('water', 'Water'),
   option('coca-cola-classic', 'Coca-Cola Classic'),
   option('coca-cola-zero', 'Coca-Cola Zero'),
-  option('diet-coke', 'Diet Coke'),
+  option('diet-coke', 'Coca-Cola Diet'),
   option('pepsi', 'Pepsi'),
   option('tango-orange', 'Tango Orange'),
   option('fanta-orange', 'Fanta Orange'),

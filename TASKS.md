@@ -57,3 +57,10 @@
 - [x] Yedi ayrı şişeyi, sos dokularını ve malzemeye göre değişen düşüş, temas ve yerleşme hareketlerini uygula.
 - [x] Görsel ve işlevsel Chromium kontrollerini tamamla.
 - [ ] Netlify önizlemesini kullanıcıyla değerlendir. Sonraki ürünlere ayrı onayla geç.
+
+## Half Pounder menü uyumu
+
+- [x] Ana daldaki sipariş sayfasının açılır bölümlerini ürün türlerine göre denetle ve içecek kurallarını kaydet.
+- [x] Half Pounder seçenek adlarını kaynakla eşleştir, ek malzeme ve soslara erişimi iyileştir.
+- [x] 1440×900 masaüstü ve 390×844 dokunmatik emülasyonda 23 seçeneği tek tek seç, £6.90–£9.80 fiyatı ve sepetteki 23 etiketi doğrula. Örnek malzeme ve sos animasyonlarını kontrol et.
+- [ ] Yetkili erişimle canlı menü ve Netlify önizlemesini doğrula.

@@ -72,6 +72,8 @@ function renderProduct() {
     link.addEventListener('click', () => {
       navigation.querySelector('[aria-current]')?.removeAttribute('aria-current')
       link.setAttribute('aria-current', 'location')
+      const disclosure = document.getElementById(group.id)?.querySelector('details')
+      if (disclosure) disclosure.open = true
     })
     navigation.append(link)
     const section = make('section', 'choice-group')
@@ -85,7 +87,8 @@ function renderProduct() {
     let secondaryGrid
     if (group.featuredCount < group.options.length) {
       const details = make('details', 'choice-more')
-      const summary = make('summary', '', group.moreLabel ?? 'More options')
+      const extraCount = group.options.length - group.featuredCount
+      const summary = make('summary', '', (group.moreLabel ?? 'More options') + ' (' + extraCount + ')')
       secondaryGrid = make('div', 'choice-grid')
       details.append(summary, secondaryGrid)
       section.append(details)
