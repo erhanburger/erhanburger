@@ -14,14 +14,16 @@
   <header class="masthead">
     <div class="masthead-inner">
       <a class="wordmark" href="./menu.html">Er-Han <span>Burger</span></a>
-      <a class="basket-button menu-basket" href="./?basket=1">Basket <span id="basket-count">0</span></a>
+      <button type="button" class="basket-button menu-basket" id="open-basket">Basket <span id="basket-count">0</span></button>
     </div>
   </header>
   <main class="menu">
     <h1>Menu</h1>
+    <p class="menu-service">Collection only. Build your order here and send it to us on WhatsApp, or call <a id="menu-call"></a>.</p>
     <nav class="menu-categories" aria-label="Menu categories"></nav>
     <div id="menu-products"></div>
     <noscript><p>Enable JavaScript to view the menu.</p></noscript>
   </main>
+  <dialog id="basket-dialog" class="basket-dialog" aria-labelledby="basket-heading"></dialog>
 </body>
 </html>

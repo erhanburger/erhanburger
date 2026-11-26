@@ -1,4 +1,5 @@
 const key = 'erhan_product_builder_basket_v1';
+export const maxQuantity = 20;
 
 export function readBasket() {
   try {
@@ -8,7 +9,8 @@ export function readBasket() {
       typeof line.name === 'string' && Number.isSafeInteger(line.unitPricePence) &&
       line.unitPricePence >= 0 && Number.isSafeInteger(line.quantity) &&
       line.quantity > 0 && Array.isArray(line.optionIds) && Array.isArray(line.options) &&
-      line.options.every(option => typeof option === 'string'));
+      line.options.every(option => typeof option === 'string'))
+      .map(line => ({ ...line, quantity: Math.min(maxQuantity, line.quantity) }));
   } catch {
     return [];
   }

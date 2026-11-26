@@ -160,6 +160,18 @@ const otherProducts = [
   optionGroups: optionPolicies[product.policy],
 }));
 
+// Choices that cannot both apply to one item. Selecting one clears the other,
+// so the kitchen never receives a self-contradicting ticket.
+const saladIds = ['lettuce', 'tomato', 'cucumber', 'onion', 'gherkin', 'all-salad']
+export const optionConflicts = [
+  ['extra-cheese', 'no-cheese'], ['cheese', 'no-cheese'],
+  ...saladIds.map(id => ['plain', id]),
+  ...saladIds.map(id => ['no-salad', id]),
+  ['onion', 'no-onion'], ['all-salad', 'no-onion'],
+  ...['chilli', 'extra-chilli', 'little-chilli'].map(id => ['no-chilli', id]),
+  ['chilli', 'extra-chilli'], ['chilli', 'little-chilli'], ['extra-chilli', 'little-chilli'],
+]
+
 export const catalog = {
   currency: 'GBP',
   categories,

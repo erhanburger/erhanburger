@@ -1,10 +1,9 @@
 import {
-  catalog, halfPounder, createDefaultSelections, formatPrice, getUnitPricePence,
+  catalog, halfPounder, optionConflicts, createDefaultSelections, formatPrice, getUnitPricePence,
 } from './catalog.js'
 import { CharcoalScene } from './scene.js'
 import { productProfile } from './product-profiles.js'
-import { readBasket, saveBasket } from './basket-storage.js'
-import { orderContact } from './order-config.js'
+import { createBasketUI } from './basket-ui.js'
 
 const requestedProduct = new URLSearchParams(location.search).get('product')
 const foundProduct = requestedProduct === null ? halfPounder :
@@ -16,20 +15,24 @@ const options = product.optionGroups.flatMap(group => group.options)
 const groups = document.querySelector('#choice-groups')
 const navigation = document.querySelector('.category-nav')
 const basketDialog = document.querySelector('#basket-dialog')
-const basketItems = document.querySelector('#basket-items')
 const basketCount = document.querySelector('#basket-count')
-const basketSubtotal = document.querySelector('#basket-subtotal')
 const basketFeedback = document.querySelector('#basket-feedback')
 const addButton = document.querySelector('#add-to-basket')
 const priceTotal = document.querySelector('#basket-total')
 const priceBreakdown = document.querySelector('#price-breakdown')
-const checkout = document.querySelector('#basket-checkout')
-const orderNote = document.querySelector('#order-note')
-const basketStatus = document.querySelector('#basket-status')
-const maxQuantity = 20
 const controls = new Map()
+const basketUI = createBasketUI({
+  dialog: basketDialog,
+  countNode: basketCount,
+  keepBrowsingHref: './menu.html' + (foundProduct ? '#' + foundProduct.categoryId : ''),
+})
 const optionsById = new Map(options.map(option => [option.id, option]))
-let basket = readBasket()
+const conflicts = new Map()
+for (const [a, b] of optionConflicts) {
+  if (!optionsById.has(a) || !optionsById.has(b)) continue
+  conflicts.set(a, [...(conflicts.get(a) ?? []), b])
+  conflicts.set(b, [...(conflicts.get(b) ?? []), a])
+}
 
 function make(tag, className, label) {
   const node = document.createElement(tag)
@@ -146,7 +149,20 @@ function updatePriceAndControls() {
     (extras ? ' + ' + formatPrice(extras) + ' extras' : '')
 }
 
+function setGroupError(group, message) {
+  const section = document.getElementById(group.id)
+  if (!section) return
+  section.querySelector('.group-error')?.remove()
+  section.toggleAttribute('data-invalid', Boolean(message))
+  if (!message) return
+  const error = make('p', 'group-error', message)
+  error.id = group.id + '-error'
+  error.setAttribute('role', 'alert')
+  section.querySelector('h3').after(error)
+}
+
 function changeChoice(group, option) {
+  const cleared = []
   if (selected.has(option.id)) {
     selected.delete(option.id)
   } else {
@@ -158,139 +174,38 @@ function changeChoice(group, option) {
       }
       selected.delete(active[0].id)
     }
+    for (const id of conflicts.get(option.id) ?? []) {
+      if (selected.delete(id)) cleared.push(optionsById.get(id).name)
+    }
     selected.add(option.id)
   }
   updatePriceAndControls()
-  basketFeedback.textContent = ''
+  setGroupError(group, '')
+  basketFeedback.textContent = cleared.length ? cleared.join(' and ') + ' removed, as it conflicts with ' + option.name + '.' : ''
   basketFeedback.classList.remove('basket-feedback--visible')
   CharcoalScene.update(getSceneSelection())
-}
-
-function renderBasket() {
-  const count = basket.reduce((total, line) => total + line.quantity, 0)
-  const total = basket.reduce((sum, line) => sum + line.quantity * line.unitPricePence, 0)
-  basketCount.textContent = String(count)
-  basketSubtotal.textContent = formatPrice(total)
-  checkout.hidden = !basket.length
-  basketItems.replaceChildren()
-  if (!basket.length) {
-    basketItems.append(make('p', 'basket-empty', 'Your basket is empty.'))
-    return
-  }
-  const list = make('ul', '')
-  for (const [index, line] of basket.entries()) {
-    const item = make('li', 'basket-item')
-    const details = make('div', 'basket-item-details')
-    details.append(make('strong', '', line.name))
-    if (line.options.length) details.append(make('p', '', line.options.join(', ')))
-    details.append(make('p', '', formatPrice(line.unitPricePence) + ' each'))
-    const amount = make('div', 'basket-item-amount')
-    const stepper = make('div', 'quantity-stepper')
-    stepper.setAttribute('role', 'group')
-    stepper.setAttribute('aria-label', 'Quantity of ' + line.name)
-    const decrease = make('button', 'quantity-button', '−')
-    decrease.type = 'button'
-    decrease.dataset.basketAction = 'decrease'
-    decrease.setAttribute('aria-label', line.quantity > 1 ? 'Decrease quantity of ' + line.name : 'Remove ' + line.name + ' from basket')
-    const quantity = make('span', 'quantity-value', String(line.quantity))
-    quantity.setAttribute('aria-label', line.quantity + ' in basket')
-    const increase = make('button', 'quantity-button', '+')
-    increase.type = 'button'
-    increase.dataset.basketAction = 'increase'
-    increase.setAttribute('aria-label', 'Increase quantity of ' + line.name)
-    increase.disabled = line.quantity >= maxQuantity
-    decrease.addEventListener('click', () => changeQuantity(index, -1, 'decrease'))
-    increase.addEventListener('click', () => changeQuantity(index, 1, 'increase'))
-    stepper.append(decrease, quantity, increase)
-    const remove = make('button', 'basket-remove', 'Remove')
-    remove.type = 'button'
-    remove.dataset.basketAction = 'remove'
-    remove.setAttribute('aria-label', 'Remove ' + line.name + ' from basket')
-    remove.addEventListener('click', () => changeQuantity(index, -line.quantity, 'remove'))
-    amount.append(make('strong', '', formatPrice(line.quantity * line.unitPricePence)), stepper, remove)
-    item.append(details, amount)
-    list.append(item)
-  }
-  basketItems.append(list)
-}
-
-function changeQuantity(index, delta, action) {
-  const line = basket[index]
-  if (!line) return
-  line.quantity = Math.min(maxQuantity, line.quantity + delta)
-  const removed = line.quantity <= 0
-  if (removed) basket.splice(index, 1)
-  saveBasket(basket)
-  renderBasket()
-  basketStatus.textContent = removed ? line.name + ' removed from your basket.' :
-    line.name + ' quantity is now ' + line.quantity + '.'
-  const rows = basketItems.querySelectorAll('.basket-item')
-  const row = rows[Math.min(index, rows.length - 1)]
-  const next = removed ? row?.querySelector('[data-basket-action="remove"]') :
-    row?.querySelector('[data-basket-action="' + action + '"]:not(:disabled)') ??
-    row?.querySelector('[data-basket-action="remove"]')
-  ;(next ?? document.querySelector('#close-basket')).focus()
-}
-
-function buildOrderMessage(note) {
-  const rule = '━'.repeat(20)
-  let message = '🍔 *ER-HAN BURGER — NEW ORDER*\n' + rule + '\n\n'
-  for (const [index, line] of basket.entries()) {
-    message += '*' + (index + 1) + '. ' + line.name + '*  x' + line.quantity + '  →  ' +
-      formatPrice(line.quantity * line.unitPricePence) + '\n'
-    for (const option of line.options) message += '   ' + option + '\n'
-    message += '\n'
-  }
-  const total = basket.reduce((sum, line) => sum + line.quantity * line.unitPricePence, 0)
-  message += rule + '\n*TOTAL:  ' + formatPrice(total) + '*\n' + rule
-  if (note) message += '\n\n📝 *Note:* ' + note
-  return message + '\n\n_' + orderContact.closingLine + '_'
-}
-
-function orderViaWhatsApp() {
-  if (!basket.length) return
-  const url = 'https://wa.me/' + orderContact.whatsappNumber + '?text=' +
-    encodeURIComponent(buildOrderMessage(orderNote.value.trim()))
-  const opened = window.open(url, '_blank')
-  if (opened) opened.opener = null
-  else location.href = url
-  basket = []
-  saveBasket(basket)
-  orderNote.value = ''
-  renderBasket()
-  basketStatus.textContent = 'WhatsApp has opened with your order. Send the message to place it, and we will confirm your collection time.'
-  basketItems.replaceChildren(make('p', 'basket-confirmation', basketStatus.textContent))
-  document.querySelector('#close-basket').focus()
 }
 
 function addToBasket() {
   const missingGroup = product.optionGroups.find(group =>
     group.options.filter(option => selected.has(option.id)).length < group.min)
   if (missingGroup) {
-    basketFeedback.textContent = missingGroup.requiredMessage ?? 'Please complete ' + missingGroup.name.toLowerCase() + '.'
-    basketFeedback.classList.add('basket-feedback--visible')
-    groups.querySelector('#' + CSS.escape(missingGroup.id) + ' button:not(:disabled)')?.focus()
+    const message = missingGroup.requiredMessage ?? 'Please complete ' + missingGroup.name.toLowerCase() + '.'
+    setGroupError(missingGroup, message)
+    const section = document.getElementById(missingGroup.id)
+    section.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+    section.querySelector('button:not(:disabled)')?.focus({ preventScroll: true })
     return
   }
   const choices = options.filter(option => selected.has(option.id) && !option.locked)
   const optionIds = choices.map(option => option.id)
-  const unitPricePence = getUnitPricePence(product, selected)
-  const existing = basket.find(line => line.productId === product.id &&
-    line.unitPricePence === unitPricePence && JSON.stringify(line.optionIds) === JSON.stringify(optionIds))
-  if (existing) existing.quantity += 1
-  else basket.push({
+  basketUI.add({
     productId: product.id,
     name: product.name,
-    unitPricePence,
-    quantity: 1,
+    unitPricePence: getUnitPricePence(product, selected),
     optionIds,
     options: choices.map(option => option.name),
   })
-  saveBasket(basket)
-  basketStatus.textContent = ''
-  renderBasket()
-  basketFeedback.textContent = product.name + ' added to your basket.'
-  basketDialog.showModal()
 }
 
 function renderNotFound() {
@@ -313,21 +228,12 @@ if (foundProduct) {
     profile: preview,
     selection: getSceneSelection(),
   })
-  document.querySelector('#replay').addEventListener('click', () => CharcoalScene.replay())
+  const replay = document.querySelector('#replay')
+  replay.hidden = preview.visual === 'photo'
+  replay.addEventListener('click', () => CharcoalScene.replay())
   addButton.addEventListener('click', addToBasket)
 } else {
   renderNotFound()
 }
-renderBasket()
-document.querySelector('#open-basket').addEventListener('click', () => {
-  basketStatus.textContent = ''
-  renderBasket()
-  basketDialog.showModal()
-})
-document.querySelector('#close-basket').addEventListener('click', () => basketDialog.close())
-document.querySelector('#order-whatsapp').addEventListener('click', orderViaWhatsApp)
-const callLink = document.querySelector('.call-link')
-callLink.href = orderContact.phoneHref
-callLink.textContent = 'Or call to order: ' + orderContact.phoneLabel
-
-if (new URLSearchParams(location.search).has('basket')) basketDialog.showModal()
+document.querySelector('#open-basket').addEventListener('click', () => basketUI.open())
+if (new URLSearchParams(location.search).has('basket')) basketUI.open()

@@ -1,5 +1,6 @@
 import { catalog, formatPrice } from './catalog.js';
-import { readBasket } from './basket-storage.js';
+import { createBasketUI } from './basket-ui.js';
+import { orderContact } from './order-config.js';
 
 const categories = document.querySelector('.menu-categories');
 const products = document.querySelector('#menu-products');
@@ -12,9 +13,6 @@ function make(tag, className, label) {
   return node;
 }
 
-function showBasketCount() {
-  basketCount.textContent = readBasket().reduce((sum, line) => sum + line.quantity, 0);
-}
 
 for (const { id, name } of catalog.categories) {
   const items = catalog.products.filter(product => product.categoryId === id);
@@ -49,6 +47,13 @@ for (const { id, name } of catalog.categories) {
   products.append(section);
 }
 
-window.addEventListener('pageshow', showBasketCount);
-window.addEventListener('storage', showBasketCount);
-showBasketCount();
+const basketUI = createBasketUI({
+  dialog: document.querySelector('#basket-dialog'),
+  countNode: basketCount,
+  onKeepBrowsing: () => document.querySelector('#open-basket').focus(),
+});
+document.querySelector('#open-basket').addEventListener('click', () => basketUI.open());
+const menuCall = document.querySelector('#menu-call');
+menuCall.href = orderContact.phoneHref;
+menuCall.textContent = orderContact.phoneLabel;
+if (new URLSearchParams(location.search).has('basket')) basketUI.open();
