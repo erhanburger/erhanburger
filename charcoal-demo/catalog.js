@@ -91,7 +91,13 @@ const sauceGroup = {
   featuredCount: 3,
   moreLabel: 'More sauces',
 };
-const preferenceGroup = group('preferences', 'Preferences', preferences);
+const preferenceGroup = {
+  ...group('preferences', 'Preferences', preferences),
+  choiceWarning: {
+    choice: 'no-cheese', withAny: ['extra-cheese', 'cheese'],
+    message: 'Check your cheese choices: you selected No cheese and added cheese.',
+  },
+};
 const toppingsGroup = {
   ...group('toppings', 'Toppings', [extras[0], salad[0], salad[4], salad[1],
     ...salad.slice(2, 4), salad[5], ...extras.slice(1)], 'photos'),
@@ -124,7 +130,12 @@ const kebabChilli = { ...group('chilli', 'Chilli preference', [
   option('little-chilli', 'Little chilli', 0, { layerKeys: ['chilli-sauce'] }),
   option('no-chilli', 'No chilli'),
   option('bbq', 'BBQ', 0, { layerKeys: ['bbq-sauce'] }),
-], 'text', 1), requiredMessage: 'Please choose a chilli preference.' };
+], 'text', 1), requiredMessage: 'Please choose a chilli preference.',
+  choiceWarning: {
+    choice: 'no-chilli', withAny: ['chilli', 'extra-chilli', 'little-chilli'],
+    message: 'Check your chilli choices: you selected No chilli and a chilli amount.',
+  },
+};
 
 const mealDrinkIds = [
   'water', 'coca-cola-classic', 'coca-cola-zero', 'diet-coke', 'pepsi',

@@ -5,7 +5,8 @@ import { CharcoalScene } from './scene.js'
 import { productProfile } from './product-profiles.js'
 import { readBasket, saveBasket } from './basket-storage.js'
 
-const requestedProduct = new URLSearchParams(location.search).get('product')
+const search = new URLSearchParams(location.search)
+const requestedProduct = search.get('product')
 const isLegacyChips = requestedProduct === 'chips-small' || requestedProduct === 'chips-large'
 const product = catalog.products.find(item => item.id === (isLegacyChips ? 'chips' : requestedProduct)) ?? halfPounder
 const selected = createDefaultSelections(product)
@@ -23,6 +24,10 @@ const addButton = document.querySelector('#add-to-basket')
 const priceTotal = document.querySelector('#basket-total')
 const priceBreakdown = document.querySelector('#price-breakdown')
 const controls = new Map()
+const choiceWarnings = new Map()
+const menuReturn = './menu.html#' + encodeURIComponent(product.categoryId)
+document.querySelector('.menu-link').href = menuReturn
+document.querySelector('.basket-continue').href = menuReturn
 const optionsById = new Map(options.map(option => [option.id, option]))
 let basket = readBasket()
 
@@ -68,6 +73,12 @@ function renderProduct() {
     const grid = make('div', 'choice-grid')
     grid.id = group.id + '-choices'
     section.append(heading)
+    if (group.choiceWarning) {
+      const warning = make('p', 'group-instruction choice-warning')
+      warning.setAttribute('role', 'status')
+      section.append(warning)
+      choiceWarnings.set(group, warning)
+    }
     if (group.instruction) section.append(make('p', 'group-instruction', group.instruction))
     if (group.min) {
       const instruction = group.max === 1 ? 'Choose one. Included in the price.' : 'Choose at least ' + group.min + '.'
@@ -129,6 +140,10 @@ function getSceneSelection() {
 function updatePriceAndControls() {
   for (const [id, button] of controls) {
     button.setAttribute('aria-pressed', String(Boolean(optionsById.get(id).locked) || selected.has(id)))
+  }
+  for (const [group, warning] of choiceWarnings) {
+    const { choice, withAny, message } = group.choiceWarning
+    warning.textContent = selected.has(choice) && withAny.some(id => selected.has(id)) ? message : ''
   }
   const total = getUnitPricePence(product, selected)
   const extras = total - product.basePricePence
@@ -232,4 +247,13 @@ document.querySelector('#open-basket').addEventListener('click', () => basketDia
 document.querySelector('#close-basket').addEventListener('click', () => basketDialog.close())
 addButton.addEventListener('click', addToBasket)
 
-if (new URLSearchParams(location.search).has('basket')) basketDialog.showModal()
+if (search.has('basket')) {
+  const menuUrl = new URL('./menu.html', location.href)
+  const referrer = document.referrer && new URL(document.referrer)
+  document.querySelector('.basket-continue').href = menuUrl.href
+  basketDialog.addEventListener('close', () => {
+    if (referrer && referrer.origin === menuUrl.origin && referrer.pathname === menuUrl.pathname) history.back()
+    else location.replace(menuUrl.href)
+  }, { once: true })
+  basketDialog.showModal()
+}

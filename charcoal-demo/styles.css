@@ -474,3 +474,5 @@ h1, h2, h3, p { margin: 0; }
   margin-top: 16px;
   text-decoration: none;
 }
+.choice-warning:empty { margin: 0; }
+.choice-warning { color: var(--accent); }
