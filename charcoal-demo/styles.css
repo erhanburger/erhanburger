@@ -604,3 +604,7 @@ a.order-button { text-decoration: none; }
   .category-nav { scroll-margin-top: calc(var(--stage-height) + 16px); }
   .is-simple .intro p { display: block; }
 }
+@media (max-width: 760px) {
+  /* Plated and open items are wide: centre them and use the stage width. */
+  .stage[data-visual="plate"] .rig, .stage[data-visual="hot-dog"] .rig { left: 50%; width: min(58%, 240px, calc(var(--stage-height) * .9)); bottom: 12%; }
+}

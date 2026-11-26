@@ -38,9 +38,9 @@ const openRoll = {
   halloumi: { width: .40, offset: -.02, positionY: .09 },
 };
 const nuggetSpots = [
-  [-.25, .12, -12], [.02, .135, 9], [.27, .12, -5],
-  [-.31, .05, 14], [-.04, .04, -8], [.22, .045, 11],
-  [-.13, .17, 4], [.14, .18, -13], [.36, .08, 7],
+  [-.26, .19, -12], [.0, .205, 9], [.26, .19, -5],
+  [-.33, .045, 14], [-.07, .03, -8], [.20, .04, 11],
+  [-.13, .27, 4], [.14, .285, -13], [.40, .11, 7],
 ];
 const shishSalad = new Set(['lettuce', 'tomato', 'cucumber', 'onion']);
 const foodTypes = new Set(['burger', 'hot-dog', 'meal', 'plate']);
@@ -96,7 +96,7 @@ export function productProfile(product, burgerProfile) {
     } else if (key === 'nugget' && !meal) {
       if (!nuggets) add(accessories, tray);
       const [x, y, turn] = nuggetSpots[nuggets++];
-      add(accessories, { ...configured, motion: 'nugget', width: .30, offset: x, positionY: y, restingAngle: turn });
+      add(accessories, { ...configured, motion: 'nugget', width: .27, offset: x, positionY: y, restingAngle: turn });
     } else if (key === 'nugget') {
       const row = Math.floor(nuggets / 3);
       const col = nuggets % 3;
@@ -127,7 +127,7 @@ export function productProfile(product, burgerProfile) {
     for (let extra = 0; extra < 3; extra++) {
       const [x, y, turn] = nuggetSpots[6 + extra]
       add(accessories, {
-        ...componentPhotos.nugget, motion: 'nugget', key: 'nuggets-extra-' + extra, width: .30,
+        ...componentPhotos.nugget, motion: 'nugget', key: 'nuggets-extra-' + extra, width: .27,
         offset: x, positionY: y, restingAngle: turn,
       }, false)
     }
