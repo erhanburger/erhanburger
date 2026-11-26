@@ -44,6 +44,15 @@ export function preloadSauceBottles(layers) {
 }
 
 function surfacePoint(layer, width, progress) {
+  if (layer.path === 'zigzag') {
+    // A squeezed line along a long item (hot dog, shish): side to side with small waves.
+    const along = -.42 + progress * .84;
+    const wave = Math.sin(progress * Math.PI * 9);
+    return {
+      x: (layer.offset + along * layer.width) * width,
+      y: (layer.y + (.07 + wave * .035) * layer.width) * width,
+    };
+  }
   const rotation = .55 + progress * Math.PI * 3.55;
   const radius = .47 - progress * (.403 - layer.sauce.spread * .12);
   return {
