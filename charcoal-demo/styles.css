@@ -468,3 +468,9 @@ h1, h2, h3, p { margin: 0; }
   .stage[data-visual="photo"] .rig { width: min(39%, 164px, var(--stage-height) * .53); }
   .basket-feedback--visible { bottom: calc(var(--footer-height) + 9px); }
 }
+.basket-continue {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 16px;
+  text-decoration: none;
+}

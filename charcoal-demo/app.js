@@ -6,8 +6,10 @@ import { productProfile } from './product-profiles.js'
 import { readBasket, saveBasket } from './basket-storage.js'
 
 const requestedProduct = new URLSearchParams(location.search).get('product')
-const product = catalog.products.find(item => item.id === requestedProduct) ?? halfPounder
+const isLegacyChips = requestedProduct === 'chips-small' || requestedProduct === 'chips-large'
+const product = catalog.products.find(item => item.id === (isLegacyChips ? 'chips' : requestedProduct)) ?? halfPounder
 const selected = createDefaultSelections(product)
+if (requestedProduct === 'chips-large') selected.add('make-it-large')
 const preview = productProfile(product, CharcoalScene.defaultProfile)
 const options = product.optionGroups.flatMap(group => group.options)
 const groups = document.querySelector('#choice-groups')
@@ -66,6 +68,7 @@ function renderProduct() {
     const grid = make('div', 'choice-grid')
     grid.id = group.id + '-choices'
     section.append(heading)
+    if (group.instruction) section.append(make('p', 'group-instruction', group.instruction))
     if (group.min) {
       const instruction = group.max === 1 ? 'Choose one. Included in the price.' : 'Choose at least ' + group.min + '.'
       section.append(make('p', 'group-instruction', instruction))

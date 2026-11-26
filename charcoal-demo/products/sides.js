@@ -10,11 +10,8 @@ const sides = [
   menuItem('nuggets', 'chicken-nuggets-9', '9 Chicken Nuggets', 490, '../IMG_0373.jpeg', {
     visual: 'plate', portionCount: 9, components: Array(9).fill('nugget'),
   }),
-  menuItem('chips', 'chips-small', 'Chips – Small', 290, '../IMG_0356.jpeg', {
-    visual: 'plate', portion: 'small', components: ['chips'],
-  }),
-  menuItem('chips', 'chips-large', 'Chips – Large', 390, '../IMG_0356.jpeg', {
-    visual: 'plate', portion: 'large', components: ['chips'],
+  menuItem('chips', 'chips', 'Chips', 290, '../IMG_0356.jpeg', {
+    policy: 'chips', visual: 'plate', portion: 'small', components: ['chips'],
   }),
   menuItem('sides', 'snickers', 'Snickers', 90, './assets/menu/snickers.webp'),
   menuItem('sides', 'kit-kat', 'Kit Kat', 90, './assets/menu/kit-kat.webp'),

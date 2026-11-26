@@ -137,6 +137,24 @@ const mealDrink = { ...group('drink', 'Choose your drink', mealDrinkIds.map(id =
   return option(id, name, 0, { image, layerKeys: ['drink-' + id] });
 }), 'photos', 1, 1), requiredMessage: 'Please choose a drink.' };
 
+// The two legacy prices are £2.90 and £3.90. Condiments are requests in this preview:
+// the menu has no chips-specific sauce availability or surcharge.
+const chipsGroups = [
+  group('size', 'Size', [
+    option('make-it-large', 'Make it large', 100, {
+      layerKeys: ['chips-large'], removeLayerKeys: ['chips-small'],
+    }),
+  ], 'text', 0, 1),
+  group('seasoning', 'Salt preference', [
+    option('salt', 'Salt'),
+    option('no-salt', 'No salt'),
+  ], 'text', 0, 1),
+  {
+    ...group('sauces', 'Sauce requests', sauces.filter(item => item.id !== 'salt' && item.id !== 'vinegar'), 'photos'),
+    instruction: 'Availability and any charge to be confirmed.',
+  },
+];
+
 // Mirrors the source's openCustomise item types. A new menu entry supplies
 // its own price, photo and preview profile, and may provide its own groups
 // for variants such as portions. Choice IDs are unique within a product.
@@ -149,6 +167,7 @@ export const optionPolicies = {
     sauceGroup,
     preferenceGroup,
   ],
+  chips: chipsGroups,
   none: [],
 };
 
