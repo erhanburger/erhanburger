@@ -88,4 +88,5 @@
 - [x] Tur 2: yapışkan sipariş çubuğu ve son sipariş özeti.
 - [ ] Kullanıcı kararları: ürüne özel seçenekler, isim/saat alanı, hızlı ekleme, shish sahnesi.
 - [x] Kullanıcı: Claude GitHub App yazma izni.
-- [ ] Kullanıcı: `erhanburger-claude-preview` Netlify sitesi; ardından Claude önizlemeyi doğrular.
+- [x] Netlify yerine claude.ai özel önizlemesi yayınlandı (`scripts/build-preview.py`).
+- [ ] Kullanıcı önizlemeyi telefonda ve masaüstünde inceler, açık kararları yanıtlar.

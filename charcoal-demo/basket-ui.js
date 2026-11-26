@@ -29,7 +29,7 @@ export const basketDialogMarkup = `
         <span>Subtotal</span>
         <strong id="basket-subtotal">£0.00</strong>
       </div>
-      <button type="button" class="order-button" id="order-whatsapp" hidden>Order via WhatsApp</button>
+      <a class="order-button" id="order-whatsapp" href="https://wa.me/" target="_blank" rel="noopener" hidden>Order via WhatsApp</a>
     </div>
     <a class="call-link" id="call-link"></a>
   </div>
@@ -80,6 +80,7 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
     subtotal.textContent = formatPrice(total())
     checkout.hidden = !basket.length
     $('#order-whatsapp').hidden = !basket.length
+    refreshOrderLink()
     items.replaceChildren()
     if (!basket.length) {
       items.append(make('p', 'basket-empty', 'Your basket is empty.'))
@@ -175,19 +176,31 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
     return message + '\n\n_' + orderContact.closingLine + '_'
   }
 
-  function orderViaWhatsApp() {
-    if (!basket.length) return
-    const url = 'https://wa.me/' + orderContact.whatsappNumber + '?text=' +
+  // A plain link opens WhatsApp in every browser, including sandboxed previews
+  // where scripted pop-ups are blocked. Its address is refreshed just before use.
+  function refreshOrderLink() {
+    $('#order-whatsapp').href = 'https://wa.me/' + orderContact.whatsappNumber + '?text=' +
       encodeURIComponent(buildOrderMessage(note.value.trim()))
-    const opened = window.open(url, '_blank')
-    if (opened) opened.opener = null
-    showSentCheck(true)
-    status.textContent = 'WhatsApp has opened with your order. Send the message, then confirm here.'
-    $('#confirm-sent').focus()
-    if (!opened) location.href = url
+  }
+
+  function orderViaWhatsApp(event) {
+    if (!basket.length) {
+      event.preventDefault()
+      return
+    }
+    refreshOrderLink()
+    // Show the confirmation after the browser has followed the link.
+    setTimeout(() => {
+      showSentCheck(true)
+      status.textContent = 'WhatsApp has opened with your order. Send the message, then confirm here.'
+      $('#confirm-sent').focus()
+    })
   }
 
   $('#order-whatsapp').addEventListener('click', orderViaWhatsApp)
+  $('#order-whatsapp').addEventListener('pointerdown', refreshOrderLink)
+  $('#order-whatsapp').addEventListener('focus', refreshOrderLink)
+  note.addEventListener('input', refreshOrderLink)
   $('#confirm-sent').addEventListener('click', () => {
     const order = { sentAt: new Date().toISOString(), totalPence: total(),
       lines: basket.map(({ name, quantity, unitPricePence, options }) => ({ name, quantity, unitPricePence, options })) }

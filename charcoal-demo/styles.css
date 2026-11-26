@@ -578,3 +578,4 @@ h1, h2, h3, p { margin: 0; }
 .last-order-help { margin-top: 4px; color: var(--muted); font-size: .8rem; }
 /* Let the order bar stick to the dialog's scroll area rather than its wrapper. */
 .basket-review:not([hidden]) { display: contents; }
+a.order-button { text-decoration: none; }

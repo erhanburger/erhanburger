@@ -121,3 +121,9 @@
 
 - Kullanıcı Claude GitHub App yazma iznini verdi. 6 commit `claude/erhan-burger-takeover-rhmow7` dalına push edildi ve uzakta `5d44715` doğrulandı. `main` (`c41bf50`) ve `burger-builder` (`f7c06c4`) değişmedi.
 - Sıradaki adım ayrı Claude Netlify önizlemesi `erhanburger-claude-preview`. Bu çalışma ortamı Netlify'a erişemediği için site kullanıcı tarafından panelden oluşturulur.
+
+## Önizleme kararı (26 Kasım 2026)
+
+- Kullanıcı ayrı Netlify sitesinden vazgeçti; önizleme claude.ai üzerinden yapılacak. Özel önizleme: https://claude.ai/artifact/YMRpPZC9cLdz9xGYX4q425 (sürüm 1).
+- `scripts/build-preview.py`, `charcoal-demo/` klasörünü ve üst dizinden kullandığı 28 paylaşılan görseli tek pakette toplar (`../` yolları `./shared/` olur). Paket 9,8 MB, 85 dosya.
+- Önizleme ortamında açılır pencereler engellendiği için "Order via WhatsApp" düğmesi normal bağlantıya çevrildi; mesaj tıklamadan hemen önce güncellenir. Paket ve depo sürümünde 3 görünümde 46 ürün regresyonu, WhatsApp mesajı ve gönderim onayı temiz.

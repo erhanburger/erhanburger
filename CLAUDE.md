@@ -38,8 +38,9 @@ Claude için kalıcı proje talimatları. `AGENTS.md` tüm ajanlar için geçerl
 
 ## Önizleme
 
-- Codex önizlemesi `erhanburger-preview.netlify.app` (`burger-builder`) değiştirilmez.
-- Claude önizlemesi için ayrı Netlify sitesi önerildi: `erhanburger-claude-preview.netlify.app`, Claude dalından, build komutu yok, yayın dizini depo kökü. Kurulumu kullanıcı Netlify panelinden yapar.
+- Codex önizlemesi `erhanburger-preview.netlify.app` (`burger-builder`) değiştirilmez. Kullanıcı Claude için ayrı Netlify sitesinden vazgeçti (26 Kasım 2026).
+- Claude önizlemesi claude.ai üzerinde özel bir sayfadır: https://claude.ai/artifact/YMRpPZC9cLdz9xGYX4q425 . Her yeni sürümde `python3 scripts/build-preview.py <oturum-çalışma-alanı>/preview` ile paket üretilir, paket test edilir ve aynı sayfaya yeniden yayınlanır (adres değişmez). Paket depoya eklenmez.
+- Önizleme sayfasında açılır pencereler engellidir; bu yüzden harici bağlantılar (WhatsApp) `window.open` değil, normal `<a target="_blank">` bağlantısıdır.
 
 ## Yerel çalıştırma ve test
 
