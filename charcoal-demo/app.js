@@ -4,9 +4,12 @@ import {
 import { CharcoalScene } from './scene.js'
 import { productProfile } from './product-profiles.js'
 import { readBasket, saveBasket } from './basket-storage.js'
+import { orderContact } from './order-config.js'
 
 const requestedProduct = new URLSearchParams(location.search).get('product')
-const product = catalog.products.find(item => item.id === requestedProduct) ?? halfPounder
+const foundProduct = requestedProduct === null ? halfPounder :
+  catalog.products.find(item => item.id === requestedProduct)
+const product = foundProduct ?? halfPounder
 const selected = createDefaultSelections(product)
 const preview = productProfile(product, CharcoalScene.defaultProfile)
 const options = product.optionGroups.flatMap(group => group.options)
@@ -20,6 +23,10 @@ const basketFeedback = document.querySelector('#basket-feedback')
 const addButton = document.querySelector('#add-to-basket')
 const priceTotal = document.querySelector('#basket-total')
 const priceBreakdown = document.querySelector('#price-breakdown')
+const checkout = document.querySelector('#basket-checkout')
+const orderNote = document.querySelector('#order-note')
+const basketStatus = document.querySelector('#basket-status')
+const maxQuantity = 20
 const controls = new Map()
 const optionsById = new Map(options.map(option => [option.id, option]))
 let basket = readBasket()
@@ -37,11 +44,15 @@ function renderProduct() {
   document.querySelector('#controls-title').textContent = product.builderTitle ?? (product.optionGroups.length ? 'Customise your order' : 'Your order')
   document.querySelector('.intro p').textContent = product.builderDescription ?? (product.optionGroups.length ? 'Choose your options.' : product.name)
   if (title) {
-    const splitAt = name.search(/ (?=with |– )/i)
-    const [first, emphasis] = product.titleLines ?? (splitAt < 0 ? [name] :
-      [name.slice(0, splitAt), name.slice(splitAt + 1)])
+    // "Deal 1 – Quarter Burger…" shows the dash only to assistive technology,
+    // so the second line never starts with punctuation.
+    const dash = name.indexOf(' – ')
+    const withAt = name.search(/ (?=with )/i)
+    const [first, separator, emphasis] = product.titleLines ? [product.titleLines[0], ' ', product.titleLines[1]] :
+      dash >= 0 ? [name.slice(0, dash), ' – ', name.slice(dash + 3)] :
+      withAt >= 0 ? [name.slice(0, withAt), ' ', name.slice(withAt + 1)] : [name]
     title.replaceChildren(document.createTextNode(first))
-    if (emphasis) title.append(make('em', '', emphasis))
+    if (emphasis) title.append(make('span', 'visually-hidden', separator), make('em', '', emphasis))
   }
   document.title = product.name + ' · Er-Han Burger'
   navigation.replaceChildren()
@@ -59,6 +70,7 @@ function renderProduct() {
     })
     navigation.append(link)
     const section = make('section', 'choice-group')
+    if (group.options.every(option => option.locked)) section.classList.add('choice-group--included')
     section.id = group.id
     const heading = make('h3', '', group.name)
     heading.id = group.id + '-title'
@@ -159,6 +171,7 @@ function renderBasket() {
   const total = basket.reduce((sum, line) => sum + line.quantity * line.unitPricePence, 0)
   basketCount.textContent = String(count)
   basketSubtotal.textContent = formatPrice(total)
+  checkout.hidden = !basket.length
   basketItems.replaceChildren()
   if (!basket.length) {
     basketItems.append(make('p', 'basket-empty', 'Your basket is empty.'))
@@ -168,24 +181,86 @@ function renderBasket() {
   for (const [index, line] of basket.entries()) {
     const item = make('li', 'basket-item')
     const details = make('div', 'basket-item-details')
-    details.append(make('strong', '', line.quantity + ' × ' + line.name))
+    details.append(make('strong', '', line.name))
     if (line.options.length) details.append(make('p', '', line.options.join(', ')))
+    details.append(make('p', '', formatPrice(line.unitPricePence) + ' each'))
     const amount = make('div', 'basket-item-amount')
+    const stepper = make('div', 'quantity-stepper')
+    stepper.setAttribute('role', 'group')
+    stepper.setAttribute('aria-label', 'Quantity of ' + line.name)
+    const decrease = make('button', 'quantity-button', '−')
+    decrease.type = 'button'
+    decrease.dataset.basketAction = 'decrease'
+    decrease.setAttribute('aria-label', line.quantity > 1 ? 'Decrease quantity of ' + line.name : 'Remove ' + line.name + ' from basket')
+    const quantity = make('span', 'quantity-value', String(line.quantity))
+    quantity.setAttribute('aria-label', line.quantity + ' in basket')
+    const increase = make('button', 'quantity-button', '+')
+    increase.type = 'button'
+    increase.dataset.basketAction = 'increase'
+    increase.setAttribute('aria-label', 'Increase quantity of ' + line.name)
+    increase.disabled = line.quantity >= maxQuantity
+    decrease.addEventListener('click', () => changeQuantity(index, -1, 'decrease'))
+    increase.addEventListener('click', () => changeQuantity(index, 1, 'increase'))
+    stepper.append(decrease, quantity, increase)
     const remove = make('button', 'basket-remove', 'Remove')
     remove.type = 'button'
+    remove.dataset.basketAction = 'remove'
     remove.setAttribute('aria-label', 'Remove ' + line.name + ' from basket')
-    remove.addEventListener('click', () => {
-      basket = basket.filter((_, position) => position !== index)
-      saveBasket(basket)
-      renderBasket()
-      const nextControl = basketItems.querySelector('.basket-remove') ?? document.querySelector('#close-basket')
-      nextControl.focus()
-    })
-    amount.append(make('strong', '', formatPrice(line.quantity * line.unitPricePence)), remove)
+    remove.addEventListener('click', () => changeQuantity(index, -line.quantity, 'remove'))
+    amount.append(make('strong', '', formatPrice(line.quantity * line.unitPricePence)), stepper, remove)
     item.append(details, amount)
     list.append(item)
   }
   basketItems.append(list)
+}
+
+function changeQuantity(index, delta, action) {
+  const line = basket[index]
+  if (!line) return
+  line.quantity = Math.min(maxQuantity, line.quantity + delta)
+  const removed = line.quantity <= 0
+  if (removed) basket.splice(index, 1)
+  saveBasket(basket)
+  renderBasket()
+  basketStatus.textContent = removed ? line.name + ' removed from your basket.' :
+    line.name + ' quantity is now ' + line.quantity + '.'
+  const rows = basketItems.querySelectorAll('.basket-item')
+  const row = rows[Math.min(index, rows.length - 1)]
+  const next = removed ? row?.querySelector('[data-basket-action="remove"]') :
+    row?.querySelector('[data-basket-action="' + action + '"]:not(:disabled)') ??
+    row?.querySelector('[data-basket-action="remove"]')
+  ;(next ?? document.querySelector('#close-basket')).focus()
+}
+
+function buildOrderMessage(note) {
+  const rule = '━'.repeat(20)
+  let message = '🍔 *ER-HAN BURGER — NEW ORDER*\n' + rule + '\n\n'
+  for (const [index, line] of basket.entries()) {
+    message += '*' + (index + 1) + '. ' + line.name + '*  x' + line.quantity + '  →  ' +
+      formatPrice(line.quantity * line.unitPricePence) + '\n'
+    for (const option of line.options) message += '   ' + option + '\n'
+    message += '\n'
+  }
+  const total = basket.reduce((sum, line) => sum + line.quantity * line.unitPricePence, 0)
+  message += rule + '\n*TOTAL:  ' + formatPrice(total) + '*\n' + rule
+  if (note) message += '\n\n📝 *Note:* ' + note
+  return message + '\n\n_' + orderContact.closingLine + '_'
+}
+
+function orderViaWhatsApp() {
+  if (!basket.length) return
+  const url = 'https://wa.me/' + orderContact.whatsappNumber + '?text=' +
+    encodeURIComponent(buildOrderMessage(orderNote.value.trim()))
+  const opened = window.open(url, '_blank')
+  if (opened) opened.opener = null
+  else location.href = url
+  basket = []
+  saveBasket(basket)
+  orderNote.value = ''
+  renderBasket()
+  basketStatus.textContent = 'WhatsApp has opened with your order. Send the message to place it, and we will confirm your collection time.'
+  basketItems.replaceChildren(make('p', 'basket-confirmation', basketStatus.textContent))
+  document.querySelector('#close-basket').focus()
 }
 
 function addToBasket() {
@@ -212,21 +287,47 @@ function addToBasket() {
     options: choices.map(option => option.name),
   })
   saveBasket(basket)
+  basketStatus.textContent = ''
   renderBasket()
   basketFeedback.textContent = product.name + ' added to your basket.'
   basketDialog.showModal()
 }
 
-renderProduct()
-updatePriceAndControls()
+function renderNotFound() {
+  document.title = 'Item not found · Er-Han Burger'
+  document.body.classList.add('is-not-found')
+  document.querySelector('#product-title').textContent = 'Item not found'
+  document.querySelector('#controls-title').textContent = 'Sorry, we couldn’t find that item'
+  const intro = document.querySelector('.intro p')
+  intro.textContent = 'It may have been renamed or removed from the menu. '
+  const link = make('a', 'not-found-link', 'Browse the menu')
+  link.href = './menu.html'
+  intro.append(link)
+  navigation.hidden = true
+}
+
+if (foundProduct) {
+  renderProduct()
+  updatePriceAndControls()
+  CharcoalScene.init({
+    profile: preview,
+    selection: getSceneSelection(),
+  })
+  document.querySelector('#replay').addEventListener('click', () => CharcoalScene.replay())
+  addButton.addEventListener('click', addToBasket)
+} else {
+  renderNotFound()
+}
 renderBasket()
-CharcoalScene.init({
-  profile: preview,
-  selection: getSceneSelection(),
+document.querySelector('#open-basket').addEventListener('click', () => {
+  basketStatus.textContent = ''
+  renderBasket()
+  basketDialog.showModal()
 })
-document.querySelector('#replay').addEventListener('click', () => CharcoalScene.replay())
-document.querySelector('#open-basket').addEventListener('click', () => basketDialog.showModal())
 document.querySelector('#close-basket').addEventListener('click', () => basketDialog.close())
-addButton.addEventListener('click', addToBasket)
+document.querySelector('#order-whatsapp').addEventListener('click', orderViaWhatsApp)
+const callLink = document.querySelector('.call-link')
+callLink.href = orderContact.phoneHref
+callLink.textContent = 'Or call to order: ' + orderContact.phoneLabel
 
 if (new URLSearchParams(location.search).has('basket')) basketDialog.showModal()

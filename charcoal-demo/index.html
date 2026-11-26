@@ -82,6 +82,14 @@
       <span>Subtotal</span>
       <strong id="basket-subtotal">£0.00</strong>
     </div>
+    <div class="basket-checkout" id="basket-checkout" hidden>
+      <label for="order-note">Order notes <span>(optional)</span></label>
+      <textarea id="order-note" rows="2" maxlength="300" placeholder="For example, extra napkins or no salt on chips"></textarea>
+      <p class="checkout-hint">Collection only. Your order opens in WhatsApp for you to send, and we confirm it there.</p>
+      <button type="button" class="order-button" id="order-whatsapp">Order via WhatsApp</button>
+      <a class="call-link" href="tel:07576113811">Or call to order: 07576 113811</a>
+    </div>
+    <p id="basket-status" class="visually-hidden" role="status"></p>
   </dialog>
 </body>
 </html>

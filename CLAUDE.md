@@ -4,10 +4,10 @@ Claude için kalıcı proje talimatları. `AGENTS.md` tüm ajanlar için geçerl
 
 ## Dallar
 
-- Claude yalnızca `claude-burger-builder` dalında çalışır. Bu dal `burger-builder` dalının `f7c06c4` commit'inden açıldı.
+- Claude yalnızca `claude/erhan-burger-takeover-rhmow7` dalında çalışır (kullanıcı 26 Kasım 2026'da onayladı; dal adı önemli değil, Codex'ten bağımsızlık önemli). Bu dal `burger-builder` dalının `f7c06c4` commit'inden açıldı. Eski yerel ad `claude-burger-builder` artık kullanılmaz.
 - `main` ve `burger-builder` dallarına hiçbir koşulda commit veya push yapılmaz. Codex ve alt ajanları `burger-builder` üzerinde çalışmaya devam eder.
-- `burger-builder` dalındaki yenilikler yalnızca kullanıcı isterse `claude-burger-builder` dalına alınır (merge, rebase değil).
-- `AGENTS.md` içindeki “`burger-builder` dalında uygula” ifadeleri Claude için `claude-burger-builder` olarak okunur.
+- `burger-builder` dalındaki yenilikler yalnızca kullanıcı isterse Claude dalına alınır (merge, rebase değil).
+- `AGENTS.md` içindeki “`burger-builder` dalında uygula” ifadeleri Claude için kendi dalı olarak okunur.
 
 ## Onay kapıları
 
@@ -34,7 +34,12 @@ Claude için kalıcı proje talimatları. `AGENTS.md` tüm ajanlar için geçerl
 
 - `AGENTS.md` içindeki bağımsız inceleme akışı uygulanır: önce bağımsız tarayıcı yolculukları, sonra en küçük doğrulanmış iyileştirme, sonra bağımsız yeniden test. Görev başına en fazla üç iyileştirme turu.
 - Alt ajanlar yalnızca somut ihtiyaçta ve kullanıcının izniyle başlatılır. Her brief görevi, dosya kapsamını, kabul ölçütlerini ve British English + GBP kuralını açıkça içerir. Müşteri ajanları tasarım/uygulama bağlamı almadan, yalnızca site adresi ve senaryoyla çalışır.
-- Önemli kararlar ve test sonuçları `PROJECT_STATE.md` ve `TASKS.md` dosyalarına yazılır. İncelenmiş iş commit edilip `claude-burger-builder` dalına push edilir.
+- Önemli kararlar ve test sonuçları `PROJECT_STATE.md` ve `TASKS.md` dosyalarına yazılır. İncelenmiş iş commit edilip Claude dalına push edilir.
+
+## Önizleme
+
+- Codex önizlemesi `erhanburger-preview.netlify.app` (`burger-builder`) değiştirilmez.
+- Claude önizlemesi için ayrı Netlify sitesi önerildi: `erhanburger-claude-preview.netlify.app`, Claude dalından, build komutu yok, yayın dizini depo kökü. Kurulumu kullanıcı Netlify panelinden yapar.
 
 ## Yerel çalıştırma ve test
 
