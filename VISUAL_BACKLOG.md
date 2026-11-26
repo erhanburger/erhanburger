@@ -24,16 +24,16 @@ This list covers every product in the verified menu. The current preview uses ex
 
 ## Hot dogs
 
-- **Hot Dog**. Capture the roll and sausage together from the studio angle. Improve visibility of cheese and egg where included.
-- **Hot Dog with Cheese**. Capture the roll and sausage together from the studio angle. Improve visibility of cheese and egg where included.
-- **Hot Dog with Cheese and Egg**. Capture the roll and sausage together from the studio angle. Improve visibility of cheese and egg where included.
+- **Hot Dog**. Refine the new open-roll cut-outs against an actual overhead product photograph. Match toppings to the split roll and verify framing.
+- **Hot Dog with Cheese**. Refine the new open-roll cut-outs against an actual overhead product photograph. Match toppings to the split roll and verify framing.
+- **Hot Dog with Cheese and Egg**. Refine the new open-roll cut-outs against an actual overhead product photograph. Match toppings to the split roll and verify framing.
 
 ## Shish
 
-- **Chicken Shish – Medium**. Verify the serving presentation for this size. Add long chilli and mixed cabbage cut-outs, and refine the portion scale.
-- **Chicken Shish – Medium with Chips**. Verify the serving presentation for this size. Add long chilli and mixed cabbage cut-outs, and refine the portion scale. Match the chips portion to an approved meal photo.
-- **Chicken Shish – Large**. Verify the serving presentation for this size. Add long chilli and mixed cabbage cut-outs, and refine the portion scale.
-- **Chicken Shish – Large with Chips**. Verify the serving presentation for this size. Add long chilli and mixed cabbage cut-outs, and refine the portion scale. Match the chips portion to an approved meal photo.
+- **Chicken Shish – Medium**. Verify the serving presentation for this size. Compare the new separated plate arrangement, long chillies and mixed cabbage with a verified serving photograph. Refine the portion scale.
+- **Chicken Shish – Medium with Chips**. Verify the serving presentation for this size. Compare the new separated plate arrangement, long chillies and mixed cabbage with a verified serving photograph. Refine the portion scale. Match the chips portion to an approved meal photo.
+- **Chicken Shish – Large**. Verify the serving presentation for this size. Compare the new separated plate arrangement, long chillies and mixed cabbage with a verified serving photograph. Refine the portion scale.
+- **Chicken Shish – Large with Chips**. Verify the serving presentation for this size. Compare the new separated plate arrangement, long chillies and mixed cabbage with a verified serving photograph. Refine the portion scale. Match the chips portion to an approved meal photo.
 
 ## Chicken nuggets
 
@@ -42,8 +42,7 @@ This list covers every product in the verified menu. The current preview uses ex
 
 ## Chips
 
-- **Chips – Small**. Match the size and serving presentation to an approved photograph. The menu gives no portion weight.
-- **Chips – Large**. Match the size and serving presentation to an approved photograph. The menu gives no portion weight.
+- **Chips**. Match both sizes to approved serving photographs. The menu gives no portion weights.
 
 ## Sides and snacks
 

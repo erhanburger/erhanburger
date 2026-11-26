@@ -72,3 +72,10 @@
 - [x] Masaüstü ve mobilde her ürünün açılmasını, doğru fiyatı, görselleri, zorunlu seçimleri ve sepeti doğrula.
 - [x] Geçici görseller için ürün bazlı `VISUAL_BACKLOG.md` listesini kaydet.
 - [ ] Netlify önizlemesini kullanıcıyla değerlendir. Son görsel iyileştirmelerini site tamamlandıktan sonra ele al.
+
+## Bağımsız müşteri incelemesi
+
+- [x] İki müşteri ajanının bağımsız tarayıcı incelemesini ve UX eleştirisini tamamla.
+- [x] Chips seçeneklerini, Hot Dog ve Shish sahnelerini, menü kartlarını ve sepet gezinmesini iyileştir.
+- [ ] Netlify menü önizlemesini kullanıcının erişimiyle değerlendir. Chips sos politikası ve arka planı gömülü ürün fotoğrafları açık konular.
+- [x] Değişiklikleri bağımsız müşteri ajanları ve ayrı QA uzmanıyla yeniden test et.
