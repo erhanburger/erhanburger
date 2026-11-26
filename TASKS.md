@@ -45,4 +45,8 @@
 
 - [x] Kalıcı British English ve GBP (£) kuralını `AGENTS.md` ve `PROJECT_STATE.md` dosyalarına yaz.
 - [x] Mevcut onaylı görsellerle üç tasarımın masaüstü ve mobil taslaklarını hazırla ve kontrol et.
-- [ ] Kullanıcının tasarım seçimini ve uygulama onayını al.
+- [x] Kullanıcının Charcoal Studio seçimini ve test önizlemesi için uygulama onayını kaydet.
+- [x] Tam menüyü destekleyecek veri odaklı Product Builder kararını kalıcı olarak kaydet.
+- [x] Charcoal Studio'yu `charcoal-demo/` içinde Half Pounder with Cheese ve mevcut menü fiyatlarıyla uygula.
+- [x] Görsel ve işlevsel kaliteyi masaüstü, mobil ve yatay mobil Chromium görünümlerinde kontrol et.
+- [ ] Netlify önizlemesindeki uygulamayı kullanıcı onayına sun. Diğer ürünlerin görsellerine ve canlı site entegrasyonuna ayrı onayla geç.

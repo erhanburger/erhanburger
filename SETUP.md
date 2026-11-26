@@ -54,7 +54,7 @@ python3 -m venv /tmp/burger-model-venv
 
 ## Bilinen erişim kısıtı
 
-Netlify önizlemesi bu çalışma ortamından HTTP 401 döndürdü. Dalın canlı önizlemeyle bağlantısı ve canlı ortamın davranışı doğrulanamadı.
+Netlify önizlemesi daha önce HTTP 401 döndürdü. Son denemede çalışma ortamının ağ geçidi bağlantıyı HTTP 403 ile reddetti. Kullanıcı Netlify önizlemesinin `burger-builder` dalına bağlı olduğunu belirtti. Uzak dağıtım bu ortamdan doğrulanamadı.
 
 ## Bağımsız Burger Atölyesi
 
@@ -68,4 +68,10 @@ Tarayıcıda `http://127.0.0.1:3000/` adresini aç. Sunucu yalnızca demo klasö
 
 ## Kömür Stüdyosu
 
-`charcoal-demo/index.html` görselleri, stilleri ve animasyon betiğini içerir. Depo kökünden `python3 -m http.server 3000 --bind 127.0.0.1` komutunu çalıştır ve tarayıcıda `http://127.0.0.1:3000/charcoal-demo/` adresini aç. Netlify önizleme hedefi aynı `/charcoal-demo/` yolunu kullanır.
+`charcoal-demo/` statik önizlemedir. Onaylanan Kömür Stüdyosu görselleri ve ortak malzeme dosyaları depodadır. Depo kökünden `python3 -m http.server 3000 --bind 127.0.0.1` komutunu çalıştır ve tarayıcıda `http://127.0.0.1:3000/charcoal-demo/` adresini aç. Netlify önizleme hedefi aynı `/charcoal-demo/` yolunu kullanır.
+
+### Ürün yapılandırması
+
+- `charcoal-demo/catalog.js` ürünleri, kategorileri, seçenek gruplarını ve menüdeki fiyatları pence cinsinden tanımlar. Yeni bir ürün için benzersiz ürün kimliği, menüden doğrulanmış taban fiyatı, onaylı görseli ve ilgili seçim grupları girilir. Porsiyon, içecek ve benzeri seçenekler fiyat farkı ve seçim sınırı olan gruplarla tanımlanır.
+- `charcoal-demo/scene.js` katmanlı veya menü fotoğraflı önizlemeyi çalıştırır. Katman sırası, ortak görseller, kapanan katman ve animasyon süreleri ürün profiliyle tanımlanabilir. Seçimler gerektiğinde önizleme katmanlarıyla eşleştirilir.
+- `charcoal-demo/app.js` katalogdan arayüzü ve GBP fiyatını oluşturur. Önizleme sepeti bu tarayıcıda saklanır. `?product=<ürün-kimliği>` ile kayıtlı ürün seçilir. İlk sürümde kayıtlı uygulama ürünü Half Pounder with Cheese.

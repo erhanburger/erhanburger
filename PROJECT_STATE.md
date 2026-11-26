@@ -34,7 +34,7 @@
 
 - British English is required throughout the entire Er-Han Burger website, including all pages, menus, product descriptions, ingredient names, buttons, animation text, notifications, error messages, basket and checkout screens, accessible names and fallback states.
 - Customer-facing interfaces must contain no Turkish text. All prices must be displayed in GBP (£). Apply and verify these rules on every future development task and brief every subagent on them.
-- The next phase is visual design for approval. Preserve the approved Kömür Stüdyosu reference and burger imagery. User approval is required before implementing the selected design, integration or live website changes.
+- Preserve the approved Kömür Stüdyosu reference and burger imagery. The user approved the Charcoal Studio preview implementation. Integration and live website changes require separate approval.
 - Onay için üç statik görsel yön hazırlandı. Charcoal Studio, Menu Board ve Build Counter tasarımlarının 1440×900 masaüstü ve 390×844 mobil PNG'leri `docs/burger-builder-designs/` altında. Mevcut burger ve malzeme görselleri kullanıldı. Mobil taslaklarda burger ve sepet çubuğu, kaydırılan malzeme alanını çevreler.
 - Fiyatlar tasarım örneğidir. £7.95 temel fiyat ve £1.25 ekstra dana köfte seçimi, £9.20 toplamı gösterir. Geliştirme onayından sonra gerçek menü fiyatları doğrulanacak.
 
@@ -43,3 +43,6 @@
 - Kullanıcı Charcoal Studio masaüstü ve mobil tasarım yönünü onayladı. Geliştirme `charcoal-demo/` ve `burger-builder` dalıyla sınırlı. İlk uygulama ve kalite kontrol ürünü Half Pounder with Cheese. Diğer ürünlerin görselleri için ayrı onay gerekiyor.
 - Kalıcı hedef tüm Er-Han Burger menüsünü kapsayan veri odaklı Product Builder. Dana, tavuk ve sebze burgerleri, hot dog, chicken shish, nuggets, chips, onion rings, mozzarella sticks, meal deals, diğer mevcut ürünler ve soslar aynı altyapıyı kullanabilmeli.
 - Her ürün kendi veri kaydında porsiyon, pence cinsinden fiyat, seçim grupları ve kuralları, görseller ve gerektiğinde animasyon profili tanımlar. Ortak malzeme görselleri, sos animasyonları ve arayüz bileşenleri yeniden kullanılır. Desteklenen düzen ve animasyon türlerinde ürün eklemek için ortak uygulama kodu değişmez.
+- Mevcut menüde taban fiyat £6.90. Ekstra peynir £0.30, iki parça halloumi £2.00 ve yumurta £0.60. Menü ücretli bir ekstra köfte sunmuyor. Taslakta kullanılan örnek fiyatlar uygulamaya alınmadı. Katalog, menünün çoklu sos ve ücretsiz tercih kurallarını korur.
+- Charcoal Studio onaylı burger, sahne ve malzeme görsellerini kullanır. Half Pounder için yumurta ve halloumi katmanları eklendi. Tuz ve sirke seçenekleri sepete kaydedilir, sıkma animasyonunu yalnızca soslar kullanır. Sepet bu önizlemenin yerel tarayıcı verisidir.
+- Chromium masaüstü ve dokunmatik emülasyonunda, kısa ve yatay ekranlar dahil, görsel yerleşim, fiyat, sepet, malzeme animasyonu, üst ekmek, sos akışı, tekrar oynatma ve azaltılmış hareket doğrulandı. Fiziksel telefonla test yapılmadı. Netlify uç noktasına bu çalışma ortamının ağ geçidi erişim vermedi.
