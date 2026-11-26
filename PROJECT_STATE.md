@@ -127,3 +127,14 @@
 - Kullanıcı ayrı Netlify sitesinden vazgeçti; önizleme claude.ai üzerinden yapılacak. Özel önizleme: https://claude.ai/artifact/YMRpPZC9cLdz9xGYX4q425 (sürüm 1).
 - `scripts/build-preview.py`, `charcoal-demo/` klasörünü ve üst dizinden kullandığı 28 paylaşılan görseli tek pakette toplar (`../` yolları `./shared/` olur). Paket 9,8 MB, 85 dosya.
 - Önizleme ortamında açılır pencereler engellendiği için "Order via WhatsApp" düğmesi normal bağlantıya çevrildi; mesaj tıklamadan hemen önce güncellenir. Paket ve depo sürümünde 3 görünümde 46 ürün regresyonu, WhatsApp mesajı ve gönderim onayı temiz.
+
+## Master Agent turu 1: site yapısı ve ürüne özel sunumlar (26 Kasım 2026)
+
+- Kullanıcı Claude'u bağımsız Master Agent olarak yetkilendirdi (kurallar `CLAUDE.md`).
+- Yeni ana sayfa `charcoal-demo/index.html`: açık/kapalı durumu (Europe/London), Popular meal deals (canlı sitede Deal 1, 2, 5 "Popular"), sipariş adımları, kategoriler, adres, harita, saatler ve telefon. Açılış saatleri canlı site başlığından: Mon–Sat 11am–8pm, Sun 11am–6pm. Ürün oluşturucu `product.html` oldu.
+- Chips tek kart: Regular £2.90, "Make it large" +£1.00 (menüdeki £3.90 ile aynı toplam), Salt, Vinegar ve soslar. Nuggets tek kart: 6 adet £3.90, 9 adet +£1.00 (£4.90), soslar. Eski bağlantılar (`chips-large`, `chicken-nuggets-9`) ilgili seçimle açılır. Menü 44 kart.
+- Chips ve nuggets için Salt/Vinegar ve soslar ücretsiz sunuldu (kullanıcı talimatı). Canlı sitede bu ürünlerde seçenek yok; mutfak kuralı olarak kullanıcı onayı bekliyor.
+- İçecek ve çikolatalar menüden tek dokunuşla eklenir. Sepette isteğe bağlı isim alanı; WhatsApp mesajında "Name" satırı.
+- Canlı sitedeki Deal 5 fotoğrafı (`IMG_0402.jpeg`) stok fotoğraf filigranı taşıyor; lisans riski. Önizlemede hot dog fotoğrafı (`IMG_0353.png`) kullanıldı. Canlı site için kullanıcıya bildirildi.
+- Ürüne özel sunum: shish tabakta (salata solda, tavuk sağda, chips tabakta), nuggets ve chips kâğıtlı tepside, hot dog açık ekmek (arka yarı sosisin arkasında, peynir ve yumurta sosis boyunca), hot dog ve shish soslarında zikzak iz (`path: 'zigzag'`). Tabak/tepsi aksesuarları Visual Design ajanı tarafından Pillow ile üretildi (`assets/props/`).
+- Regresyon: 3 görünümde 44 ürün sepete eklendi, hata yok. Önizleme sürüm 2 yayınlandı.

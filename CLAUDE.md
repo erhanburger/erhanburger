@@ -9,12 +9,21 @@ Claude için kalıcı proje talimatları. `AGENTS.md` tüm ajanlar için geçerl
 - `burger-builder` dalındaki yenilikler yalnızca kullanıcı isterse Claude dalına alınır (merge, rebase değil).
 - `AGENTS.md` içindeki “`burger-builder` dalında uygula” ifadeleri Claude için kendi dalı olarak okunur.
 
+## Rol ve karar yetkisi (kullanıcı talimatı, 26 Kasım 2026)
+
+- Claude, projeyi bağımsız yöneten Master Agent'tır. Uzman ajanlar: UI/UX, Animation, Visual Design, Frontend Developer, Mobile Customer, Desktop Customer, Critical Reviewer, QA. Ajanlar birbirinin çalışmasını eleştirir, alternatif önerir; müşteri ajanları bağımsız kalır. Tekrarlayan testler azaltılır, ajanlar yalnızca fayda sağladıkları yerde kullanılır.
+- Döngü: tarayıcıda incele → müşteri senaryoları → eksik ve fırsatları belirle → uzmanlarla değerlendir → en iyi çözümü uygula → bağımsız yeniden test → hafıza ve GitHub'a kaydet → sonraki tur. Görev bitince yeni görev beklemeden sıradaki anlamlı işe geçilir; her değişiklik ölçülebilir fayda sağlamalıdır.
+- Tasarım, kullanıcı deneyimi, animasyon, performans ve teknik iyileştirmelerde Claude onay beklemeden karar verir.
+- Onay gerektirenler: fiyat değişiklikleri, doğrulanamayan menü içerikleri, gerçek mutfak kuralları, ücretli servisler, canlı sitenin yayınlanması, `main` değişiklikleri.
+- Öncelik: tüm sitenin konsepti, altyapısı, animasyon sistemi ve işlevselliği. Tek tek ürün görsellerinin mükemmelleştirilmesi son aşamaya kalır.
+- Her ürün kendi gerçek hazırlanış ve sunumuyla gösterilir; her şey burger mantığıyla dizilmez.
+
 ## Onay kapıları
 
-- Tasarım veya uygulama değişikliğine başlamadan önce kullanıcı onayı alınır.
+- Büyük kapsam değişikliklerinde kullanıcı bilgilendirilir; yukarıdaki onay gerektiren konular dışında Claude karar verir.
 - Yeni arayüz, ana siteye entegrasyon, canlı site, üretim dağıtımı ve `main` değişiklikleri ayrı açık onay gerektirir.
 - Ücretli harici servisler (görsel üretim API'leri, barındırma, ücretli araçlar) onaysız kullanılmaz. Harici harcama bütçesi £0.
-- Half Pounder with Cheese dışındaki ürünler için yeni görsel üretimi kullanıcı onayı gerektirir.
+- Fotogerçekçi yeni ürün fotoğrafları son aşamaya kalır. Geçici sunum aksesuarları (tabak, tepsi) Pillow ile yerelde üretilebilir.
 - Kimlik bilgileri, API anahtarları ve kişisel veriler depoya yazılmaz.
 
 ## Müşteriye görünen dil ve para birimi
@@ -46,10 +55,11 @@ Claude için kalıcı proje talimatları. `AGENTS.md` tüm ajanlar için geçerl
 
 ```sh
 python3 -m http.server 4173 --bind 127.0.0.1   # depo kökünden
+# http://127.0.0.1:4173/charcoal-demo/              (ana sayfa)
 # http://127.0.0.1:4173/charcoal-demo/menu.html
-# http://127.0.0.1:4173/charcoal-demo/?product=half-pounder-with-cheese
+# http://127.0.0.1:4173/charcoal-demo/product.html?product=half-pounder-with-cheese
 ```
 
 - Bulut ortamında Chromium ve Playwright hazırdır (`require('playwright')`). Yeniden kurulmaz.
-- Her değişiklikten sonra en az şunlar doğrulanır: 1440×900 masaüstü ve iPhone 13 emülasyonu; menüdeki 46 ürünün açılması; fiyat ve sepet; zorunlu seçimler (Meal Deal içeceği, Chicken Shish chilli tercihi); klavye gezinmesi; azaltılmış hareket; yatay taşma yok; konsol hatası yok; müşteri metninde Türkçe veya `£` dışı para birimi yok.
+- Her değişiklikten sonra en az şunlar doğrulanır: 1440×900 masaüstü ve iPhone 13 emülasyonu; menüdeki 44 kartın açılması; fiyat ve sepet; zorunlu seçimler (Meal Deal içeceği, Chicken Shish chilli tercihi); klavye gezinmesi; azaltılmış hareket; yatay taşma yok; konsol hatası yok; müşteri metninde Türkçe veya `£` dışı para birimi yok.
 - Test betikleri ve ekran görüntüleri depoya değil oturum çalışma alanına yazılır; yalnızca kullanıcıya sunulacak kanıtlar `docs/` altına eklenir.

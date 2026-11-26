@@ -90,3 +90,12 @@
 - [x] Kullanıcı: Claude GitHub App yazma izni.
 - [x] Netlify yerine claude.ai özel önizlemesi yayınlandı (`scripts/build-preview.py`).
 - [ ] Kullanıcı önizlemeyi telefonda ve masaüstünde inceler, açık kararları yanıtlar.
+
+## Master Agent turları
+
+- [x] Ana sayfa, tek Chips/Nuggets kartı, hızlı ekleme, isim alanı.
+- [x] Shish tabağı, tepsi sunumları, açık hot dog, zikzak sos.
+- [ ] Animation ajanı: tabak/tepsi yerleşmesi, nugget dökülmesi, hot dog ve shish hazırlama hareketleri.
+- [ ] Bağımsız masaüstü/mobil müşteri ve eleştirmen incelemesi; bulguların uygulanması.
+- [ ] Kullanıcı onayı bekleyen: chips/nuggets sos ve tuz kuralı, ürüne özel seçenek listeleri, chilli kuralı.
+- [ ] Son aşama: ürün fotoğraflarının nihai kalitesi (beyaz arka planlı fotoğraflar, paylaşılan burger fotoğrafı).
