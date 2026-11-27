@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#141312">
+  <meta name="theme-color" content="#f6efe4">
   <title>Menu · Er-Han Burger</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./brand.css">
   <link rel="stylesheet" href="./menu.css">
   <script src="./menu.js" type="module"></script>
 </head>
 <body>
   <header class="masthead">
     <div class="masthead-inner">
-      <a class="wordmark" href="./menu.html">Er-Han <span>Burger</span></a>
+      <a class="wordmark" href="./home.html">Er-Han <span>Burger</span></a>
       <a class="basket-button menu-basket" href="./?basket=1">Basket <span id="basket-count">0</span></a>
     </div>
     <div class="menu-picker" hidden>
@@ -24,9 +25,14 @@
     </div>
   </header>
   <main class="menu">
-    <h1>Menu</h1>
-    <nav class="menu-categories" aria-label="Menu categories"></nav>
-    <div id="menu-products"></div>
+    <div class="menu-intro">
+      <h1>The <em>menu.</em></h1>
+      <p>Choose a product to customise it.</p>
+    </div>
+    <div class="menu-layout">
+      <nav class="menu-categories" aria-label="Menu categories"></nav>
+      <div id="menu-products"></div>
+    </div>
     <noscript><p>Enable JavaScript to view the menu.</p></noscript>
   </main>
 </body>

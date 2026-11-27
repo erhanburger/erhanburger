@@ -1,0 +1,45 @@
+.home { max-width: 1450px; margin: auto; padding: clamp(20px, 4vw, 60px) 5% 64px; }
+.home-basket { display: inline-flex; align-items: center; text-decoration: none; }
+.home-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.home-copy {
+  display: grid;
+  justify-items: start;
+  align-content: center;
+  min-height: 490px;
+  padding: clamp(18px, 4vw, 60px) 0;
+}
+.home h1 {
+  font: 500 clamp(3.2rem, 8.5vw, 8.2rem)/.9 Georgia, 'Times New Roman', serif;
+  letter-spacing: -.075em;
+}
+.home h1 em { color: var(--accent); }
+.home p { max-width: 36ch; color: var(--muted); font-size: clamp(1rem, 1.45vw, 1.23rem); margin: 25px 0; }
+.home-primary {
+  padding: 14px 21px; border-radius: 6px; text-decoration: none;
+  background: var(--accent); color: #fffaf1; font-weight: 750;
+}
+.home-feature {
+  display: grid; align-content: end; min-width: 0; min-height: 485px; padding: 24px; overflow: hidden;
+  border-radius: 14px; color: #fff5e8; text-decoration: none;
+  background: radial-gradient(ellipse at 52% 53%, #56372b, #281e1c 65%, #1a1b21);
+}
+.home-feature img { width: 100%; height: 100%; max-height: 420px; min-height: 0; object-fit: contain; }
+.home-feature > span { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+.home-feature > span > span { color: #ffc29a; }
+.home-feature small { margin-top: 4px; color: #e9d3c0; }
+.home-categories { border-top: 1px solid var(--border); margin-top: 32px; padding-top: 23px; }
+.home-categories h2 { font: 500 clamp(1.55rem, 3vw, 2.25rem) Georgia, serif; margin-bottom: 14px; }
+#home-category-links { display: flex; flex-wrap: wrap; gap: 8px; }
+#home-category-links a {
+  display: inline-flex; align-items: center; min-height: 44px; padding-inline: 12px;
+  border: 1px solid var(--border); border-radius: 6px; color: var(--ink); text-decoration: none;
+}
+#home-category-links a:hover { background: var(--panel); border-color: var(--accent); }
+@media (max-width: 700px) {
+  .home-hero { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .home-copy { min-height: auto; padding: 10px 0 6px; }
+  .home p { margin-block: 14px; }
+  .home-feature { min-height: 220px; padding: 14px; }
+  .home-feature img { max-height: 265px; }
+}
+@media (max-width: 360px) { .home-basket { margin-inline-start: auto; } }

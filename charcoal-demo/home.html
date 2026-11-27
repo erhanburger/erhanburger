@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6efe4">
+  <title>Er-Han Burger · Menu and customisation</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./brand.css">
+  <link rel="stylesheet" href="./home.css">
+  <script type="module" src="./home.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="wordmark" href="./home.html" aria-current="page">Er-Han <span>Burger</span></a>
+      <a class="masthead-title menu-link" href="./menu.html">Menu</a>
+      <a class="basket-button home-basket" href="./?basket=1">Basket <span id="basket-count">0</span></a>
+    </div>
+  </header>
+  <main class="home">
+    <section class="home-hero" aria-labelledby="home-title">
+      <div class="home-copy">
+        <h1 id="home-title">Your order,<br><em>your way.</em></h1>
+        <p>Explore burgers, hot dogs, Chicken Shish and meal deals. Choose your favourites and customise them as you go.</p>
+        <a class="home-primary" href="./menu.html">Explore the menu</a>
+      </div>
+      <a class="home-feature" href="./?product=half-pounder-with-cheese">
+        <img src="../IMG_0352.png" alt="" fetchpriority="high">
+        <span><strong>Half Pounder with Cheese</strong><span id="featured-price"></span></span>
+        <small>Shown with optional toppings</small>
+      </a>
+    </section>
+    <section class="home-categories" aria-labelledby="browse-heading">
+      <h2 id="browse-heading">Browse by category</h2>
+      <div id="home-category-links"></div>
+    </section>
+  </main>
+</body>
+</html>

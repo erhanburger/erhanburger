@@ -252,7 +252,10 @@ if (search.has('basket')) {
   const referrer = document.referrer && new URL(document.referrer)
   document.querySelector('.basket-continue').href = menuUrl.href
   basketDialog.addEventListener('close', () => {
-    if (referrer && referrer.origin === menuUrl.origin && referrer.pathname === menuUrl.pathname) history.back()
+    const homeUrl = new URL('./home.html', location.href)
+    const cameFromPreview = referrer && referrer.origin === menuUrl.origin &&
+      [menuUrl.pathname, homeUrl.pathname].includes(referrer.pathname)
+    if (cameFromPreview) history.back()
     else location.replace(menuUrl.href)
   }, { once: true })
   basketDialog.showModal()

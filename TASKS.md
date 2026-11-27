@@ -86,4 +86,6 @@
 - [x] Erişilebilen marka ve teknik kaynakların bulgularını, kısıtlarıyla birlikte kaydet.
 - [x] Üç farklı prototipi masaüstü ve mobilde bağımsız olarak karşılaştır.
 - [ ] Birincil referansa erişim sağlandığında masaüstü ve mobil davranışı ile render tekniğini doğrula.
-- [ ] Kullanıcıyla bütün site için tasarım yönünü seç. Doğrulanmış menü ve sepet akışını koru.
+- [x] Kullanıcının onayladığı Order Counter ve Build Room birleşimini önizlemeye uygula.
+- [x] 45 ürünü masaüstü ve mobil Chromium’da fiyat, zorunlu seçenekler ve ortak sepet için yeniden doğrula.
+- [ ] Birleşik önizlemeyi fiziksel mobil cihazlarda doğrula. Kaynak kart görsellerinin son düzenlemesi için VISUAL_BACKLOG.md dosyasını kullan.

@@ -1,0 +1,277 @@
+/* Build Room overrides the layout and colour treatment while keeping the shared scene rig. */
+:root {
+  color-scheme: light;
+  --build-paper: #f6efe4;
+  --build-ink: #192d47;
+  --build-orange: #ad472a;
+  --build-surface: #fffbf5;
+  --build-line: #dbcdbc;
+  --build-muted: #594f46;
+  --ink: var(--build-ink);
+  --muted: var(--build-muted);
+  --accent: var(--build-orange);
+  --border: var(--build-line);
+  --panel: var(--build-surface);
+  color: var(--build-ink);
+  background: var(--build-paper);
+}
+
+body:has(.builder) .masthead {
+  position: sticky;
+  top: 0;
+  z-index: 55;
+  color: #fff7ed;
+  background: var(--build-ink);
+  border-color: transparent;
+  --ink: #fff7ed;
+  --muted: #f0dacf;
+  --accent: #ffd2aa;
+}
+
+body:has(.builder) .masthead-inner {
+  min-height: 64px;
+  max-width: 1280px;
+}
+
+body:has(.builder) .masthead .basket-button {
+  color: #fff7ed;
+  border-color: #c0a996;
+  background: transparent;
+}
+
+body:has(.builder) .masthead .basket-button:hover {
+  border-color: #ffd2aa;
+  background: #31445c;
+}
+
+.builder {
+  display: block;
+  max-width: 1280px;
+  padding: clamp(15px, 2.6vw, 32px) clamp(14px, 4vw, 48px) 112px;
+}
+
+.stage {
+  --heading-size: clamp(2.4rem, 5vw, 4.55rem);
+  --heading-top: clamp(26px, 5.4vw, 70px);
+  border: 1px solid #5c3c2c;
+  border-radius: 20px;
+  color: #fff8ef;
+  --accent: #ffd2aa;
+}
+
+.stage h1 {
+  font: 850 var(--heading-size)/.99 system-ui, sans-serif;
+  letter-spacing: -.075em;
+  overflow-wrap: anywhere;
+}
+
+.stage h1 em {
+  font-weight: 720;
+  letter-spacing: -.055em;
+}
+
+.stage-caption .replay {
+  color: #fff8ef;
+  border-color: #ad8770;
+  background: #291d177a;
+}
+
+.stage-caption .replay:hover { background: #3d2b23; }
+
+.controls {
+  height: auto;
+  margin-block-start: clamp(20px, 3.3vw, 40px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.intro h2 {
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  font-weight: 850;
+  letter-spacing: -.06em;
+}
+
+.category-nav {
+  margin: 12px 0 18px;
+  gap: 8px;
+  border: 0;
+  flex-wrap: wrap;
+}
+
+.category-nav a {
+  border: 1px solid var(--build-line);
+  border-radius: 99px;
+  padding-inline: 12px;
+  background: var(--build-surface);
+  color: var(--build-ink);
+  font-weight: 700;
+}
+
+.category-nav a[aria-current] {
+  background: var(--build-ink);
+  border-color: var(--build-ink);
+  color: #fff7ed;
+  box-shadow: none;
+}
+
+#choice-groups {
+  margin: 0;
+  padding: 0;
+  flex: none;
+  overflow: visible;
+  counter-reset: prep-step;
+}
+
+.choice-group {
+  counter-increment: prep-step;
+  padding: clamp(12px, 2vw, 20px);
+  border: 1px solid var(--build-line);
+  border-radius: 16px;
+  background: var(--build-surface);
+}
+
+.choice-group + .choice-group { margin-top: 11px; }
+
+.choice-group h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 10px;
+  font-weight: 820;
+}
+
+.choice-group h3::before {
+  content: counter(prep-step);
+  display: grid;
+  place-items: center;
+  flex: 0 0 31px;
+  height: 31px;
+  border-radius: 50%;
+  color: white;
+  background: var(--build-orange);
+  font-size: .79rem;
+}
+
+.choice-more summary { inset: 8px 12px auto auto; }
+
+.choice-card {
+  border-color: var(--build-line);
+  border-radius: 11px;
+  background: var(--build-paper);
+}
+
+.choice-card[aria-pressed="true"],
+.choice-card[aria-checked="true"] {
+  border-color: var(--build-orange);
+  background: #f3dbcb;
+}
+
+.choice-label { font-size: .84rem; }
+
+.choice-mark {
+  color: var(--build-muted);
+  border-color: #9e8476;
+}
+
+.choice-card[aria-pressed="true"] .choice-mark,
+.choice-card[aria-checked="true"] .choice-mark { color: white; }
+
+.order-footer {
+  color: #fff8ef;
+  border: 0;
+  background: var(--build-ink);
+  box-shadow: 0 5px 20px #192d4738;
+}
+
+.order-footer .price > :is(span, small) { color: #efdbd1; }
+
+.order-footer .order-button {
+  min-width: auto;
+  gap: 12px;
+  border-color: var(--build-orange);
+  color: white;
+  background: var(--build-orange);
+}
+
+.order-footer .order-button:not(:disabled):hover {
+  border-color: #91331c;
+  background: #91331c;
+}
+
+.basket-dialog { background: var(--build-surface); border-color: var(--build-line); }
+.basket-dialog .basket-button {
+  color: var(--build-ink);
+  background: var(--build-paper);
+  border-color: var(--build-line);
+}
+.basket-dialog .basket-button:hover { border-color: var(--build-orange); }
+
+@media (min-width: 761px) {
+  html { scroll-padding-block: 88px 102px; }
+  .builder {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(17px, 3vw, 40px);
+    padding-bottom: 42px;
+  }
+  .stage {
+    --heading-size: clamp(2rem, 4vw, 4rem);
+    --heading-top: clamp(20px, 3vw, 42px);
+    position: sticky;
+    top: 84px;
+    height: min(650px, calc(100svh - 112px));
+  }
+  .stage-heading, .stage[data-visual] .stage-heading {
+    max-width: calc(100% - 50px);
+    left: clamp(20px, 3vw, 42px);
+  }
+  .stage[data-visual] .stage-heading h1 { font-size: clamp(1.8rem, 3.7vw, 3.65rem); }
+  .stage .rig {
+    left: 52%;
+    bottom: 12%;
+    width: min(60%, 325px, 57cqh);
+  }
+  .stage[data-tall="true"] .rig { width: min(57%, 325px, 51cqh); }
+  .stage[data-visual="meal"] .rig { left: 51%; width: min(62%, 350px, 55cqh); }
+  .stage[data-visual="photo"] .rig { width: min(55%, 250px, 55cqh); }
+  .controls { margin: 0; }
+  .order-footer {
+    position: sticky;
+    bottom: 14px;
+    z-index: 45;
+    width: auto;
+    margin: 12px 0 0;
+    padding: 10px 13px;
+    border-radius: 13px;
+  }
+  .basket-feedback--visible { bottom: 104px; }
+}
+
+@media (max-width: 760px) {
+  :root { --stage-height: clamp(226px, 62vw, 305px); --footer-height: calc(83px + env(safe-area-inset-bottom)); }
+  html { scroll-padding-block: calc(58px + var(--stage-height) + 14px) calc(var(--footer-height) + 12px); }
+  body:has(.builder) .masthead-inner { min-height: 58px; }
+  .builder { width: min(590px, 100%); padding-bottom: calc(var(--footer-height) + 22px); }
+  .stage { height: var(--stage-height); position: sticky; top: 58px; border-radius: 15px; }
+  .stage-heading, .stage[data-visual] .stage-heading { left: 14px; max-width: 48%; }
+  .stage h1, .stage[data-visual] .stage-heading h1 { font-size: clamp(1.2rem, 5.9vw, 1.7rem); }
+  .stage .rig { left: 67%; width: min(39%, 175px, 62cqh); }
+  .stage[data-tall="true"] .rig { left: 69%; width: min(37%, 172px, 57cqh); }
+  .stage[data-visual="meal"] .rig { left: 62%; width: min(47%, 178px, 62cqh); }
+  .stage[data-visual="photo"] .rig { width: min(37%, 146px, 60cqh); }
+  .intro p { display: block; }
+  .choice-grid, #toppings .choice-grid, #sauces .choice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .choice-more summary { inset: 4px 6px auto auto; font-size: .75rem; }
+  .order-footer { padding-inline: max(15px, calc((100vw - 540px) / 2)); }
+}
+
+@media (max-width: 760px) and (max-height: 560px) {
+  :root { --stage-height: clamp(105px, 34svh, 190px); --footer-height: calc(74px + env(safe-area-inset-bottom)); }
+  body:has(.builder) .masthead { position: relative; }
+  html { scroll-padding-block: calc(var(--stage-height) + 12px) calc(var(--footer-height) + 12px); }
+  .stage { top: 0; z-index: 6; }
+  .stage h1, .stage[data-visual] .stage-heading h1 { font-size: clamp(1rem, 4vw, 1.45rem); }
+  .stage .rig { width: min(39%, 150px, 57cqh); }
+}

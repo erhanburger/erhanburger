@@ -79,3 +79,7 @@ Tarayıcıda `http://127.0.0.1:3000/` adresini aç. Sunucu yalnızca demo klasö
 ### Menü önizlemesi
 
 Depo kökünden statik sunucuyu çalıştır ve `/charcoal-demo/menu.html` yolunu aç. Ürün kartları `/charcoal-demo/?product=<ürün-kimliği>` yoluna gider. Sepet aynı tarayıcıda menü ve ürün sayfaları arasında paylaşılır. Ürün grupları `charcoal-demo/products/`, ortak seçenekler `catalog.js` ve görsel yerleşim profilleri `product-profiles.js` altında.
+
+### Birleşik tasarım önizlemesi
+
+Depo kökünden yukarıdaki statik HTTP sunucusunu çalıştır ve `http://127.0.0.1:3000/charcoal-demo/home.html` adresini aç. Ana sayfa, tüm menüyü ve kategori bağlantılarını açar. Önizleme sepeti bu tarayıcıda saklanır. Bu yerel önizlemenin çalışması için Netlify veya ChatGPT Sites dağıtımı gerekmez.

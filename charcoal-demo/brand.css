@@ -1,0 +1,30 @@
+:root {
+  color-scheme: light;
+  --paper: #f6efe4;
+  --ink: #192d47;
+  --muted: #546075;
+  --accent: #ad472a;
+  --border: #dacebd;
+  --panel: #fffaf1;
+  background: var(--paper);
+  color: var(--ink);
+}
+.masthead { background: var(--paper); border-color: var(--border); }
+.wordmark { color: var(--ink); text-decoration: none; letter-spacing: -.04em; }
+.basket-button {
+  border-color: var(--border);
+  background: var(--panel);
+  color: var(--ink);
+}
+.basket-button:hover { background: #f3e5d6; color: var(--ink); }
+.basket-dialog { background: var(--panel); border-color: var(--border); }
+.basket-dialog::backdrop { background: #192d4799; }
+.order-button {
+  background: var(--accent);
+  color: #fffaf1;
+  border-color: var(--accent);
+}
+.order-button:not(:disabled):hover { background: #8e381f; }
+.stage { color: #fff5e6; }
+.stage h1 em { color: #ffc29a; }
+.stage .replay { color: #fff5e6; }

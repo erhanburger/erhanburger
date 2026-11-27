@@ -91,3 +91,11 @@
 - Yalnızca `burger-builder` dalı kullanılacak. Netlify kredi limiti nedeniyle yeni dağıtım denemesi yapılmaz. Harici bütçe £0.
 - Birincil referans `eat.brainy.ink`, Chromium masaüstü ve mobilde ağ geçidinde engellendi. Alan adına özel erişim isteğinin onayı tamamlanmadı. Görsel teknoloji, özelleştirme, mobil davranış ve performans doğrulanamadı. Yayımlanmış teknik vaka çalışmaları ve restoran menü incelemeleri `docs/experience-review/` altında.
 - Open Grill, Order Counter ve Build Room prototipleri masaüstü ve mobil görselleriyle kaydedildi. Bağımsız inceleme tek üstün yön bulmadı. Tam menü keşfinde Order Counter, etkileşimli hazırlamada Build Room, marka sunumunda Open Grill öne çıktı. Üretim kodu ve doğrulanmış sipariş kuralları korundu. Tasarım seçimi ve erişim doğrulanınca uygulama ölçütleri yeniden değerlendirilecek.
+
+## Onaylanan birleşik tasarım
+
+- Kullanıcı Order Counter menüsü ile Build Room hazırlama ekranını birleştirmeyi onayladı. Yeni giriş `charcoal-demo/home.html`. Tam menü `charcoal-demo/menu.html` yolunda. Eski `/charcoal-demo/` ürün bağlantıları aynı şekilde açılır.
+- Menüde masaüstü kategori listesi ve mobil kategori seçici bulunur. Ürün hazırlama sahnesi, toplam ve sepete ekleme aynı akışta kalır. Ana sayfa, menü ve hazırlama ekranı ortak marka kimliği ve önizleme sepetini kullanır.
+- Mevcut katalog, doğrulanmış GBP fiyatları, sipariş kuralları ve sahne görselleri korundu. Bazı kaynak kart fotoğraflarındaki gömülü arka planlar ve Chips sos politikasının ticari teyidi açık.
+- Bağımsız Chromium denetimi 45 ürünü masaüstü ve mobil emülasyonda doğruladı. Ürün görselleri, fiyatlar, zorunlu seçimler ve sepet kontrol edildi. Temsilî 14 üründe animasyonun tekrar oynatılması geçti. Fiziksel mobil cihaz testi yapılmadı.
+- Birleşik tasarım Cloud Chrome üzerinden yerel olarak açıldı. Netlify dağıtımı yapılmadı. Geri dönüş noktası `c59a5f7`, üç tasarım konseptinin arşivi `7536d90`.
