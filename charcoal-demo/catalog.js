@@ -154,11 +154,34 @@ const nuggetCount = { ...group('pieces', 'Pieces', [
   option('nuggets-9', '9 pieces', 100, { image: './assets/menu/nugget.webp', layerKeys: ['nuggets-extra-0', 'nuggets-extra-1', 'nuggets-extra-2'] }),
 ], 'photos', 1, 1), defaultOptionIds: ['nuggets-6'] }
 
+// Chicken shish (client decisions, 27 November 2026): the standard salad is
+// included and shown from the start; the ticket lists only changes to it.
+// Cooked onion and peppers have their own group and never touch the salad.
+const shishSaladDefaults = ['lettuce', 'tomato', 'cucumber', 'onion']
+const shishSalad = {
+  ...group('salad', 'Salad', [
+    salad[0], salad[1], salad[2],
+    option('onion', 'Red onion', 0, { image: ingredientImage('onion'), layerKeys: ['onion'] }),
+    option('gherkin', 'Pickle', 0, { image: ingredientImage('pickle'), layerKeys: ['gherkin'] }),
+    option('salad-none', 'No salad'),
+  ], 'photos'),
+  defaultOptionIds: shishSaladDefaults,
+  summary: 'changes',
+  noneOptionId: 'salad-none',
+  noneLabel: 'No salad',
+}
+const shishExtras = group('extras', 'Extras', extras, 'photos')
+const shishCooked = group('cooked', 'Cooked with your chicken', [
+  option('no-cooked-onion', 'No onion'),
+  option('no-pepper', 'No pepper'),
+  option('no-veggie', 'No Veggie'),
+])
+
 export const optionPolicies = {
   chips: [chipsSize, seasoning, sideSauces],
   nuggets: [nuggetCount, sideSauces],
   burger: toppingsGroups,
-  kebab: [kebabChilli, ...toppingsGroups],
+  kebab: [kebabChilli, shishSalad, shishExtras, sauceGroup, shishCooked],
   meal: [
     mealDrink,
     group('toppings', 'Toppings', [...salad, ...extras, option('cheese', 'Cheese', 0, { image: ingredientImage('cheese'), layerKeys: ['cheese'] })], 'photos'),
@@ -183,6 +206,7 @@ export const optionConflicts = [
   ['extra-cheese', 'no-cheese'], ['cheese', 'no-cheese'],
   ...saladIds.map(id => ['plain', id]),
   ...saladIds.map(id => ['no-salad', id]),
+  ...saladIds.map(id => ['salad-none', id]),
   ['onion', 'no-onion'], ['all-salad', 'no-onion'],
   ...['chilli', 'extra-chilli', 'little-chilli'].map(id => ['no-chilli', id]),
   ['chilli', 'extra-chilli'], ['chilli', 'little-chilli'], ['extra-chilli', 'little-chilli'],
@@ -217,6 +241,30 @@ export function findProduct(id) {
     if (product.aliases && Object.hasOwn(product.aliases, id)) return { product, preset: product.aliases[id] }
   }
   return null
+}
+
+// The choices printed on the kitchen ticket and in the WhatsApp message, in
+// the order they were stored. A group with summary 'changes' (the shish salad)
+// prints only what differs from its standard choices: "No tomato", "Pickle",
+// or its noneLabel when none of the standard choices is left.
+export function choiceSummary(product, optionIds) {
+  const groups = product.optionGroups
+  const byId = new Map(groups.flatMap(group => group.options.map(option => [option.id, { group, option }])))
+  const chosen = new Set(optionIds)
+  const names = []
+  for (const id of optionIds) {
+    const entry = byId.get(id)
+    if (entry && entry.group.summary !== 'changes') names.push(entry.option.name)
+  }
+  for (const group of groups.filter(({ summary }) => summary === 'changes')) {
+    const standard = group.options.filter(({ id }) => group.defaultOptionIds.includes(id))
+    const missing = standard.filter(({ id }) => !chosen.has(id))
+    if (missing.length === standard.length) names.push(group.noneLabel)
+    else names.push(...missing.map(({ name }) => 'No ' + name.toLowerCase()))
+    names.push(...group.options.filter(({ id }) => chosen.has(id) &&
+      !group.defaultOptionIds.includes(id) && id !== group.noneOptionId).map(({ name }) => name))
+  }
+  return names
 }
 
 export function getUnitPricePence(product, selections) {

@@ -3,7 +3,7 @@
 // ticket: its lines are the exact WhatsApp message, so what the customer reads
 // is what is sent. The basket is only cleared once the customer confirms that
 // they sent the message.
-import { catalog, formatPrice, getUnitPricePence } from './catalog.js'
+import { catalog, choiceSummary, formatPrice, getUnitPricePence } from './catalog.js'
 import { readBasket, saveBasket, maxQuantity, readLastOrder, saveLastOrder } from './basket-storage.js'
 import { orderContact, openingStatus } from './order-config.js'
 
@@ -76,7 +76,7 @@ function currentBasket() {
       ...line,
       name: product.name,
       unitPricePence: getUnitPricePence(product, new Set(line.optionIds)),
-      options: line.optionIds.map(id => options.get(id).name),
+      options: choiceSummary(product, line.optionIds),
     })
   }
   return lines

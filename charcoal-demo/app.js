@@ -1,5 +1,5 @@
 import {
-  catalog, halfPounder, optionConflicts, findProduct, createDefaultSelections, formatPrice, getUnitPricePence,
+  catalog, halfPounder, optionConflicts, findProduct, createDefaultSelections, formatPrice, getUnitPricePence, choiceSummary,
 } from './catalog.js'
 import { CharcoalScene } from './scene.js'
 import { productProfile } from './product-profiles.js'
@@ -386,7 +386,7 @@ function addToBasket() {
     name: product.name,
     unitPricePence: getUnitPricePence(product, selected),
     optionIds: choices.map(option => option.id),
-    options: choices.map(option => option.name),
+    options: choiceSummary(product, choices.map(option => option.id)),
   })
   phase = 'added'
   builder.classList.add('is-added')
