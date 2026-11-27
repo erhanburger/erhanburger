@@ -41,3 +41,13 @@ All three: 44/44 prices correct, required choices enforced, identical and correc
 ## Must fix in any direction
 
 Product pages need Menu/back navigation; group tabs must work at every width; 44 px targets for chips, tabs and steppers; closed notice clipped in the phone basket; second add without reload; one shared asset set; self-hosted fonts; lazy-loaded menu images.
+
+## Decision (27 November 2026)
+
+The client left the choice to the agency. Following the panels: **Ticket is the design direction** (first with the design and customer panels; most ownable idea), built as a theme over the shared engine (`scene.js`, `product-profiles.js`, `basket-ui.js`, `catalog.js`) as the technical panel requires, and absorbing:
+
+- from Coal: the food shown on a dark "kitchen pass" stage with depth, the clearest selected ring, "Added · Make another", quiet cards;
+- from Daylight: the numbered menu contents rail on desktop, cleaner card layout with price and action on their own line, working group tabs, green WhatsApp action;
+- every item in "Must fix in any direction".
+
+The production pages in `charcoal-demo/` are rebuilt in this direction; the concept prototypes stay in `charcoal-demo/concepts/` for reference.
