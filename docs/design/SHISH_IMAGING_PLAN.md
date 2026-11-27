@@ -87,3 +87,7 @@ Total: about 39 photos, about 1.5–2 hours including preparation. The chicken c
 ## If the client prefers ChatGPT
 
 Possible as a fallback (method C), with lower and less predictable realism: each image must share the exact angle, light and scale, which generators do not hold reliably. Best use: four finished hero images (one per variant, with the exact chicken counts) for menu cards, combined with the current engine only for animation hints. For layers, request each item alone on a plain black background, "front 55° top-down view, soft light from top left, 4:3, 3000 px", and an empty open HP10 box with the same prompt wording.
+
+## Customer reference photos (28 November 2026)
+
+`assets/source/shish/ref-customer-box-a.jpg` and `ref-customer-box-sauces.jpg` (cropped from public reviews; food only, reference only, never shown on the site). They show the real presentation: chicken with onions and peppers (and chips under) in the base half of the HP10 box; the pitta in the lid half, lying over the salad; sauces as a white garlic-mayo zigzag with a single burger-sauce stripe down the middle. The shoot layout should follow the client's answer on pitta and salad placement.
