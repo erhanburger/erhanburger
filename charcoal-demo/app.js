@@ -5,6 +5,7 @@ import { CharcoalScene } from './scene.js'
 import { productProfile } from './product-profiles.js'
 import { createBasketUI } from './basket-ui.js'
 import { initShell, make } from './shell.js'
+import { productArt } from './art.js'
 
 const requestedProduct = new URLSearchParams(location.search).get('product')
 const match = requestedProduct === null ? { product: halfPounder, preset: [] } : findProduct(requestedProduct)
@@ -60,6 +61,16 @@ function renderTitle() {
   const name = product.displayName ?? product.name
   // "Deal 1 – Quarter Burger…" shows the dash only to assistive technology,
   // so the second line never starts with punctuation.
+  // Meal deals: "Deal 2" moves to the label line and the contents are the title.
+  const deal = name.match(/^(Deal \d+) – (.+)$/)
+  if (deal) {
+    title.replaceChildren(make('span', 'visually-hidden', deal[1] + ' – '), document.createTextNode(deal[2]))
+    $('#product-category').textContent = categoryName + ' · ' + deal[1]
+    document.title = product.name + ' · Er-Han Burger'
+    finishTitle()
+    return
+  }
+  // The red second line is kept for the variant part of a name only.
   const dash = name.indexOf(' – ')
   const withAt = name.search(/ (?=with )/i)
   const [first, separator, emphasis] = product.titleLines ? [product.titleLines[0], ' ', product.titleLines[1]] :
@@ -70,6 +81,10 @@ function renderTitle() {
   title.classList.toggle('is-long', name.length > 30)
   document.title = product.name + ' · Er-Han Burger'
   $('#product-category').textContent = categoryName
+  finishTitle()
+}
+
+function finishTitle() {
   const back = $('#back-link')
   back.href = menuHref
   back.setAttribute('aria-label', 'Back to ' + categoryName.toLowerCase())
@@ -93,6 +108,8 @@ function renderGroups() {
   if (!groups.length) {
     builder.classList.add('is-simple')
     tabs.hidden = true
+    intro.textContent = 'Nothing to choose: it comes as it is. Add it on its own or alongside your meal.'
+    renderPairings()
     const back = make('a', 'text-link', 'Back to ' + categoryName.toLowerCase())
     back.href = menuHref
     groupsNode.append(back)
@@ -163,6 +180,61 @@ function renderGroups() {
     section.append(grid)
     groupsNode.append(section)
   }
+}
+
+// Simple items suggest a few others from the menu, at their menu prices.
+function renderPairings() {
+  const ids = ['chips', 'chicken-nuggets', 'coca-cola-classic', 'pepsi', 'snickers']
+  const picks = ids.map(id => catalog.products.find(item => item.id === id))
+    .filter(item => item && item.id !== product.id && item.categoryId !== product.categoryId).slice(0, 3)
+  if (!picks.length) return
+  const box = make('section', 'pairings')
+  box.setAttribute('aria-labelledby', 'pairings-title')
+  const heading = make('h3', 'group-title', 'Goes well with')
+  heading.id = 'pairings-title'
+  const list = make('ul', 'pairing-list')
+  for (const item of picks) {
+    const row = make('li', 'pairing')
+    const link = make('a', 'pairing-name', item.name)
+    link.href = './product.html?product=' + encodeURIComponent(item.id)
+    row.append(productArt(item, { className: 'art--thumb', eager: true }), link, make('span', 'price', formatPrice(item.basePricePence)))
+    if (!item.optionGroups.length) {
+      const add = make('button', 'button button--small button--ink pairing-add', 'Add')
+      add.type = 'button'
+      add.setAttribute('aria-label', 'Add ' + item.name + ' to basket, ' + formatPrice(item.basePricePence))
+      add.addEventListener('click', () => {
+        const quantity = basketUI.addQuietly({ productId: item.id, name: item.name, unitPricePence: item.basePricePence, optionIds: [], options: [] })
+        add.textContent = quantity > 1 ? quantity + ' added' : 'Added'
+        showToast(item.name + ' added to your basket.')
+      })
+      row.append(add)
+    } else {
+      const go = make('span', 'menu-customise', 'Choose')
+      go.setAttribute('aria-hidden', 'true')
+      row.append(go)
+    }
+    list.append(row)
+  }
+  box.append(heading, list)
+  groupsNode.append(box)
+}
+
+// A short note on the stage, near the choices, that fades after a moment.
+let toastTimer = 0
+function showToast(message) {
+  feedback.textContent = message
+  feedback.classList.toggle('is-on', Boolean(message))
+  clearTimeout(toastTimer)
+  if (message) toastTimer = setTimeout(() => feedback.classList.remove('is-on'), 3200)
+}
+
+// Choices that do not change the picture (seasoning, preferences, chilli) are
+// listed on the stage, and seasoning is sprinkled over the food.
+function renderStageNotes() {
+  const notes = $('#stage-notes')
+  notes.replaceChildren(...options.filter(option => selected.has(option.id) && !option.locked &&
+    !option.image && !(option.layerKeys?.length)).map(option => make('li', '', option.name)))
+  $('#stage').dataset.choices = [...selected].join(' ')
 }
 
 function showGroup(group, { scroll = false, focus = false } = {}) {
@@ -273,7 +345,7 @@ function changeChoice(group, option) {
     const active = group.options.filter(choice => selected.has(choice.id))
     if (active.length >= group.max) {
       if (group.max !== 1 || active[0].locked) {
-        feedback.textContent = 'Choose up to ' + group.max + ' from ' + group.name + '.'
+        showToast('Choose up to ' + group.max + ' from ' + group.name + '.')
         return
       }
       selected.delete(active[0].id)
@@ -286,7 +358,8 @@ function changeChoice(group, option) {
   backToBuild()
   updatePriceAndControls()
   setGroupError(group, '')
-  feedback.textContent = cleared.length ? cleared.join(' and ') + ' removed, as it clashes with ' + option.name + '.' : ''
+  showToast(cleared.length ? cleared.join(' and ') + ' removed: it clashes with ' + option.name + '.' : '')
+  renderStageNotes()
   setStageLabel(option.name + (on ? ' · on' : ' · off'), on ? 'on' : 'off')
   CharcoalScene.update(getSceneSelection())
 }
@@ -321,7 +394,7 @@ function addToBasket() {
   addLabel.textContent = 'Added to basket'
   addPrice.textContent = '✓'
   makeAnother.hidden = false
-  feedback.textContent = product.name + ' added to your basket.'
+  showToast(product.name + ' added to your basket.')
   // A moment later (at once with reduced motion) the button becomes the next step.
   const nextStep = () => {
     if (phase !== 'added') return
@@ -342,7 +415,8 @@ function startAgain() {
   backToBuild()
   for (const group of groups) setGroupError(group, '')
   updatePriceAndControls()
-  feedback.textContent = 'Ready for another ' + product.name + '.'
+  showToast('Ready for another ' + product.name + '.')
+  renderStageNotes()
   setStageLabel('Make another', '')
   CharcoalScene.update(getSceneSelection())
   if (groups.length) showGroup(groups.find(isRequired) ?? groups[0], { scroll: true })
@@ -365,6 +439,7 @@ if (foundProduct) {
   renderTitle()
   renderGroups()
   updatePriceAndControls()
+  renderStageNotes()
   if (activeGroup) showGroup(activeGroup)
   followScroll()
   CharcoalScene.init({ profile: preview, selection: getSceneSelection() })

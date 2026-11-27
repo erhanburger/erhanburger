@@ -3,10 +3,8 @@ function menuItem(categoryId, id, name, basePricePence, image, presentation = {}
   return { id, name, basePricePence, image, categoryId, policy: 'none', visual: 'photo', components: [], ...presentation };
 }
 
-// Chocolate bars are tight cut-outs, drawn smaller on cards to keep one scale.
 function sweet(id, name) {
-  const image = './assets/menu/' + id + '.webp';
-  return menuItem('sides', id, name, 90, image, { art: [{ src: image, w: .58, base: .2, rotate: -6 }] });
+  return menuItem('sides', id, name, 90, './assets/menu/' + id + '.webp');
 }
 
 const sides = [
@@ -29,9 +27,9 @@ const sides = [
   menuItem('hot-dogs', 'halloumi-cheese-sandwich', 'Halloumi Cheese Sandwich', 550, './assets/products/halloumi-sandwich.webp', {
     // The only photo is a styled overhead shot, so the card is composed from cut-outs.
     art: [
-      { src: './assets/menu/roll-bottom.webp', w: .8, base: .2, z: 1 },
-      { src: './assets/halloumi.webp', w: .62, base: .25, z: 2 },
-      { src: './assets/menu/roll-top.webp', w: .8, base: .33, z: 3, rotate: -4 },
+      { src: './assets/menu/roll-bottom.webp', w: .62, base: .2, z: 1 },
+      { src: './assets/halloumi.webp', w: .5, base: .245, z: 2 },
+      { src: './assets/menu/roll-top.webp', w: .62, base: .31, z: 3, rotate: -4 },
     ],
     policy: 'burger', components: ['sandwich'],
   }),
@@ -65,7 +63,6 @@ const drinks = [
   // so a neutral bottle is shown until an approved photo is supplied.
   menuItem('drinks', 'lucozade-original', 'Lucozade Original', 190, './assets/props/drink-placeholder.webp', {
     cutout: './assets/props/drink-placeholder.webp', sceneWidth: bottle * 1.6,
-    art: [{ src: './assets/props/drink-placeholder.webp', w: .4, base: .14 }],
   }),
   drink('red-bull', 'Red Bull', 230, 'drink-red-bull', can),
 ];

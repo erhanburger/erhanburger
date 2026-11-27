@@ -121,13 +121,16 @@ function markCurrent(current) {
   }
 }
 let ticking = false
+let lockUntil = 0
 function followScroll() {
   if (ticking) return
   ticking = true
   requestAnimationFrame(() => {
     ticking = false
-    // On phones the sticky chips bar covers the top of the page.
-    const line = (getComputedStyle(rail).position === 'sticky' && innerWidth < 900 ? rail.getBoundingClientRect().bottom : 140) + 12
+    if (performance.now() < lockUntil) return
+    // A section is current once its heading passes a line under the sticky bars.
+    const bar = innerWidth < 900 ? rail.getBoundingClientRect().bottom : document.querySelector('.appbar').getBoundingClientRect().bottom
+    const line = Math.max(bar + 48, innerHeight * .3)
     const visible = sections.filter(({ section }) => !section.hidden)
     let current = visible[0]?.section
     for (const { section } of visible) if (section.getBoundingClientRect().top <= line) current = section
@@ -138,6 +141,21 @@ function followScroll() {
 addEventListener('scroll', followScroll, { passive: true })
 addEventListener('resize', followScroll, { passive: true })
 markCurrent(sections[0]?.section)
+// Jumping to a section (chip, contents rail or a link with #section) marks it at once.
+function markFromHash() {
+  const target = sections.find(({ section }) => '#' + section.id === location.hash)
+  if (!target) return
+  markCurrent(target.section)
+  lockUntil = performance.now() + 900
+}
+addEventListener('hashchange', markFromHash)
+for (const { section, shortcut } of sections) {
+  shortcut.addEventListener('click', () => {
+    markCurrent(section)
+    lockUntil = performance.now() + 900
+  })
+}
+if (location.hash) requestAnimationFrame(markFromHash)
 
 const search = document.querySelector('#menu-search')
 const searchStatus = document.querySelector('#search-status')
@@ -159,7 +177,24 @@ function applySearch() {
   searchStatus.textContent = words.length ? shown + (shown === 1 ? ' item matches.' : ' items match.') : ''
   followScroll()
 }
-search.addEventListener('input', applySearch)
+search.addEventListener('input', () => {
+  applySearch()
+  compactForSearch()
+})
+// On phones the heading folds away while searching and the results start right
+// under the search field, above the on-screen keyboard.
+function compactForSearch() {
+  if (innerWidth >= 900) return
+  document.body.classList.add('is-searching')
+  const top = document.querySelector('.menu-shell').getBoundingClientRect().top + scrollY
+  if (scrollY > top || search.value) scrollTo({ top, behavior: 'auto' })
+}
+search.addEventListener('focus', () => {
+  if (innerWidth < 900) document.body.classList.add('is-searching')
+})
+search.addEventListener('blur', () => {
+  if (!search.value) document.body.classList.remove('is-searching')
+})
 document.querySelector('#clear-search').addEventListener('click', () => {
   search.value = ''
   applySearch()

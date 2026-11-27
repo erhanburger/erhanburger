@@ -87,8 +87,9 @@ export function productProfile(product, burgerProfile) {
     } else if (key === 'chips' && optionKeys.has('chips-large')) {
       // Chips sold on their own: the portion choice swaps the regular and large serving.
       add(accessories, tray);
-      add(accessories, { ...configured, key: 'chips-regular', motion: 'chips', width: .78, positionY: .06, offset: 0 }, false);
-      add(accessories, { ...configured, key: 'chips-large', motion: 'chips', width: .98, positionY: .05, offset: 0 }, false);
+      // The large portion is drawn clearly bigger than the regular one.
+      add(accessories, { ...configured, key: 'chips-regular', motion: 'chips', width: .64, positionY: .07, offset: 0 }, false);
+      add(accessories, { ...configured, key: 'chips-large', motion: 'chips', width: 1.04, positionY: .04, offset: 0 }, false);
     } else if (key === 'chips') {
       const width = meal ? .46 : shish ? .52 : 1.03;
       if (shish) add(main, { ...configured, motion: 'chips', width: .40, positionY: .095, offset: .37, step: 0 });

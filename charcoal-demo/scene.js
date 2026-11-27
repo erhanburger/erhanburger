@@ -1,33 +1,9 @@
-import { paintSaucePour, paintSauceTrail, preloadSauceBottles, sauceProfiles } from './sauce-motion.js';
+import { paintSaucePour, paintSauceTrail, preloadSauceBottles } from './sauce-motion.js';
 import { ingredientPose, ingredientTiming } from './ingredient-motion.js';
+import { burgerProfile } from './burger-layers.js';
 
 export const CharcoalScene = (() => {
-  // Width, stacking step and offset are fractions of the rig width.
-  const assets = '../burger-builder-demo/assets/';
-  const sauceLayers = Object.entries(sauceProfiles).map(([key, sauce], index) => ({
-    key, width: .63, step: .005, offset: (index - 3) * .008, sauce,
-  }));
-  const defaultProfile = {
-    id: 'half-pounder',
-    closingLayerKey: 'top',
-    name: 'Half Pounder with Cheese',
-    layers: [
-      { key: 'bottom', width: .95, step: .141, offset: -.013, required: true },
-      { key: 'patty-a', width: .98, step: .126, offset: .007, required: true },
-      { key: 'patty-b', width: .96, step: .108, offset: -.014 },
-      { key: 'cheese', width: .97, step: .032, offset: .004 },
-      { key: 'extra-cheese', embeddedKey: 'cheese', width: .955, step: .034, offset: -.012 },
-      { key: 'halloumi', asset: './assets/halloumi.webp', width: .87, step: .068, offset: -.011 },
-      { key: 'egg', asset: './assets/egg.webp', width: .89, step: .048, offset: .012 },
-      { key: 'lettuce', width: 1.05, step: .048, offset: -.002 },
-      { key: 'tomato', width: .91, step: .068, offset: .017 },
-      { key: 'cucumber', asset: assets + 'cucumber.webp', width: .91, step: .035, offset: -.012 },
-      { key: 'gherkin', asset: assets + 'pickle.webp', width: .88, step: .033, offset: .014 },
-      { key: 'onion', asset: assets + 'onion.webp', width: .90, step: .036, offset: .018 },
-      ...sauceLayers,
-      { key: 'top', width: .98, step: 0, offset: .003, required: true },
-    ],
-  };
+  const defaultProfile = burgerProfile;
 
   const defaultTimings = { drop: 285, settle: 95, enter: 240, pour: 650, exit: 215 };
   let timings = defaultTimings;

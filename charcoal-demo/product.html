@@ -44,6 +44,8 @@
       <span class="pass-rail" aria-hidden="true"></span>
       <p class="stage-ticket" id="choice-status" aria-hidden="true">Tap a choice to add it</p>
       <span class="stage-delta" id="price-delta" aria-hidden="true"></span>
+      <ul class="stage-notes" id="stage-notes" aria-hidden="true"></ul>
+      <p class="stage-toast" id="basket-feedback" role="status"></p>
       <div class="rig" id="rig" aria-hidden="true">
         <div class="contact"></div>
         <img class="ingredient" data-layer="bottom" src="./assets/scene/bottom.webp" alt="">
@@ -70,8 +72,8 @@
       <noscript><p>Enable JavaScript to customise your order.</p></noscript>
     </section>
     <div class="order-bar">
-      <p id="basket-feedback" class="order-feedback" role="status"></p>
       <div class="order-actions">
+        <button type="button" class="order-basket" data-open-basket><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-2-1.5L14 21l-2-1.5L10 21l-2-1.5L6 21zM9 8h6M9 12h6"/></svg><span class="order-basket-text">Basket<strong data-basket-total>Empty</strong></span><span class="count-badge" data-basket-count hidden>0</span></button>
         <button type="button" class="button button--ghost" id="make-another" hidden>Make another</button>
         <button type="button" class="button order-button" id="add-to-basket"><span id="add-label">Add to basket</span><span class="button-price" id="add-price">£6.90</span></button>
       </div>

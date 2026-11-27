@@ -3,7 +3,7 @@
 // ticket: its lines are the exact WhatsApp message, so what the customer reads
 // is what is sent. The basket is only cleared once the customer confirms that
 // they sent the message.
-import { formatPrice } from './catalog.js'
+import { catalog, formatPrice, getUnitPricePence } from './catalog.js'
 import { readBasket, saveBasket, maxQuantity, readLastOrder, saveLastOrder } from './basket-storage.js'
 import { orderContact, openingStatus } from './order-config.js'
 
@@ -27,19 +27,19 @@ export const basketDialogMarkup = `
       <button type="button" class="icon-button" id="close-basket" aria-label="Close basket">${closeIcon}</button>
     </div>
     <p class="basket-shop" id="checkout-closed"></p>
-    <div id="basket-items"></div>
-    <div class="basket-review" id="basket-review">
-      <div class="basket-checkout" id="basket-checkout" hidden>
-        <div class="field">
-          <label for="order-name">Name for the order <span>optional</span></label>
-          <input id="order-name" type="text" maxlength="40" autocomplete="given-name" placeholder="So we know who it’s for">
-        </div>
-        <div class="field">
-          <label for="order-note">Note for the kitchen <span>optional</span></label>
-          <textarea id="order-note" rows="2" maxlength="300" placeholder="For example, extra napkins or no salt on chips"></textarea>
-        </div>
-        <p class="checkout-hint">Collection only from Brent South Shopping Park. Your order opens in WhatsApp for you to send, and we confirm it there. Allergies or dietary needs? Please call us before ordering.</p>
+    <div class="basket-checkout" id="basket-checkout" hidden>
+      <div class="field">
+        <label for="order-name">Name for the order <span>optional</span></label>
+        <input id="order-name" type="text" maxlength="40" autocomplete="given-name" placeholder="So we know who it’s for">
       </div>
+      <div class="field">
+        <label for="order-note">Note for the kitchen <span>optional</span></label>
+        <textarea id="order-note" rows="1" maxlength="300" placeholder="For example, extra napkins"></textarea>
+      </div>
+    </div>
+    <div id="basket-items"></div>
+    <p class="checkout-hint" id="checkout-hint" hidden>Collection only from Brent South Shopping Park. Your order opens in WhatsApp for you to send, and we confirm it there. Allergies or dietary needs? Please call us before ordering.</p>
+    <div class="basket-review" id="basket-review">
       <div class="basket-pay">
         <div class="basket-subtotal">
           <span>Total</span>
@@ -63,6 +63,25 @@ const rule = '━'.repeat(20)
 
 // The order message as tagged lines. Joined with line breaks, these are the
 // exact text sent on WhatsApp; the ticket view prints the same lines.
+// Stored lines are checked against the current menu: unknown items or choices
+// are dropped, and names and prices always come from the catalogue.
+function currentBasket() {
+  const lines = []
+  for (const line of readBasket()) {
+    const product = catalog.products.find(item => item.id === line.productId)
+    if (!product) continue
+    const options = new Map(product.optionGroups.flatMap(group => group.options).map(option => [option.id, option]))
+    if (!line.optionIds.every(id => options.has(id))) continue
+    lines.push({
+      ...line,
+      name: product.name,
+      unitPricePence: getUnitPricePence(product, new Set(line.optionIds)),
+      options: line.optionIds.map(id => options.get(id).name),
+    })
+  }
+  return lines
+}
+
 function messageLines(basket, { note = '', name = '' } = {}) {
   const lines = []
   const push = (text, kind = 'text', index) => lines.push({ text, kind, index })
@@ -128,7 +147,11 @@ function printTicket(lines, controls) {
       continue
     }
     const row = make('p', 'tl tl--' + line.kind)
-    if (line.text) row.append(formatted(line.text))
+    const amount = line.kind === 'item' ? line.text.match(/^(\*.+\*)(  x\d+  →  .+)$/) : null
+    if (amount) {
+      // The quantity and price stay together on the right of the item name.
+      row.append(formatted(amount[1]), Object.assign(make('span', 'tl-amount'), { textContent: amount[2] }))
+    } else if (line.text) row.append(formatted(line.text))
     else row.setAttribute('aria-hidden', 'true')
     ;(block ?? body).append(row)
   }
@@ -151,7 +174,7 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
   const status = $('#basket-status')
   const keepBrowsing = $('#keep-browsing')
   const callLink = $('#call-link')
-  let basket = readBasket()
+  let basket = currentBasket()
   let confirmation = null
   const quietStatus = document.createElement('p')
   quietStatus.className = 'visually-hidden'
@@ -177,6 +200,8 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
     sentCheck.hidden = !visible
     review.hidden = visible
     items.hidden = visible
+    checkout.hidden = visible || !basket.length
+    $('#checkout-hint').hidden = visible || !basket.length
     keepBrowsing.hidden = visible
   }
 
@@ -232,7 +257,8 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
   function render() {
     renderSummary()
     subtotal.textContent = formatPrice(total())
-    checkout.hidden = !basket.length
+    checkout.hidden = !basket.length || Boolean(confirmation)
+    $('#checkout-hint').hidden = !basket.length
     send.hidden = !basket.length
     $('.basket-subtotal').hidden = !basket.length
     dialog.classList.toggle('is-empty', !basket.length)
@@ -406,7 +432,8 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
 
   function open() {
     showOpeningNotice()
-    basket = readBasket()
+    basket = currentBasket()
+    saveBasket(basket)
     confirmation = null
     status.textContent = ''
     keepBrowsing.textContent = 'Keep browsing'
@@ -422,7 +449,7 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
   }
 
   function merge(line) {
-    basket = readBasket()
+    basket = currentBasket()
     confirmation = null
     const existing = basket.find(item => item.productId === line.productId &&
       item.unitPricePence === line.unitPricePence &&
@@ -451,11 +478,11 @@ export function createBasketUI({ dialog, countNode, keepBrowsingHref, onKeepBrow
   }
 
   window.addEventListener('pageshow', () => {
-    basket = readBasket()
+    basket = currentBasket()
     render()
   })
   window.addEventListener('storage', () => {
-    basket = readBasket()
+    basket = currentBasket()
     render()
   })
   for (const button of document.querySelectorAll('[data-open-basket]')) {
