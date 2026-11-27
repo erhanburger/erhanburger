@@ -89,3 +89,8 @@
 - [x] Kullanıcının onayladığı Order Counter ve Build Room birleşimini önizlemeye uygula.
 - [x] 45 ürünü masaüstü ve mobil Chromium’da fiyat, zorunlu seçenekler ve ortak sepet için yeniden doğrula.
 - [ ] Birleşik önizlemeyi fiziksel mobil cihazlarda doğrula. Kaynak kart görsellerinin son düzenlemesi için VISUAL_BACKLOG.md dosyasını kullan.
+
+## Güncel önizleme hedefi
+
+- [x] Cloudflare Pages ve `burger-builder` otomatik dağıtım ayarlarını proje hafızasına kaydet.
+- [ ] Cloudflare Pages dağıtımında ana sayfa, menü, özelleştirme, animasyon ve sepeti doğrula. Önceki Netlify doğrulama maddeleri emekliye ayrıldı.

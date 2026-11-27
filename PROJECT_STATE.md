@@ -99,3 +99,8 @@
 - Mevcut katalog, doğrulanmış GBP fiyatları, sipariş kuralları ve sahne görselleri korundu. Bazı kaynak kart fotoğraflarındaki gömülü arka planlar ve Chips sos politikasının ticari teyidi açık.
 - Bağımsız Chromium denetimi 45 ürünü masaüstü ve mobil emülasyonda doğruladı. Ürün görselleri, fiyatlar, zorunlu seçimler ve sepet kontrol edildi. Temsilî 14 üründe animasyonun tekrar oynatılması geçti. Fiziksel mobil cihaz testi yapılmadı.
 - Birleşik tasarım Cloud Chrome üzerinden yerel olarak açıldı. Netlify dağıtımı yapılmadı. Geri dönüş noktası `c59a5f7`, üç tasarım konseptinin arşivi `7536d90`.
+
+## Cloudflare Pages önizlemesine geçiş
+
+- Kullanıcı yeni önizleme projesini `erhanburger-preview.pages.dev` olarak bildirdi. Bağlı depo `erhanburger/erhanburger`, üretim dalı `burger-builder`, otomatik dağıtım açık. Birleşik tasarımın uygulama commit’i `5491f3e`. Netlify artık kullanılmayacak.
+- Bu ortamın ağ geçidi Pages alan adına bağlantıyı HTTP 403 ile reddetti. Yalnızca önizleme alan adına erişim talebi ortam yapılandırması tarafından reddedildi. Uzak dağıtım ve tarayıcı akışı bu ortamdan doğrulanamadı.

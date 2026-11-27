@@ -68,7 +68,7 @@ Tarayıcıda `http://127.0.0.1:3000/` adresini aç. Sunucu yalnızca demo klasö
 
 ## Kömür Stüdyosu
 
-`charcoal-demo/` statik önizlemedir. Onaylanan Kömür Stüdyosu görselleri ve ortak malzeme dosyaları depodadır. Depo kökünden `python3 -m http.server 3000 --bind 127.0.0.1` komutunu çalıştır ve tarayıcıda `http://127.0.0.1:3000/charcoal-demo/` adresini aç. Netlify önizleme hedefi aynı `/charcoal-demo/` yolunu kullanır.
+`charcoal-demo/` statik önizlemedir. Onaylanan Kömür Stüdyosu görselleri ve ortak malzeme dosyaları depodadır. Depo kökünden `python3 -m http.server 3000 --bind 127.0.0.1` komutunu çalıştır ve tarayıcıda `http://127.0.0.1:3000/charcoal-demo/` adresini aç. Cloudflare Pages önizlemesinde birleşik tasarımın giriş yolu `/charcoal-demo/home.html`.
 
 ### Ürün yapılandırması
 
@@ -83,3 +83,7 @@ Depo kökünden statik sunucuyu çalıştır ve `/charcoal-demo/menu.html` yolun
 ### Birleşik tasarım önizlemesi
 
 Depo kökünden yukarıdaki statik HTTP sunucusunu çalıştır ve `http://127.0.0.1:3000/charcoal-demo/home.html` adresini aç. Ana sayfa, tüm menüyü ve kategori bağlantılarını açar. Önizleme sepeti bu tarayıcıda saklanır. Bu yerel önizlemenin çalışması için Netlify veya ChatGPT Sites dağıtımı gerekmez.
+
+### Cloudflare Pages
+
+Kullanıcı `erhanburger-preview.pages.dev` projesini `erhanburger/erhanburger` deposuna bağladı. Cloudflare Pages üretim dalı `burger-builder` ve otomatik dağıtımlar açık. Birleşik tasarımın ana sayfası `/charcoal-demo/home.html`, menüsü `/charcoal-demo/menu.html` yolunu kullanır. Demo, `charcoal-demo/` klasörünün yanı sıra depo kökündeki menü fotoğraflarına ve `burger-builder-demo/assets/` klasörüne ihtiyaç duyar. Statik yayın dizini bu yolları korumalıdır. Bu Pages projesi yalnızca önizleme içindir.
