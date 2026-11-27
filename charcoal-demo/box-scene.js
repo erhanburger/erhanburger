@@ -195,10 +195,11 @@ export function planBox(recipe, manifest) {
   const extras = Object.entries(recipe.extras)
   extras.forEach(([key, extra], index) => {
     const entry = manifest.extras?.[key]
-    const size = entry ? sprite(entry) : { src: extra.fallback.src, w: extra.fallback.w, h: 0 }
-    const angle = -.6 + index * 1.25
-    const u = heap.cu + Math.cos(angle) * heap.ru * .38
-    const v = heap.cv + Math.sin(angle) * heap.rv * .32 - .04
+    const size = entry ? sprite(entry) : { src: extra.fallback.src, w: extra.fallback.w * .8, h: 0 }
+    // In a row across the front of the heap, clear of the sauce line.
+    const reach = heap.ru / coverage
+    const u = heap.cu + (index - (extras.length - 1) / 2) * reach * .7
+    const v = heap.cv + heap.rv / coverage * (.5 - (index % 2) * .4)
     items.push({
       id: 'extra-' + key, group: 'extra:' + key, ...size, material: extra.material,
       x: toX(u), y: toY(v) + recipe.heap.height + .012, rot: (rand() - .5) * 16, tier: 3, depth: v, seed: rand(),
@@ -246,7 +247,7 @@ export function planBox(recipe, manifest) {
   items.forEach((item, index) => { item.order = index })
 
   // The sauce line runs across the middle of the heap.
-  const sauce = { x: toX(heap.cu), y: toY(heap.cv) + recipe.heap.height * .7, width: heap.ru * 1.5 }
+  const sauce = { x: toX(heap.cu), y: toY(heap.cv - heap.rv * .15) + recipe.heap.height * .8, width: heap.ru * 1.5 }
   // Lid and front lip are positioned on the base image's canvas (x, y = top-left in its pixels).
   const overlay = entry => {
     const image = boxImage(entry, manifest.scale)
@@ -267,10 +268,10 @@ export function planBox(recipe, manifest) {
 }
 
 // Sauce passes for a chosen sauce: a little is a short thin line, extra is two.
-function saucePasses(target, plan, index) {
+function saucePasses(target, plan) {
   const profile = sauceProfiles[target.sauceKey]
   const { x, y, width } = plan.sauce
-  const shift = ((index % 3) - 1) * .035
+  const shift = ((target.lane * 3) % 5 - 2) * .02
   const layer = (dy, scale, body) => ({
     key: target.sauceKey, path: 'zigzag', offset: x + shift * .5,
     y: y + shift + dy - .07 * width * scale, width: width * scale,
@@ -409,7 +410,7 @@ export async function renderBoxStill(canvas, recipe, options, selectedIds) {
     // The box fills most of the card and stands a little above its foot.
     const s = Math.min(box.width * .9, box.height * .8 / (plan.top - plan.foot)) * scale
     const view = { ox: canvas.width / 2, oy: canvas.height - box.height * .08 * scale + plan.foot * s, s }
-    const layers = sauces.flatMap((target, index) => saucePasses(target, plan, index))
+    const layers = sauces.flatMap(target => saucePasses(target, plan))
       .map(layer => ({ layer, progress: 1, alpha: 1 }))
     drawBox(context, view, plan, item => groups.has(item.group) ? { h: 0, o: 1, dx: 0, rot: 0 } : null, layers)
     canvas.dataset.ready = 'true'
@@ -559,7 +560,7 @@ export const BoxScene = (() => {
 
   function sauceTargets() {
     return boxTargets(recipe, options, selection).sauces
-      .flatMap((target, index) => saucePasses(target, plan, index).map((layer, pass) =>
+      .flatMap(target => saucePasses(target, plan).map((layer, pass) =>
         ({ key: target.id + '#' + pass, layer })))
   }
 

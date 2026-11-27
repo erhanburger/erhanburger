@@ -978,6 +978,7 @@ html.has-sheet { overflow: hidden; }
    height of the food above the box foot, in box widths). */
 .stage[data-visual="box"] .rig { --tag-room: 40px; bottom: 6%; width: min(92cqw, calc((90cqh - var(--tag-room)) / var(--box-top, .6)), 600px); }
 .stage[data-visual="box"] .contact { display: none; }
+@media (min-width: 900px) and (min-height: 560px) { .stage[data-visual="box"] .rig { bottom: 16%; } }
 .box-canvas { position: absolute; z-index: 2; pointer-events: none; }
 .box-canvas--pour { z-index: 29; }
 .art-box { position: absolute; inset: 0; width: 100%; height: 100%; }

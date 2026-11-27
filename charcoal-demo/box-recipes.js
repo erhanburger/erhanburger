@@ -99,10 +99,13 @@ export function boxTargets(recipe, options, selectedIds) {
   }
   for (const option of chosen) for (const key of recipe.removals[option.id] ?? []) groups.delete(key)
   const ordered = [...selectedIds].map(id => chosen.find(option => option.id === id)).filter(Boolean)
+  // Each sauce choice has its own lane across the chicken, so a line never
+  // moves when other sauces come and go.
+  const saucy = options.filter(option => (option.layerKeys ?? []).some(layerKey => sauceProfiles[layerKey]))
   const sauces = []
   for (const option of ordered) {
     const key = (option.layerKeys ?? []).find(layerKey => sauceProfiles[layerKey])
-    if (key) sauces.push({ id: option.id, sauceKey: key, amount: recipe.sauceAmounts[option.id] ?? 'normal' })
+    if (key) sauces.push({ id: option.id, sauceKey: key, lane: saucy.indexOf(option), amount: recipe.sauceAmounts[option.id] ?? 'normal' })
   }
   return { groups, sauces }
 }
