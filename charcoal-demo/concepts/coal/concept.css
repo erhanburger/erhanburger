@@ -11,11 +11,11 @@
   --c-surface-2: #2e2a25;     /* raised well, hover */
   --c-line: rgb(242 236 224 / .14);
   --c-line-strong: rgb(242 236 224 / .32);
-  --c-text: #f2ece0;          /* bone: 15.2:1 on ground */
+  --c-text: #f2ece0;          /* bone: 14.9:1 on ground */
   --c-text-muted: #aba294;    /* ash: 7.0:1 on ground */
-  --c-action: #e8622a;        /* ember: actions only, 5.0:1 on ground */
-  --c-on-action: #1b1210;     /* text on ember: 5.6:1 */
-  --c-confirm: #94cda0;       /* leaf: confirm and halal only, 9.9:1 on ground */
+  --c-action: #e8622a;        /* ember: actions only, 5.2:1 on ground */
+  --c-on-action: #1b1210;     /* text on ember: 5.4:1 */
+  --c-confirm: #94cda0;       /* leaf: confirm and halal only, 9.6:1 on ground */
   --c-on-confirm: #14231a;
   --c-focus: #f2ece0;
   --c-warm-light: rgb(255 176 112 / .17);
