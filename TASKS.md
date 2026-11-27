@@ -79,3 +79,11 @@
 - [x] Chips seçeneklerini, Hot Dog ve Shish sahnelerini, menü kartlarını ve sepet gezinmesini iyileştir.
 - [ ] Netlify menü önizlemesini kullanıcının erişimiyle değerlendir. Chips sos politikası ve arka planı gömülü ürün fotoğrafları açık konular.
 - [x] Değişiklikleri bağımsız müşteri ajanları ve ayrı QA uzmanıyla yeniden test et.
+
+## Araştırma ve konsept karşılaştırması
+
+- [x] Çalışan önizlemenin GitHub geri dönüş noktasını kaydet.
+- [x] Erişilebilen marka ve teknik kaynakların bulgularını, kısıtlarıyla birlikte kaydet.
+- [x] Üç farklı prototipi masaüstü ve mobilde bağımsız olarak karşılaştır.
+- [ ] Birincil referansa erişim sağlandığında masaüstü ve mobil davranışı ile render tekniğini doğrula.
+- [ ] Kullanıcıyla bütün site için tasarım yönünü seç. Doğrulanmış menü ve sepet akışını koru.

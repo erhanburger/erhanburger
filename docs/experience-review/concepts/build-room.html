@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Er-Han Burger · Build Room</title>
+<style>
+:root{--paper:#f6f2eb;--ink:#201714;--red:#b52b23;--soft:#eee4d8;--line:#ddd0c2;--white:#fffaf3;--radius:17px;font:16px/1.45 Arial,Helvetica,sans-serif;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}body{margin:0}button{font:inherit;cursor:pointer}a{color:inherit}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #825318;outline-offset:3px}.top{height:72px;padding:0 max(26px,calc((100vw - 1160px)/2));background:var(--ink);color:var(--white);display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:6}.brand{font-size:21px;font-weight:900;letter-spacing:-.085em;text-transform:uppercase;white-space:nowrap}.brand span{color:#f2a864}.basket-button{border:1px solid #d6bdb1;background:transparent;color:inherit;border-radius:99px;padding:8px 15px;font-weight:700;min-height:44px}.basket-button span{margin-left:6px;color:#f3ac6c}.menu-shell{max-width:1160px;margin:auto;padding:29px 0 105px}.product-switch{display:flex;gap:9px;overflow:auto;padding:2px 2px 4px;margin-bottom:20px}.product-switch button{flex:none;border:1px solid var(--line);border-radius:100px;background:var(--white);color:var(--ink);padding:10px 17px;min-height:44px;font-weight:700}.product-switch button[aria-current=true]{background:var(--ink);color:var(--white);border-color:var(--ink)}.layout{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:start}.stage{position:sticky;top:91px;min-height:652px;overflow:hidden;border-radius:var(--radius);isolation:isolate;display:flex;flex-direction:column;align-items:stretch;padding:34px;background:#f0bd91 radial-gradient(ellipse at 48% 65%,#ffdec2 0%,#f3bf96 44%,#e29a7c 100%)}.stage:before{content:"";position:absolute;inset:0;z-index:-1;background:repeating-linear-gradient(90deg,transparent,transparent calc(16.666% - 1px),#9f483319 calc(16.666% - 1px),#9f483319 16.666%)}.stage h1{font-size:clamp(3rem,5.1vw,5.1rem);line-height:.92;letter-spacing:-.095em;text-wrap:balance;max-width:530px;margin:0}.stage-buttons{position:absolute;z-index:3;bottom:28px;left:30px;right:30px;display:flex;justify-content:space-between;align-items:center;gap:10px}.replay{background:transparent;border:1px solid #593126;color:#39231d;min-height:44px;border-radius:100px;padding:4px 13px;font-weight:750}.stage-price{font-size:1.35rem;font-weight:850;white-space:nowrap}.plate{position:absolute;left:6%;right:6%;top:27%;bottom:14%;display:grid;place-items:center}.plate:before{content:"";position:absolute;left:14%;right:14%;top:72%;height:25%;border-radius:50%;transform:rotate(-5deg);background:#8d472a67;filter:blur(24px)}.layers{width:min(65%,375px);position:relative;z-index:1;align-self:end;margin-bottom:5%;filter:drop-shadow(0 18px 18px #71372652)}.layers img{display:block;width:100%;position:absolute;left:0;bottom:var(--bottom);transform-origin:50% 75%;filter:drop-shadow(0 3px 2px #5d291e48)}.layers img.run{animation:drop .62s cubic-bezier(.32,.01,.72,.36) both;animation-delay:var(--delay)}.item-photo{position:relative;width:min(76%,450px);height:90%;object-fit:contain;filter:drop-shadow(0 23px 23px #71372654)}.item-photo.run{animation:present .58s both}@keyframes drop{0%{transform:translateY(-33px) rotate(2deg);opacity:0}70%{transform:translateY(3px) rotate(-1deg);opacity:1}100%{transform:none;opacity:1}}@keyframes present{0%{opacity:0;transform:translateY(14px) scale(.96)}100%{opacity:1;transform:none}}.steps{min-width:0}.steps h2{margin:0 0 12px;font-size:2.1rem;letter-spacing:-.06em;line-height:1.05}.steps p{margin:0 0 22px}.step{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:12px;overflow:hidden}.step summary{cursor:pointer;list-style:none;min-height:66px;display:flex;align-items:center;padding:11px 15px;gap:11px;font-size:1.1rem;font-weight:850}.step summary::-webkit-details-marker{display:none}.step summary:after{content:'+';margin-left:auto;font-size:1.35rem;color:var(--red)}.step[open] summary:after{content:'−'}.step-index{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;color:var(--white);background:var(--red);font-size:15px}.options{padding:0 11px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.options button{display:grid;grid-template-columns:45px 1fr;gap:7px;align-items:center;background:var(--paper);color:var(--ink);min-height:60px;border:1px solid var(--line);border-radius:12px;text-align:left;padding:7px;font-weight:750}.options button[aria-pressed=true]{border-color:var(--red);background:#f4dbcd;color:#6c2219;box-shadow:inset 0 0 0 1px var(--red)}.options button img{width:44px;height:43px;object-fit:contain}.options .label{line-height:1.17}.options button span small{display:block;font-size:.82em;color:#75493e;margin-top:4px}.options button.text-only{grid-template-columns:1fr;padding-left:14px}.order{position:sticky;bottom:12px;z-index:4;background:var(--ink);color:var(--white);box-shadow:0 4px 14px #20171440;border-radius:var(--radius);display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;margin-top:19px;font-weight:800}.order button,.done{border:0;background:var(--red);color:white;padding:11px 19px;border-radius:11px;font-weight:850;min-height:44px}.sum{font-size:1.3rem}.sum small{display:block;color:#e5c9b8;font-size:.72rem;font-weight:600}.dialog{border:0;border-radius:var(--radius);padding:24px;color:var(--ink);background:var(--white);width:min(95%,460px)}.dialog::backdrop{background:#20171499}.dialog h2{margin:0}.dialog p{margin:10px 0}.line{display:flex;justify-content:space-between;gap:9px;padding:12px 0;border-bottom:1px solid var(--line)}.line small{display:block;color:#75493e}.dialog button{margin-top:12px}
+@media(min-width:761px){.layout{display:block}.stage{position:relative;top:auto;min-height:455px;padding:42px}.stage h1{position:relative;z-index:2;max-width:51%;margin-top:30px}.plate{left:49%;right:4%;top:3%;bottom:14%}.layers{width:min(72%,340px);margin-bottom:5%}.steps{margin-top:32px;padding-left:8px;padding-right:335px}.steps h2{font-size:2.35rem}.steps p{margin-bottom:15px}.step{margin-bottom:13px}.options{grid-template-columns:repeat(4,minmax(0,1fr))}.order{position:fixed;bottom:20px;right:max(24px,calc((100vw - 1160px)/2));min-width:310px;margin:0}.stage-buttons{left:42px;right:42px}}
+@media(min-width:761px) and (max-width:1000px){.steps{padding-right:275px}.order{min-width:250px}.options{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1200px){.menu-shell{padding-left:24px;padding-right:24px}}
+@media(max-width:760px){.top{height:55px;padding:0 14px}.menu-shell{padding:14px 13px 90px}.product-switch{margin-bottom:12px}.product-switch button{padding:7px 12px;font-size:.88rem}.layout{display:block}.stage{min-height:253px;padding:17px;top:55px;z-index:5}.stage h1{font-size:2rem;max-width:58%;letter-spacing:-.09em;line-height:.96}.plate{left:43%;right:0;top:13%;bottom:15%}.layers{width:min(69%,165px);margin-bottom:6%}.stage-buttons{bottom:12px;left:13px;right:13px}.stage-price{font-size:1.05rem}.replay{font-size:.84rem;padding-inline:10px}.steps{margin-top:17px}.steps h2{font-size:1.62rem}.steps p{margin-bottom:14px;font-size:.91rem}.step summary{min-height:54px}.step-index{width:33px;height:33px;font-size:14px}.order{position:fixed;bottom:0;left:0;right:0;border-radius:0;box-shadow:0 -3px 12px #20171438;margin:0}.sum{font-size:1.21rem}.item-photo{width:91%;height:100%}html{scroll-padding-block:320px 85px}}
+@media(max-width:760px) and (max-height:550px){.stage{position:relative;top:auto}.steps{margin-top:11px}html{scroll-padding-block:65px 85px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">Er-Han <span>Burger</span></div>
+  <button class="basket-button" id="basket-button" type="button">Basket <span id="count">0</span></button>
+</header>
+<main class="menu-shell">
+  <nav class="product-switch" aria-label="Choose a product" id="products"></nav>
+  <section class="layout">
+    <div class="stage">
+      <h1 id="title"></h1>
+      <div class="plate" id="plate" aria-hidden="true"></div>
+      <div class="stage-buttons"><button id="replay" class="replay" type="button">Replay preparation</button><span id="item-price" class="stage-price"></span></div>
+    </div>
+    <div class="steps">
+      <h2>Make it yours</h2>
+      <p id="description"></p>
+      <div id="options"></div>
+      <div class="order"><div class="sum" aria-live="polite"><small>Total</small><span id="total"></span></div><button type="button" id="add">Add to basket</button></div>
+      <span id="announcement" role="status" style="position:absolute;clip-path:inset(100%)"></span>
+    </div>
+  </section>
+</main>
+<dialog class="dialog" id="dialog" aria-labelledby="basket-title">
+  <h2 id="basket-title">Your basket</h2>
+  <div id="basket-items"></div>
+  <div class="line"><strong>Subtotal</strong><strong id="subtotal"></strong></div>
+  <button type="button" class="done" id="continue">Continue shopping</button>
+</dialog>
+<script type="module">
+const ingredients = '/burger-builder-demo/assets/'
+const menu = '/charcoal-demo/assets/menu/'
+const products = [
+  { id:'burger', name:'Half Pounder with Cheese', price:690, description:'Choose your toppings and sauces.', groups:[
+    { name:'Toppings', choices:[
+      {id:'lettuce',name:'Lettuce',asset:'lettuce'}, {id:'tomato',name:'Tomato',asset:'tomato'},
+      {id:'extra',name:'Extra cheese',asset:'cheese',price:30}, {id:'onion',name:'Onion',asset:'onion'}
+    ]},
+    { name:'Sauces', choices:[
+      {id:'ketchup',name:'Ketchup',asset:'ketchup'}, {id:'burger-sauce',name:'Burger sauce',asset:'burger-sauce'}, {id:'mayo',name:'Mayonnaise',asset:'mayo'}
+    ]}
+  ]},
+  { id:'dog', name:'Hot Dog', price:470, description:'Choose your toppings and sauces.', groups:[
+    { name:'Toppings', choices:[{id:'onion',name:'Onion',asset:'onion'},{id:'extra',name:'Extra cheese',asset:'cheese',price:30}]},
+    { name:'Sauces', choices:[{id:'ketchup',name:'Ketchup',asset:'ketchup'},{id:'mayo',name:'Mayonnaise',asset:'mayo'}]}
+  ]},
+  { id:'chips', name:'Chips', price:290, description:'Choose a size and tell us your salt preference.', groups:[
+    { name:'Size', choices:[{id:'large',name:'Make it large',price:100}]},
+    { name:'Salt preference', single:true, choices:[{id:'salt',name:'Salt'}, {id:'no-salt',name:'No salt'}]}
+  ]}
+]
+const $ = id => document.getElementById(id)
+const currency = new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP'})
+const price = pence => currency.format(pence/100)
+let product = products[0]
+let selected = new Set()
+let basket
+try{basket = JSON.parse(sessionStorage.getItem('build-room-basket')) ?? []}catch{basket = []}
+const options = () => product.groups.flatMap(group=>group.choices).filter(choice=>selected.has(choice.id))
+const total = () => product.price + options().reduce((sum,choice)=>sum+(choice.price??0),0)
+function element(tag, name, text){
+  const node=document.createElement(tag)
+  if(name) node.className=name
+  if(text) node.textContent=text
+  return node
+}
+function image(path,className){
+  const img=element('img',className)
+  img.src=path
+  img.alt=''
+  return img
+}
+function draw(animated){
+  $('plate').replaceChildren()
+  const layers=element('div','layers')
+  function add(path, position, narrower=false){
+    const pic=image(path,animated?'run':'')
+    pic.style.setProperty('--bottom',position+'px')
+    pic.style.setProperty('--delay',(layers.childElementCount*45)+'ms')
+    if(narrower){pic.style.width='86%';pic.style.left='7%'}
+    layers.append(pic)
+  }
+  const mobile = matchMedia('(max-width:760px)').matches
+  const scale=mobile?.49:1
+  let y=15
+  if(product.id==='burger'){
+    for (const [part, rise] of [['bun',48],['beef',40],['beef',41],['cheese',16]]){
+      add(ingredients+part+'.webp',y*scale)
+      y+=rise
+    }
+    for(const choice of options()){
+      add(ingredients+choice.asset+'.webp',y*scale,product.groups[1].choices.includes(choice))
+      y+= product.groups[1].choices.includes(choice)?3:14
+    }
+    add(ingredients+'top.webp',y*scale)
+  } else if(product.id==='dog'){
+    add(menu+'dog-open-roll.webp',22*scale)
+    add(menu+'dog-overhead-sausage.webp',42*scale,true)
+    for(const choice of options()) add(ingredients+choice.asset+'.webp',52*scale,true)
+  } else {
+    const pic=image(menu+'chips.webp','item-photo'+(animated?' run':''))
+    if(selected.has('large')) pic.style.transform='scale(1.13)'
+    $('plate').append(pic)
+    return
+  }
+  $('plate').append(layers)
+}
+function render(){
+  $('title').textContent=product.name
+  $('item-price').textContent=price(product.price)
+  $('description').textContent=product.description
+  for(const button of $('products').children) button.setAttribute('aria-current',String(button.dataset.product===product.id))
+  $('options').replaceChildren()
+  product.groups.forEach((group,index)=>{
+    const details=element('details','step')
+    details.open = index===0
+    const heading=element('summary')
+    heading.append(element('span','step-index',String(index+1)),document.createTextNode(group.name))
+    details.append(heading)
+    const grid=element('div','options')
+    for(const choice of group.choices){
+      const button=element('button',choice.asset?'':'text-only')
+      button.type='button'
+      if(choice.asset) button.append(image(ingredients+choice.asset+'.webp'))
+      const label=element('span','label',choice.name)
+      if(choice.price) label.append(element('small','', '+'+price(choice.price)))
+      button.append(label)
+      button.setAttribute('aria-pressed',String(selected.has(choice.id)))
+      button.addEventListener('click',()=>{
+        const next=!selected.has(choice.id)
+        if(group.single) for(const item of group.choices) selected.delete(item.id)
+        if(next) selected.add(choice.id)
+        else selected.delete(choice.id)
+        for(const [i,control] of [...grid.children].entries()) control.setAttribute('aria-pressed',String(selected.has(group.choices[i].id)))
+        $('total').textContent=price(total())
+        draw(false)
+      })
+      grid.append(button)
+    }
+    details.append(grid)
+    $('options').append(details)
+  })
+  $('total').textContent=price(total())
+  draw(false)
+}
+function showBasket(){
+  const items=$('basket-items')
+  items.replaceChildren()
+  if(!basket.length) items.append(element('p','','Your basket is empty.'))
+  for(const item of basket){
+    const row=element('div','line')
+    const summary=element('div','',item.name)
+    if(item.extras.length) summary.append(element('small','',item.extras.join(', ')))
+    row.append(summary,element('strong','',price(item.price)))
+    items.append(row)
+  }
+  $('subtotal').textContent=price(basket.reduce((sum,item)=>sum+item.price,0))
+  $('dialog').showModal()
+}
+for(const item of products){
+  const control=element('button','',item.name)
+  control.type='button'
+  control.dataset.product=item.id
+  control.onclick=()=>{product=item; selected=new Set();render()}
+  $('products').append(control)
+}
+$('add').onclick=()=>{
+  basket.push({name:product.name,extras:options().map(choice=>choice.name),price:total()})
+  try{sessionStorage.setItem('build-room-basket',JSON.stringify(basket))}catch{}
+  $('count').textContent=basket.length
+  $('announcement').textContent=product.name+' added to your basket.'
+  showBasket()
+}
+$('basket-button').onclick=showBasket
+$('continue').onclick=()=>$('dialog').close()
+$('replay').onclick=()=>draw(true)
+matchMedia('(max-width:760px)').addEventListener('change',()=>draw(false))
+$('count').textContent=basket.length
+render()
+</script>
+</body>
+</html>
