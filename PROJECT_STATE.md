@@ -83,3 +83,9 @@
 - Sepette Continue shopping, kategoriye geri dönüş, kaydırırken görünen menü sepeti ve mobil Jump to seçici eklendi. Çelişen chilli veya peynir seçimleri için uyarı gösterilir. Kaynaktaki çoklu seçim kuralları korunur.
 - Hot Dog ve Deal 5 açık yarıklı üstten görünen ekmekle hazırlanır. Sosis ve malzemeler yarığa yerleşir, sos ekmek boyunca uygulanır. Chicken Shish fotoğraftaki ızgara tavuğu ve sebzeleri ayrı salatayla gösterir. Medium ve Large görsel ölçekte ayrılır, chips yalnız ilgili çeşitlerde görünür. Porsiyon ağırlığı, servis kabı ve nihai kart fotoğrafı gereksinimleri `VISUAL_BACKLOG.md` içinde.
 - Aynı turun bağımsız yeniden testinde iki müşteri ajanı yeni akışları kontrol etti. Ayrı QA uzmanı 45 kartın tamamını 1440×900 ve 390×844 Chromium görünümlerinde sepete ekledi. Chips boyutu, tuz ve çoklu sos notları, Hot Dog ve Shish görselleri, menüye dönüş ve zorunlu seçenekler doğrulandı. 568×320 yatay mobilde hedefli kontroller de geçti. Fiziksel mobil cihaz testi yapılmadı.
+
+## Araştırma ve yeniden tasarım
+
+- Yeniden tasarım öncesi geri dönüş noktası `c59a5f7bce82a2ac49248c319ed2881b59311f74`. Çalışma ağacı temizdi ve GitHub `burger-builder` başının aynı commit olduğu doğrulandı. Bu sürümde 45 menü kartı, Chips boyut seçimi, bağımsız testler, yarıklı Hot Dog ekmeği ve ayrı Chicken Shish sunumu mevcut.
+- Kullanıcı görsel tasarım özgürlüğünü genişletti. Önizleme yeniden tasarlanabilir. Doğrulanmış menü, sipariş ve sepet kuralları, GBP ve müşteri arayüzünde British English korunur. Üç gerçekten farklı konsept hazırlanır ve bağımsız değerlendirme yapılır. Ticari kurallar mevcut doğrulanmış kayıtlara dayanır.
+- Yalnızca `burger-builder` dalı kullanılacak. Netlify kredi limiti nedeniyle yeni dağıtım denemesi yapılmaz. Harici bütçe £0.

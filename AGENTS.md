@@ -27,3 +27,10 @@
 - Begin with independent browser journeys. Customer agents select products, customise and add to the preview basket on desktop and mobile. The critic and QA review discoverability, commercial and menu logic, accessibility, realism, motion and edge cases.
 - Share evidence across roles, agree the smallest verified improvements, implement on `burger-builder`, and ask independent agents to retest. Limit each development task to three improvement rounds. Verify facts against the approved menu or user instructions. Record unresolved prices, ingredients and commercial rules.
 - Match the preparation and animation to the actual product. Preserve the approved Charcoal Studio language, British English and GBP. Commit and push reviewed work as it is completed. Release or changes to the live site require separate user approval.
+
+## Experience redesign rules
+
+- Use `eat.brainy.ink` as the primary experience reference. Inspect it in a real desktop and mobile browser when access permits. Separate observed behaviour and browser evidence from architectural hypotheses. Do not copy another site's identity, assets or interface.
+- Research professional restaurant and design examples, then share the findings in project memory. Develop at least three materially different concepts covering layout, typography, brand character, product presentation and the customer journey. Use independent customer and QA reviews.
+- The previous Charcoal Studio visual direction may be replaced in the preview. Preserve interactive food preparation, the working basket and ordering logic, verified menu facts, and British English with GBP. Implement an option without another design approval only if independent review finds a clear winner. Where design taste decides, present the alternatives.
+- Record and verify a clean, pushed baseline before redesign. Work only on `burger-builder`. Do not inspect or change other branches. Avoid Netlify deployment attempts while its credit limit is exhausted. Use free preview methods and spend £0 externally. The three-round limit still applies.
