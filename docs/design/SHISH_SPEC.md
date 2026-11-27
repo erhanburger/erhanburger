@@ -45,21 +45,21 @@ No cartoon or geometric stand-ins. If a layer cannot be made photorealistic from
 |---|---|
 | No pepper | red and green pepper strips lift out and disappear; deselect brings them back |
 | No onion | cooked white onion strips removed; back on deselect |
-| No Veggie | removes the cooked onions and peppers (assumption: not verified with the client; see below) |
-| Salad items (Lettuce, Tomato, Cucumber, Onion, Pickle, All salad) | placed along the box side; removed on deselect |
-| Plain | clears salad (existing conflict rule) |
+| No Veggie | removes the cooked onions and peppers (confirmed by the client) |
+| Salad (included by default: lettuce, tomato, cucumber, red onion) | shown along the box side from the start; each item can be removed and returns when re-selected; Pickle can be added |
+| No salad | removes the whole salad side; any salad item re-selected brings that item back |
 | Sauces and chilli preference | the matching bottle appears and squeezes over the chicken; the sauce is removed on deselect; Extra/Little chilli changes the amount |
 | Extra cheese, Halloumi × 2, Egg | placed on the chicken (paid extras offered on the live menu) |
 
 Engine rules: state-driven (the scene always converges to the current selection), interruptible animations, no desync under rapid taps, gravity/weight/contact shadows and settling, transform and opacity only, reduced motion places items directly, the final still matches every selection.
 
-## Options review
+## Options (client decisions, 27 November 2026)
 
-- Shish currently receives the burger option groups. "No cheese" has no meaning (no cheese in the product) and is removed for shish.
-- Paid burger extras (Extra cheese, Halloumi × 2, Egg) are offered for kebabs on the live menu; they stay until the client decides.
-- Salad items are add-ons on the live menu (selected = added), while the description says shish is served with salad. The ticket semantics stay as they are; the client should confirm whether salad is included by default.
-- "No Veggie" scope is not defined on the live menu; the visual mapping above is an assumption to confirm.
-- "No onion" removes the cooked onions; salad red onion is controlled by the Onion salad choice.
+- **No Veggie** means no cooked onion and no peppers in the chicken. Separate **No onion** and **No pepper** choices also exist. These three sit in their own group ("Cooked with your chicken") and never affect the salad.
+- **Salad is included by default** (lettuce, tomato, cucumber, red onion). The customer can choose **No salad** or build their own salad by switching items off and on (Pickle can be added). The kitchen ticket lists only changes from the standard salad ("No tomato", "Pickle", "No salad"); the standard salad prints nothing.
+- "No cheese" and "Plain" have no meaning for shish and are not offered for it.
+- Paid extras offered for kebabs on the live menu (Extra cheese, Halloumi × 2, Egg) stay until the client decides otherwise.
+- "No onion" removes the cooked onions; the salad's red onion is its own salad choice.
 
 ## Delivery
 
