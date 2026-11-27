@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Er-Han Design Concepts</title>
+<style>
+:root { color-scheme: light dark; --bg: light-dark(#f4f1ec, #141312); --ink: light-dark(#1a1714, #f2ece4); --muted: light-dark(#5d554d, #b4a99c); --line: light-dark(#d9d1c6, #3a332d); --card: light-dark(#fffdf9, #1e1b18); }
+:root[data-theme=light] { color-scheme: light; } :root[data-theme=dark] { color-scheme: dark; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+main { max-width: 1100px; margin: 0 auto; padding: 32px max(5vw, 16px) 48px; }
+h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.1; margin: 0 0 8px; }
+p { color: var(--muted); margin: 0 0 24px; max-width: 62ch; }
+ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+li { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 8px; }
+li strong { font-size: 1.15rem; }
+li span { color: var(--muted); font-size: .92rem; }
+nav { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+nav a { display: inline-grid; place-items: center; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 99px; color: var(--ink); text-decoration: none; font-weight: 600; }
+nav a:hover { border-color: currentColor; }
+</style>
+</head>
+<body>
+<main>
+<h1>Er-Han Burger design concepts</h1>
+<p>Working prototypes of three different creative directions, plus the current preview for comparison. Each uses the real menu, prices, basket and WhatsApp order format.</p>
+<ul>
+<li><strong>Coal &amp; Cream</strong><span>Dark, warm grill house. Condensed display type, ember actions, halal stamp.</span><nav><a href="charcoal-demo/concepts/coal/">Home</a><a href="charcoal-demo/concepts/coal/menu.html">Menu</a><a href="charcoal-demo/concepts/coal/product.html?product=half-pounder-with-cheese">Build</a></nav></li>
+<li><strong>Neighbourhood Daylight</strong><span>Light, editorial local shop. Soft serif, paper ground, tomato actions.</span><nav><a href="charcoal-demo/concepts/daylight/">Home</a><a href="charcoal-demo/concepts/daylight/menu.html">Menu</a><a href="charcoal-demo/concepts/daylight/product.html?product=half-pounder-with-cheese">Build</a></nav></li>
+<li><strong>The Ticket</strong><span>App-first and bold. The basket is a kitchen ticket that becomes your WhatsApp message.</span><nav><a href="charcoal-demo/concepts/ticket/">Home</a><a href="charcoal-demo/concepts/ticket/menu.html">Menu</a><a href="charcoal-demo/concepts/ticket/product.html?product=half-pounder-with-cheese">Build</a></nav></li>
+<li><strong>Current preview</strong><span>The site before the redesign, for comparison.</span><nav><a href="charcoal-demo/">Home</a><a href="charcoal-demo/menu.html">Menu</a><a href="charcoal-demo/product.html?product=half-pounder-with-cheese">Build</a></nav></li>
+</ul>
+</main>
+</body>
+</html>
