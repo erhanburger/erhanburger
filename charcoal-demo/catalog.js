@@ -58,9 +58,9 @@ const preferences = [
 ];
 
 const sauces = [
-  option('burger-sauce', 'Burger sauce', 0, { image: ingredientImage('burger-sauce'), layerKeys: ['burger-sauce'] }),
-  option('ketchup', 'Ketchup', 0, { image: ingredientImage('ketchup'), layerKeys: ['ketchup'] }),
-  option('mayo', 'Mayonnaise', 0, { image: ingredientImage('mayo'), layerKeys: ['mayo'] }),
+  option('burger-sauce', 'Burger sauce', 0, { image: './assets/sauces/burger-sauce.webp', layerKeys: ['burger-sauce'] }),
+  option('ketchup', 'Ketchup', 0, { image: './assets/sauces/ketchup.webp', layerKeys: ['ketchup'] }),
+  option('mayo', 'Mayonnaise', 0, { image: './assets/sauces/mayo.webp', layerKeys: ['mayo'] }),
   option('chilli-sauce', 'Chilli sauce', 0, { image: './assets/sauces/chilli-sauce.webp', layerKeys: ['chilli-sauce'] }),
   option('garlic-mayo', 'Garlic mayonnaise', 0, { image: './assets/sauces/garlic-mayo.webp', layerKeys: ['garlic-mayo'] }),
   option('bbq-sauce', 'BBQ sauce', 0, { image: './assets/sauces/bbq-sauce.webp', layerKeys: ['bbq-sauce'] }),
@@ -109,7 +109,7 @@ export const halfPounder = {
   builderDescription: 'Choose your fillings and sauces.',
   categoryId: 'beef-burgers',
   basePricePence: 690,
-  image: '../IMG_0352.png',
+  image: './assets/products/burger-half.webp',
   preview: {
     id: 'half-pounder',
     fixedLayerKeys: ['bottom', 'patty-a', 'patty-b', 'cheese', 'top'],
@@ -132,8 +132,8 @@ const mealDrinkIds = [
 const drinksById = new Map(sidesAndDrinks.filter(item => item.categoryId === 'drinks')
   .map(item => [item.id, item]));
 const mealDrink = { ...group('drink', 'Choose your drink', mealDrinkIds.map(id => {
-  const { name, image } = drinksById.get(id);
-  return option(id, name, 0, { image, layerKeys: ['drink-' + id] });
+  const { name, image, cutout, sceneWidth } = drinksById.get(id);
+  return option(id, name, 0, { image: cutout ?? image, cutout, sceneWidth, layerKeys: ['drink-' + id] });
 }), 'photos', 1, 1), requiredMessage: 'Please choose a drink.' };
 
 // Mirrors the source's openCustomise item types. A new menu entry supplies

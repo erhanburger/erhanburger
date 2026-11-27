@@ -2,34 +2,77 @@
 <html lang="en-GB">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#141312">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#151412">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23C21F17'/%3E%3Cpath d='M8 12l16-4M8 18l16-4M8 24l16-4' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <!-- Fonts: Google Fonts for now; self-host Archivo and IBM Plex Mono before launch. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..100,400..900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+  <link rel="stylesheet" href="./tokens.css">
+  <link rel="stylesheet" href="./components.css">
   <title>Menu · Er-Han Burger</title>
-  <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./menu.css">
+  <meta name="description" content="The full Er-Han Burger menu: meal deals, burgers, chicken shish, hot dogs, sides and drinks. Order on WhatsApp for collection at Brent South Shopping Park.">
   <script src="./menu.js" type="module"></script>
 </head>
-<body>
-  <header class="masthead">
-    <div class="masthead-inner">
-      <a class="wordmark" href="./">Er-Han <span>Burger</span></a>
-      <button type="button" class="basket-button menu-basket" id="open-basket">Basket <span id="basket-count">0</span></button>
+<body class="page-menu">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="appbar">
+    <div class="wrap appbar-inner">
+      <a class="brand" href="./index.html" aria-label="Er-Han Burger, home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#C21F17"/><path d="M8 12l16-4M8 18l16-4M8 24l16-4" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+        <span class="brand-word">Er-Han <span>Burger</span></span>
+      </a>
+      <span class="status-pill" data-open-status>Opening hours</span>
+      <nav class="appbar-nav" aria-label="Main">
+        <a href="./menu.html" data-nav="menu">Menu</a>
+        <a href="./product.html" data-nav="build">Build a burger</a>
+        <button type="button" class="appbar-basket" id="open-basket" data-open-basket>Basket <span class="appbar-total" data-basket-total>Empty</span><span class="count-badge" data-basket-count hidden>0</span></button>
+      </nav>
     </div>
   </header>
-  <main class="menu">
-    <h1>Menu</h1>
-    <p class="menu-service">Collection only. Build your order here and send it to us on WhatsApp, or call <a id="menu-call"></a>.</p>
-    <p class="menu-status" id="menu-status"></p>
-    <div class="menu-search">
-      <label for="menu-search">Search the menu</label>
-      <input id="menu-search" type="search" placeholder="For example, nuggets, cheese or Pepsi" autocomplete="off">
+  <main id="main" class="menu">
+    <div class="wrap menu-head">
+      <div class="menu-heading">
+        <p class="label">Fresh · grilled · halal · since 2013</p>
+        <h1 class="display">Menu</h1>
+      </div>
+      <div class="menu-intro">
+        <p class="menu-status" id="menu-status"></p>
+        <p class="menu-service">Collection only from Brent South Shopping Park. Build your order here and send it on WhatsApp, or call <a id="menu-call" href="tel:07576113811">07576 113811</a>.</p>
+      </div>
     </div>
-    <nav class="menu-categories" aria-label="Menu categories"></nav>
-    <p class="menu-no-results" id="menu-no-results" hidden>No items match your search.</p>
-    <div id="menu-products"></div>
-    <noscript><p>Enable JavaScript to view the menu.</p></noscript>
+    <div class="wrap menu-shell">
+      <div class="menu-rail">
+        <div class="search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+          <label class="visually-hidden" for="menu-search">Search the menu</label>
+          <input id="menu-search" type="search" placeholder="Search the menu" autocomplete="off">
+        </div>
+        <nav class="menu-categories" aria-label="Menu sections"></nav>
+        <p class="rail-note">Allergies or dietary needs? Please call <a class="phone-link" href="tel:07576113811">07576 113811</a> before ordering.</p>
+      </div>
+      <div class="menu-content">
+        <div class="menu-empty" id="menu-no-results" hidden>
+          <p class="menu-empty-title">Nothing on the grill by that name.</p>
+          <p>Try “chicken”, “chips” or “cola”.</p>
+          <button type="button" class="button button--ink" id="clear-search">Clear search</button>
+        </div>
+        <div id="menu-products"></div>
+        <p class="visually-hidden" role="status" id="search-status"></p>
+        <noscript><p>Enable JavaScript to view the menu.</p></noscript>
+      </div>
+      <aside class="menu-ticket" id="menu-ticket" aria-label="Your basket"></aside>
+    </div>
   </main>
+  <nav class="tabbar" aria-label="Quick links">
+    <a href="./menu.html" data-nav="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Menu</a>
+    <a href="./product.html" data-nav="build"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10a8 5 0 0 1 16 0zM3.5 13.5h17M4 17h16a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z"/></svg>Build</a>
+    <button type="button" class="tabbar-basket" data-open-basket>
+      <span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-2-1.5L14 21l-2-1.5L10 21l-2-1.5L6 21zM9 8h6M9 12h6"/></svg><span class="count-badge" data-basket-count hidden>0</span></span>
+      <span class="tabbar-basket-text">Basket<strong data-basket-total>Empty</strong></span>
+    </button>
+  </nav>
   <dialog id="basket-dialog" class="basket-dialog" aria-labelledby="basket-heading"></dialog>
 </body>
 </html>

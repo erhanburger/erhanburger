@@ -16,7 +16,8 @@ out = Path(sys.argv[1]).resolve()
 if out == root or root in out.parents:
     sys.exit('Choose an output folder outside the repository.')
 shutil.rmtree(out, ignore_errors=True)
-shutil.copytree(source, out)
+# Concept prototypes have their own gallery bundle (build-gallery-preview.py).
+shutil.copytree(source, out, ignore=shutil.ignore_patterns('concepts'))
 
 pattern = re.compile(r'\.\./((?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_.-]*)')
 shared = set()

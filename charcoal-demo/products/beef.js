@@ -1,5 +1,5 @@
-const quarterPhoto = '../IMG_0351.png';
-const halfPhoto = '../IMG_0352.png';
+const quarterPhoto = './assets/products/burger-quarter.webp';
+const halfPhoto = './assets/products/burger-half.webp';
 
 function beefBurger(id, name, basePricePence, image, components) {
   return {

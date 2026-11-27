@@ -1,4 +1,4 @@
-const hotDogPhoto = '../IMG_0353.png';
+const hotDogPhoto = './assets/products/hot-dog.webp';
 
 export default [
   {

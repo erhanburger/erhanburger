@@ -133,11 +133,12 @@ export function productProfile(product, burgerProfile) {
     }
   }
 
-  // Standalone products and the sandwich can use the existing menu photograph.
+  // Standalone products and the sandwich use their menu photograph or cut-out.
   if (!foodTypes.has(product.visual)) {
     add(main, {
-      key: 'menu-photo', asset: product.image, motion: 'slice', width: product.categoryId === 'drinks' ? .56 : .79,
-      offset: 0, step: 0, positionY: 0, menuPhoto: product.categoryId !== 'sides',
+      key: 'menu-photo', asset: product.cutout ?? product.image, motion: 'slice',
+      width: product.sceneWidth ?? (product.categoryId === 'drinks' ? .56 : .79),
+      offset: 0, step: 0, positionY: 0, menuPhoto: !product.cutout && product.categoryId !== 'sides',
     });
   }
 
@@ -160,8 +161,8 @@ export function productProfile(product, burgerProfile) {
     const key = choice.layerKeys?.find(id => id.startsWith('drink-'));
     if (!key) continue;
     add(accessories, {
-      key, asset: choice.image, width: .255, offset: .57, positionY: .05,
-      motion: 'slice', menuPhoto: true, step: 0,
+      key, asset: choice.cutout ?? choice.image, width: choice.sceneWidth ? choice.sceneWidth * .7 : .255,
+      offset: .57, positionY: .05, motion: 'slice', menuPhoto: !choice.cutout, step: 0,
     }, false);
   }
   add(main, cover);

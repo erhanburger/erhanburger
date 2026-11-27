@@ -1,0 +1,72 @@
+/* Er-Han Burger design tokens: the Ticket direction.
+   One ground (paper), one text colour (ink), one action colour (fire), one
+   confirm colour (go, WhatsApp and success only) and the dark kitchen pass the
+   food is shown on. Contrast ratios are for normal text on the named ground. */
+:root {
+  color-scheme: light;
+
+  /* Colour roles */
+  --paper: #f2ecdf;          /* page ground */
+  --paper-2: #e8e0cf;        /* wells, quiet surfaces */
+  --slip: #fbf8f1;           /* cards and the printed ticket */
+  --ink: #151412;            /* text, rules, dark bars: 15.6:1 on paper */
+  --ink-2: #5a544a;          /* secondary text: 6.4:1 on paper, 5.8:1 on paper-2 */
+  --line: rgb(21 20 18 / .16);
+  --fire: #c21f17;           /* the action colour: 5.1:1 on paper, white on fire 6.0:1 */
+  --fire-deep: #9e180f;
+  --fire-soft: #ff7a70;      /* fire on dark grounds: 6.9:1 on pass */
+  --go: #10794a;             /* WhatsApp and success only: white on go 5.4:1 */
+  --go-deep: #0b5e39;
+  --pass: #171310;           /* the kitchen pass behind the food */
+  --pass-2: #241d17;
+  --on-dark: #f2ecdf;        /* 15.4:1 on pass */
+  --on-dark-2: #cbc2b2;      /* 10.4:1 on pass */
+  --focus: #1d4ed8;          /* focus ring on light grounds: 6.1:1 on paper */
+  --focus-on-dark: #9cc0ff;
+
+  /* Type: Archivo (condensed for display) and IBM Plex Mono for ticket details */
+  --font-display: 'Archivo', 'Arial Narrow', system-ui, sans-serif;
+  --font-text: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+  /* Five sizes only */
+  --t-label: .75rem;                                    /* 12: mono labels, tile names */
+  --t-small: .875rem;                                   /* 14: secondary text */
+  --t-body: 1rem;                                       /* 16: body, buttons */
+  --t-title: clamp(1.625rem, 1.15rem + 1.9vw, 2.75rem); /* 26–44: titles */
+  --t-display: clamp(3rem, 1.2rem + 7.4vw, 7.5rem);     /* 48–120: hero and page names */
+
+  /* Space: 4 px base */
+  --s-1: .25rem; --s-2: .5rem; --s-3: .75rem; --s-4: 1rem; --s-5: 1.5rem; --s-6: 2rem; --s-7: 3rem; --s-8: 5rem;
+  --gutter: clamp(1rem, 3.4vw, 2.5rem);
+  --max: 1440px;
+
+  /* Shape */
+  --r-1: 4px; --r-2: 10px; --r-3: 18px; --r-pill: 999px;
+  --border: 1.5px solid var(--ink);
+  --border-strong: 2px solid var(--ink);
+
+  /* Elevation: a soft printed edge rather than a hard block shadow */
+  --e-press: 0 2px 0 rgb(21 20 18 / .9), 0 6px 14px rgb(21 20 18 / .1);
+  --e-card: 0 1px 0 rgb(21 20 18 / .12), 0 8px 22px rgb(60 36 12 / .07);
+  --e-lift: 0 3px 0 rgb(21 20 18 / .9), 0 12px 26px rgb(60 36 12 / .14);
+  --e-sheet: 0 -18px 50px rgb(21 20 18 / .3);
+  --e-food: drop-shadow(0 12px 14px rgb(0 0 0 / .35));
+
+  /* Sizes */
+  --tap: 44px;
+  --bar-h: 64px;
+  --appbar-h: 60px;
+
+  /* Motion: menus barely move; the builder and confirmations do */
+  --m-fast: 140ms; --m-base: 220ms; --m-slow: 380ms;
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --ease-drop: cubic-bezier(.3, 1.35, .5, 1);
+}
+
+@media (min-width: 900px) {
+  :root { --appbar-h: 68px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --m-fast: 0ms; --m-base: 0ms; --m-slow: 0ms; }
+}
