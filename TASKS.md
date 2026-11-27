@@ -99,3 +99,13 @@
 - [ ] Bağımsız masaüstü/mobil müşteri ve eleştirmen incelemesi; bulguların uygulanması.
 - [ ] Kullanıcı onayı bekleyen: chips/nuggets sos ve tuz kuralı, ürüne özel seçenek listeleri, chilli kuralı.
 - [ ] Son aşama: ürün fotoğraflarının nihai kalitesi (beyaz arka planlı fotoğraflar, paylaşılan burger fotoğrafı).
+
+## Profesyonel yeniden tasarım (26–27 Kasım 2026)
+
+- [x] Araştırma (marka, sipariş UX, görseller/hareket, frontend) ve kullanıcının referansı Carte; `docs/design/`.
+- [x] Bağımsız ajans denetimi (`docs/design/AUDIT.md`).
+- [x] Standart ürün görsel seti (`charcoal-demo/assets/products/`).
+- [x] Üç konsept prototipi ve bağımsız değerlendirme (`docs/design/EVALUATION.md`); karar: Ticket yönü, ortak motor üzerinde.
+- [x] Üretim sayfalarının yeniden kurulması ve üç inceleme turu; son QA temiz. Önizleme sürüm 7.
+- [ ] Kullanıcı kararları: hot dog/shish seçenekleri, chips/nuggets sos ve tuz kuralı, chilli kuralı, chips biletinde "Regular" satırı.
+- [ ] Son aşama: gerçek ürün fotoğrafları (chicken burger, halloumi sandviç, veggie deal, UK Diet Coke, burger çeşitleri), yazı tiplerinin siteye gömülmesi, canlı yayın onayı.
