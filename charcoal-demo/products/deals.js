@@ -19,8 +19,8 @@ function meal(id, main, basePricePence, image, mainComponents, cardDrink, popula
 }
 
 export default [
-  meal(1, 'Quarter Burger', 790, photos + 'burger-quarter.webp', ['bottom', 'beef', 'top'], 'coca-cola-classic', true),
-  meal(2, 'Half Burger', 980, photos + 'burger-half.webp', ['bottom', 'beef', 'beef', 'top'], 'pepsi', true),
+  meal(1, 'Quarter Burger', 790, photos + 'burger-quarter.webp', ['bottom', 'patty-a', 'top'], 'coca-cola-classic', true),
+  meal(2, 'Half Burger', 980, photos + 'burger-half.webp', ['bottom', 'patty-a', 'patty-b', 'top'], 'pepsi', true),
   meal(3, 'Chicken Burger', 790, photos + 'chicken-burger.webp', ['bottom', 'chicken', 'top'], 'fanta-orange'),
   meal(4, 'Chicken Nuggets', 780, photos + 'nuggets.webp', ['nugget'], 'tango-orange'),
   meal(5, 'Hot Dog', 790, photos + 'hot-dog.webp', ['dog-bottom', 'sausage', 'dog-top'], 'coca-cola-zero', true),

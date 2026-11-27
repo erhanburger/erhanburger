@@ -21,16 +21,17 @@ if (halfPounder) {
 const deals = document.querySelector('#popular-deals')
 for (const deal of catalog.products.filter(({ popular }) => popular)) {
   const item = make('li', 'deal-card')
-  const [title, contents] = deal.name.split(' – ')
+  const [, contents] = deal.name.split(' – ')
   const body = make('div', 'deal-body')
   const name = make('h3', 'deal-name')
-  const link = make('a', 'deal-link', contents ?? title)
+  const link = make('a', 'deal-link', contents ?? deal.name)
+  link.setAttribute('aria-label', deal.name)
   link.href = productHref(deal.id)
   name.append(link)
   const foot = make('div', 'deal-foot')
   foot.append(make('span', 'price', formatPrice(deal.basePricePence)), make('span', 'menu-customise', 'Choose a drink'))
   foot.lastChild.setAttribute('aria-hidden', 'true')
-  body.append(make('p', 'label deal-no', title), name, foot)
+  body.append(make('p', 'label deal-no', 'Popular meal deal'), name, foot)
   item.append(productArt(deal, { eager: true }), body)
   deals.append(item)
 }
@@ -50,6 +51,14 @@ for (const [index, category] of catalog.categories.entries()) {
     make('span', 'label category-row-meta', items.length + (items.length === 1 ? ' item' : ' items') + ' · from ' + formatPrice(from)))
   item.append(link)
   categoryGrid.append(item)
+}
+
+// The menu section's feature: a plated shish, built like the builder shows it.
+const featured = catalog.products.find(({ id }) => id === 'chicken-shish-medium-with-chips')
+if (featured) {
+  const feature = document.querySelector('#feature-dish')
+  feature.append(productArt(featured, { eager: true }),
+    make('span', 'feature-caption', featured.name), make('span', 'price', formatPrice(featured.basePricePence)))
 }
 
 for (const link of document.querySelectorAll('.phone-link')) {

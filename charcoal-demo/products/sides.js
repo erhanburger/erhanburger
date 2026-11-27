@@ -25,6 +25,7 @@ const sides = [
   sweet('mars', 'Mars'),
   sweet('bounty', 'Bounty'),
   menuItem('hot-dogs', 'halloumi-cheese-sandwich', 'Halloumi Cheese Sandwich', 550, './assets/products/halloumi-sandwich.webp', {
+    sceneWidth: .6,
     // The only photo is a styled overhead shot, so the card is composed from cut-outs.
     art: [
       { src: './assets/menu/roll-bottom.webp', w: .62, base: .2, z: 1 },
@@ -39,7 +40,7 @@ const sides = [
 // cut-outs of the same files (assets/cutouts) in the builder scene. sceneWidth is
 // the preview width as a share of the stage, by pack shape.
 const can = .3;
-const bottle = .2;
+const bottle = .17;
 const carton = .27;
 function drink(id, name, basePricePence, file, sceneWidth) {
   return menuItem('drinks', id, name, basePricePence, './assets/products/' + file + '.webp', {

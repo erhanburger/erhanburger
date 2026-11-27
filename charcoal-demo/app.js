@@ -87,7 +87,7 @@ function renderTitle() {
 function finishTitle() {
   const back = $('#back-link')
   back.href = menuHref
-  back.setAttribute('aria-label', 'Back to ' + categoryName.toLowerCase())
+  back.setAttribute('aria-label', 'Menu: back to ' + categoryName.toLowerCase())
   // The Build tab keeps the customer on the item they are building.
   for (const link of document.querySelectorAll('[data-nav="build"]')) link.href = location.pathname.split('/').pop() + location.search
 }
@@ -199,17 +199,17 @@ function renderPairings() {
     link.href = './product.html?product=' + encodeURIComponent(item.id)
     row.append(productArt(item, { className: 'art--thumb', eager: true }), link, make('span', 'price', formatPrice(item.basePricePence)))
     if (!item.optionGroups.length) {
-      const add = make('button', 'button button--small button--ink pairing-add', 'Add')
+      const add = make('button', 'button button--small pairing-add', '+ Add')
       add.type = 'button'
       add.setAttribute('aria-label', 'Add ' + item.name + ' to basket, ' + formatPrice(item.basePricePence))
       add.addEventListener('click', () => {
         const quantity = basketUI.addQuietly({ productId: item.id, name: item.name, unitPricePence: item.basePricePence, optionIds: [], options: [] })
-        add.textContent = quantity > 1 ? quantity + ' added' : 'Added'
+        add.textContent = quantity > 1 ? quantity + ' in basket' : 'Added'
         showToast(item.name + ' added to your basket.')
       })
       row.append(add)
     } else {
-      const go = make('span', 'menu-customise', 'Choose')
+      const go = make('span', 'pairing-go', 'Customise')
       go.setAttribute('aria-hidden', 'true')
       row.append(go)
     }
@@ -293,7 +293,8 @@ function updatePriceAndControls() {
   const total = getUnitPricePence(product, selected)
   const extras = total - product.basePricePence
   priceTotal.textContent = formatPrice(total)
-  priceBreakdown.textContent = extras ? formatPrice(product.basePricePence) + ' + ' + formatPrice(extras) + ' extras' : 'Base price'
+  // Phones show the short form ("+ £0.30 extras"); wider screens add the base.
+  priceBreakdown.replaceChildren(...(extras ? [make('span', 'breakdown-base', formatPrice(product.basePricePence) + ' '), '+ ' + formatPrice(extras) + ' extras'] : ['Base price']))
   if (phase === 'build') addPrice.textContent = formatPrice(total)
   if (total !== lastPrice) {
     delta.textContent = (total > lastPrice ? '+' : '−') + formatPrice(Math.abs(total - lastPrice))

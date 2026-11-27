@@ -50,7 +50,7 @@ export function restingLayers(product) {
 function image(src, eager, onError) {
   const node = document.createElement('img')
   node.alt = ''
-  node.decoding = 'async'
+  node.decoding = 'auto'
   node.loading = eager ? 'eager' : 'lazy'
   node.draggable = false
   node.addEventListener('error', onError, { once: true })

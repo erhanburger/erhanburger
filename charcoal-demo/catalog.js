@@ -147,7 +147,7 @@ const sideSauces = {
 const seasoning = group('seasoning', 'Seasoning', [option('salt', 'Salt'), option('vinegar', 'Vinegar')])
 const chipsSize = { ...group('size', 'Size', [
   option('chips-regular', 'Regular', 0, { image: './assets/menu/chips.webp', layerKeys: ['chips-regular'] }),
-  option('chips-large', 'Make it large', 100, { image: './assets/menu/chips.webp', layerKeys: ['chips-large'] }),
+  option('chips-large', 'Make it large', 100, { image: './assets/menu/chips.webp', layerKeys: ['chips-large', 'chips-large-heap'] }),
 ], 'photos', 1, 1), defaultOptionIds: ['chips-regular'], hideInSummary: ['chips-regular'] }
 const nuggetCount = { ...group('pieces', 'Pieces', [
   option('nuggets-6', '6 pieces', 0, { image: './assets/menu/nugget.webp' }),

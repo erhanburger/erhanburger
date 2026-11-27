@@ -5,8 +5,9 @@ const photo = (key, width, step = 0, motion = 'slice') => ({
 });
 const componentPhotos = {
   beef: { asset: sharedAssets + 'beef.webp', width: .98, step: .125, offset: 0, motion: 'patty' },
-  chicken: photo('chicken', .91, .17, 'patty'),
-  veggie: photo('veggie', .92, .147, 'patty'),
+  // Chicken and veggie patties stand a little proud of the bun so they read at a glance.
+  chicken: photo('chicken', 1.02, .17, 'patty'),
+  veggie: photo('veggie', 1.0, .147, 'patty'),
   'dog-bottom': photo('roll-bottom', 1.08, .096, 'bread'),
   sausage: photo('sausage', .99, .058, 'patty'),
   'dog-top': photo('roll-top', 1.08, 0, 'crown'),
@@ -88,8 +89,9 @@ export function productProfile(product, burgerProfile) {
       // Chips sold on their own: the portion choice swaps the regular and large serving.
       add(accessories, tray);
       // The large portion is drawn clearly bigger than the regular one.
-      add(accessories, { ...configured, key: 'chips-regular', motion: 'chips', width: .64, positionY: .07, offset: 0 }, false);
-      add(accessories, { ...configured, key: 'chips-large', motion: 'chips', width: 1.04, positionY: .04, offset: 0 }, false);
+      add(accessories, { ...configured, key: 'chips-regular', motion: 'chips', width: .56, positionY: .08, offset: 0 }, false);
+      add(accessories, { ...configured, key: 'chips-large', motion: 'chips', width: 1.04, positionY: .04, offset: -.04 }, false);
+      add(accessories, { ...configured, key: 'chips-large-heap', motion: 'chips', width: .86, positionY: .15, offset: .08, restingAngle: 7 }, false);
     } else if (key === 'chips') {
       const width = meal ? .46 : shish ? .52 : 1.03;
       if (shish) add(main, { ...configured, motion: 'chips', width: .40, positionY: .095, offset: .37, step: 0 });

@@ -96,6 +96,16 @@ for (const { id, name } of catalog.categories) {
   sections.push({ section, shortcut })
 }
 
+// A strip of dishes in the heading, drawn like the cards (wide screens only).
+const feature = document.querySelector('#menu-feature')
+for (const id of ['half-pounder-with-cheese', 'chicken-shish-medium-with-chips', 'hot-dog-with-cheese']) {
+  const product = catalog.products.find(item => item.id === id)
+  if (!product) continue
+  const tile = make('li')
+  tile.append(productArt(product, { eager: true }))
+  feature.append(tile)
+}
+
 const menuCall = document.querySelector('#menu-call')
 menuCall.href = orderContact.phoneHref
 menuCall.textContent = orderContact.phoneLabel
