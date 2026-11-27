@@ -114,14 +114,14 @@ export function recipe(product, selected) {
     const drinkId = drinkKey?.slice(6)
     const main = base.includes('nugget') ? null : stackKeys(added.filter(key => !key.startsWith('drink-')))
     if (drinkId) items.push({ type: 'item', key: 'drink', src: drinkImage(drinkId), w: drinkWidth(drinkId) * 2.1, x: .44, y: .2, z: 1, tall: true })
-    else items.push({ type: 'ghost', key: 'drink', w: .3, x: .44, y: .2, z: 1 })
+    else items.push({ type: 'ghost', key: 'drink', src: asset('./assets/props/drink-placeholder.webp'), w: .36, x: .44, y: .2, z: 1 })
     if (main) items.push({ type: 'stack', key: 'main', keys: main, x: -.12, y: 0, scale: .8, z: 3 })
     else {
       const spots = [[-.34, .06, -10], [-.06, .04, 8], [-.2, .2, 4], [.06, .2, -12]]
       spots.forEach(([x, y, r], i) => items.push({ type: 'item', key: 'nugget-' + i, src: menuCut('nugget'), w: .34, x, y, z: 4 - (y > .1 ? 2 : 0), rotate: r }))
     }
     items.push({ type: 'item', key: 'chips', src: menuCut('chips'), w: .52, x: .3, y: -.04, z: 5 })
-    return { kind: 'meal', fit: [1.9, 1.5], items, closing: main ? 'main' : null }
+    return { kind: 'meal', fit: [1.6, 1.15], items, closing: main ? 'main' : null }
   }
 
   if (base.includes('shish')) {

@@ -62,6 +62,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 img { max-width: 100%; display: block; }
+[hidden] { display: none !important; }
 h1, h2, h3, p { margin: 0; }
 a { color: inherit; }
 button, input, textarea { font: inherit; color: inherit; }
@@ -92,7 +93,7 @@ html.has-sheet { overflow: hidden; }
 .appbar-inner { height: 100%; display: flex; align-items: center; gap: var(--s-3); }
 .brand { display: inline-flex; align-items: center; gap: var(--s-2); text-decoration: none; min-height: var(--tap); }
 .brand-mark { width: 30px; height: 30px; flex: none; }
-.brand-word { font-family: var(--font-display); font-stretch: 62%; font-weight: 900; font-size: 1.75rem; line-height: 1; letter-spacing: .01em; text-transform: uppercase; }
+	.brand-word { white-space: nowrap; font-family: var(--font-display); font-stretch: 62%; font-weight: 900; font-size: 1.75rem; line-height: 1; letter-spacing: .01em; text-transform: uppercase; }
 .brand-word span { color: var(--fire); }
 .status-pill {
   display: inline-flex; align-items: center; gap: 7px;
@@ -216,7 +217,7 @@ body { padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); }
   display: grid; place-items: center; text-align: center;
   font: 600 .6875rem/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2);
 }
-.food--thumb .food-ghost { display: none; }
+.food-ghost { aspect-ratio: 1 / 1.6; font-size: .625rem; }
 .food::after { /* contact shadow on the surface */
   content: ''; position: absolute; left: 50%; bottom: 6%; width: 74%; height: 9%; translate: -50% 40%;
   background: radial-gradient(closest-side, rgba(60, 36, 12, .3), transparent); z-index: 0; pointer-events: none;
@@ -514,7 +515,7 @@ body { padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); }
 .b-price small { display: block; font-size: .6875rem; color: var(--ink-2); font-weight: 500; margin-top: 3px; letter-spacing: .02em; }
 .b-stage { position: relative; min-height: 150px; margin: var(--s-2) var(--gutter) 0; border-radius: var(--r-2); }
 .b-stage .food { position: absolute; inset: 0; }
-.b-status { position: absolute; left: var(--s-3); bottom: var(--s-2); z-index: 9000; font: 600 .6875rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: .08em; background: var(--slip); border: 1.5px solid var(--ink); padding: 5px 7px; border-radius: 3px; }
+.b-status { position: absolute; left: var(--s-3); top: var(--s-3); z-index: 9000; font: 600 .6875rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: .08em; background: var(--slip); border: 1.5px solid var(--ink); padding: 5px 7px; border-radius: 3px; }
 .b-status.is-ready { background: var(--go); color: #fff; border-color: var(--go); }
 .b-delta { position: absolute; right: var(--s-3); top: var(--s-3); z-index: 9000; font: 700 .9375rem/1 var(--font-mono); background: var(--ink); color: var(--on-dark); padding: 6px 8px; border-radius: 3px; opacity: 0; pointer-events: none; }
 .b-delta.is-on { animation: delta 900ms var(--ease-out); }
@@ -547,7 +548,7 @@ body { padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); }
   transition: background var(--m-base), box-shadow var(--m-base), transform var(--m-fast) var(--ease-drop);
 }
 .tile-disc img { width: 84%; height: 84%; object-fit: contain; }
-.tile-disc .tall { height: 86%; width: auto; }
+.tile-disc .tall { height: 84%; width: 84%; object-fit: contain; }
 .tile-disc .stack3 { position: relative; width: 100%; height: 100%; }
 .tile-disc .stack3 img { position: absolute; left: 12%; width: 76%; height: auto; }
 .tile-text { font: 700 .75rem/1.05 var(--font-mono); text-transform: uppercase; padding: 0 4px; }
@@ -609,4 +610,27 @@ body { padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); }
   :root { --m-fast: 0ms; --m-base: 0ms; --m-drop: 0ms; --m-slow: 0ms; }
   *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
   .food-steam { display: none; }
+}
+
+/* ---------- 11. Phone refinements ---------- */
+.status-pill .long { display: none; }
+@media (min-width: 900px) { .status-pill .long { display: inline; } }
+@media (max-width: 899px) {
+  .builder-page .appbar { display: none; }
+  .builder { height: calc(100dvh - var(--bar-h) - env(safe-area-inset-bottom)); }
+  .b-head h1 { font-size: 1.75rem; }
+  .b-head h1.is-long { font-size: 1.4rem; }
+  .b-head .btn-icon { width: 44px; height: 44px; }
+  .tiles { grid-auto-columns: 66px; gap: 6px 4px; }
+  .tile-disc { width: 58px; height: 58px; }
+  .tile-label { font-size: .6875rem; line-height: 1.1; max-width: 66px; }
+  .tile-price { font-size: .625rem; }
+  .b-note { margin-bottom: 2px; }
+}
+@media (max-width: 899px) {
+  .hero-art { min-height: 360px; }
+  .hero-ticket { width: 60%; right: 0; font-size: .625rem; padding-inline: var(--s-3); }
+  .hero-ticket .tl--head b { font-size: .6875rem; }
+  .hero-food { inset: 30% 36% 0 0; }
+  .hero-food .food { inset: 0; }
 }

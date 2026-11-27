@@ -55,6 +55,7 @@ function run(product, preset) {
     title.append(hidden, document.createElement('br'), em)
   }
   document.title = name + ' · Er-Han Burger'
+  title.classList.toggle('is-long', name.length > 28)
   $('[data-category]').textContent = categoryName(product.categoryId)
   $('[data-back]').href = './menu.html#' + product.categoryId
   $('[data-back]').setAttribute('aria-label', 'Back to ' + categoryName(product.categoryId).toLowerCase())

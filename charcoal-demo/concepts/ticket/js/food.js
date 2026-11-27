@@ -57,7 +57,7 @@ export function createFood(container, product, { mode = 'stage', lidOpen = mode 
     const width = container.clientWidth || 300
     const height = container.clientHeight || 300
     const [fw, fh] = current.fit
-    const roomH = height * (mode === 'stage' ? .86 : .9) - (open && current.closing ? height * .04 : 0)
+    const roomH = height * (mode === 'stage' ? .84 : .9) / (open && current.closing ? 1.22 : 1)
     return Math.max(40, Math.min(width * (mode === 'stage' ? .9 : .94) / fw, roomH / fh))
   }
 
@@ -66,10 +66,13 @@ export function createFood(container, product, { mode = 'stage', lidOpen = mode 
     seen.add(key)
     let node = nodes.get(key)
     if (!node) {
-      if (item.type === 'ghost') {
+      if (item.type === 'ghost' && mode !== 'stage') {
+        node = image(item.src, 'food-item food-item--tall')
+        node.style.opacity = '.55'
+      } else if (item.type === 'ghost') {
         node = document.createElement('div')
         node.className = 'food-ghost'
-        node.innerHTML = '<span>Pick a<br>drink</span>'
+        node.innerHTML = '<span>Your<br>drink</span>'
       } else node = image(item.src, 'food-item')
       if (item.tall) node.classList.add('food-item--tall')
       rig.append(node)
@@ -103,7 +106,7 @@ export function createFood(container, product, { mode = 'stage', lidOpen = mode 
       }
       let y = rise
       let x = item.x * W
-      if (layer.lid && open) y = rise + .3 * S
+      if (layer.lid && open) y = rise + .5 * S
       node.classList.toggle('is-open', Boolean(layer.lid && open))
       node.style.width = layer.w * S + 'px'
       node.style.zIndex = item.z * 100 + index + 1

@@ -133,6 +133,9 @@ p { margin: 0; }
   .masthead nav .nav-visit { display: none; }
   body.is-builder .masthead .basket-toggle { display: inline-flex; padding-left: 14px; }
   .wordmark-since { display: none; }
+  .wordmark-name { font-size: 1.3rem; white-space: nowrap; }
+  .wordmark { gap: 8px; }
+  .wordmark-mark { width: 26px; height: 26px; }
   .masthead-inner { min-height: 60px; gap: var(--s-3); }
   .tabbar { display: grid; grid-template-columns: 1fr 1.4fr; gap: 8px; position: fixed; z-index: 35;
     left: 0; right: 0; bottom: 0; padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
@@ -389,7 +392,7 @@ p { margin: 0; }
 .choice-group:last-child { border-bottom: 0; }
 .group-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: var(--s-4); }
 .group-head h3 { font: 400 1.35rem/1.1 var(--font-display); font-variation-settings: "SOFT" 100, "opsz" 36; }
-.group-head .label { margin-left: auto; }
+.group-head .label { margin-left: auto; white-space: nowrap; }
 .group-head .req { color: var(--action); }
 .group-error { color: var(--action-deep); font-weight: 600; margin: -6px 0 12px; display: flex; gap: 8px; align-items: center; }
 .group-error::before { content: "!"; width: 20px; height: 20px; border-radius: 50%; background: var(--action); color: var(--on-action);
@@ -460,7 +463,8 @@ p { margin: 0; }
   .replay { min-height: 44px; padding: 0 12px; font-size: .82rem; }
   .rig { left: 66%; width: min(46%, 210px, calc(40svh * .62)); bottom: 21%; }
   .board[data-tall="true"] .rig { width: min(40%, 190px, calc(40svh * .55)); }
-  .board[data-visual="meal"] .rig { left: 60%; width: min(66%, 300px); bottom: 20%; }
+  .board[data-visual="meal"] .rig { left: 58%; width: min(56%, 240px); bottom: 22%; }
+  .group-head h3 { font-size: 1.2rem; }
   .board[data-visual="plate"] .rig, .board[data-visual="hot-dog"] .rig { left: 58%; width: min(62%, 280px); bottom: 24%; }
   .board[data-visual="photo"] .rig { left: 68%; width: min(34%, 150px, calc(40svh * .4)); bottom: 18%; }
   .steam { left: 66%; width: 110px; height: 110px; }
@@ -482,7 +486,7 @@ p { margin: 0; }
 @media (max-width: 370px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
 /* 8. Basket (dialog rendered by ../../basket-ui.js) -------------------------- */
-.basket-dialog { border: 0; padding: 0; margin: 0 0 0 auto; width: min(460px, 100%); height: 100dvh; max-height: 100dvh;
+.basket-dialog { border: 0; padding: 0; margin: 0 0 0 auto; width: min(460px, 100%); max-width: 100%; height: 100dvh; max-height: 100dvh;
   background: var(--card); color: var(--ink); box-shadow: -30px 0 60px -30px #15233b77; overflow-y: auto; overscroll-behavior: contain; }
 .basket-dialog[open] { display: flex; flex-direction: column; animation: sheet-in var(--t-slow) var(--ease-out); }
 @keyframes sheet-in { from { transform: translateX(40px); opacity: 0; } }

@@ -95,7 +95,7 @@ function render() {
     head.append(heading)
     const free = group.options.every(({ pricePence }) => !pricePence)
     const rule = group.options.every(option => option.locked) ? 'Included' :
-      group.min ? (group.max === 1 ? 'Required · choose one' : 'Required') :
+      group.min ? 'Required' :
       group.max === 1 ? 'Choose one' : free ? 'Optional · no charge' : 'Optional'
     const ruleNode = make('span', 'label' + (group.min ? ' req' : ''), rule)
     head.append(ruleNode)

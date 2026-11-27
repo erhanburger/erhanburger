@@ -290,7 +290,9 @@ export function mountTicket(root, { variant = 'sheet', onClose } = {}) {
 export function initShell({ active } = {}) {
   const shop = openingStatus()
   for (const pill of document.querySelectorAll('[data-open-status]')) {
-    pill.textContent = shop.open ? shop.text.replace('Open now until', 'Open · till') : 'Closed · opens ' + shop.opensAt
+    const [time, ...day] = (shop.opensAt ?? '').split(' ')
+    pill.innerHTML = shop.open ? shop.text.replace('Open now until', 'Open · till') :
+      'Closed · opens ' + time + '<span class="long"> ' + day.join(' ') + '</span>'
     pill.classList.toggle('is-closed', !shop.open)
   }
   for (const link of document.querySelectorAll(`[data-tab="${active}"]`)) link.setAttribute('aria-current', 'page')
