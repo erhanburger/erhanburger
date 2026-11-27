@@ -6,7 +6,7 @@ Client brief, 27 November 2026. Chicken Shish sets the quality standard and the 
 
 - Thin, irregular slices of chicken breast cooked on a flat griddle: golden, lightly browned, juicy. Never cubes or thick chunks; no heavy black specks or burnt look.
 - Cooked with white onion strips and red and green bell pepper strips.
-- Served in a white, open-lid **HP10 foam takeaway box** (not a plate). With chips: chips at the bottom, chicken on top, cooked onions and peppers among the chicken. Salad along one side of the box. One lightly toasted pitta on top that must not hide most of the chicken.
+- Served in a white **HP10 foam takeaway box opened flat** (not a plate), as in the real customer photos (client decision 28 November 2026): the **base half** holds the chicken with cooked onions and peppers among it (chips underneath for the with-chips variants); the **lid half** holds the salad with one lightly toasted pitta lying over it, salad visible around the pitta edges. The chicken is fully visible.
 - Salad presentation the client likes: lettuce, sliced tomato, round cucumber slices, red onion rings.
 - The ChatGPT images (`ref-*.png`) are references for composition and lighting only; they are not final and their Medium/Large difference is too weak.
 

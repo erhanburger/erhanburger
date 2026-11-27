@@ -39,7 +39,7 @@ Limits to accept: no free rotation or relighting; only the two real portion size
 
 - iPhone main 1× lens (no zoom), landscape 4:3, flash off, Live Photo off, HDR as default. Long-press to lock focus and exposure (AE/AF lock) on the box before the first shot.
 - Phone fixed on a stand, tripod or a stack of books, never touched between shots (use the timer or the volume button on wired earphones). About 40 cm above the box front edge, tilted about 50–60° downwards, box filling about 70% of the frame with a margin all round.
-- Mark the box position with tape on the surface; the box must not move.
+- The box is opened flat with both halves side by side: chicken in the base half, salad and pitta in the lid half (client decision). Frame both halves with a margin. Mark the box position with tape; the box must not move.
 - Same light for the whole shoot: even indoor light, no direct sun, no moving shadows; switch off any flickering or coloured lights. The same time of day.
 - Background: one plain matte dark surface (black or charcoal board, card or tray) in every shot.
 - Format: HEIC or JPEG at full resolution (4032×3024). Send the originals uncompressed (as files, not via messaging apps that compress).
@@ -57,12 +57,13 @@ Chain 1, **Medium with Chips** (build in this order, one photo after each step, 
 3. `m_chips_02_chicken.jpg` — about 15 chicken slices on the chips (no onion or pepper yet), heaped naturally in the chicken zone.
 4. `m_chips_03_onion.jpg` — add the cooked white onion in its zone among the chicken.
 5. `m_chips_04_pepper.jpg` — add the red and green pepper strips in their own zone (not on the onion).
-6. `m_chips_05_lettuce.jpg` — lettuce along the left side.
-7. `m_chips_06_tomato.jpg` — add tomato slices.
+6. `m_chips_05_lettuce.jpg` — lettuce in the lid half.
+7. `m_chips_06_tomato.jpg` — add tomato slices in the lid half.
 8. `m_chips_07_cucumber.jpg` — add cucumber rounds.
 9. `m_chips_08_redonion.jpg` — add red onion rings.
 10. `m_chips_09_pickle.jpg` — add pickles (optional extra).
-11. `m_chips_10_pitta.jpg` — the pitta on top in its usual place.
+11. `m_chips_10_pitta.jpg` — the pitta laid over the salad in the lid half, salad showing round its edges as served.
+11b. `m_chips_10b_pitta_nosalad.jpg` — optional: lift the salad out and lay the pitta alone in the lid half (for "No salad").
 
 Chain 2, **Large with Chips** (empty box again in the same taped position): 12 `l_chips_01_chips`, 13 `l_chips_02_chicken` (about 25 slices, same chips amount), 14 `l_chips_03_onion`, 15 `l_chips_04_pepper`, 16 `l_chips_05_salad` (the standard salad in one go, same layout as chain 1), 17 `l_chips_06_pitta`.
 
@@ -87,6 +88,10 @@ Total: about 39 photos, about 1.5–2 hours including preparation. The chicken c
 ## If the client prefers ChatGPT
 
 Possible as a fallback (method C), with lower and less predictable realism: each image must share the exact angle, light and scale, which generators do not hold reliably. Best use: four finished hero images (one per variant, with the exact chicken counts) for menu cards, combined with the current engine only for animation hints. For layers, request each item alone on a plain black background, "front 55° top-down view, soft light from top left, 4:3, 3000 px", and an empty open HP10 box with the same prompt wording.
+
+## Presentation decision (28 November 2026)
+
+The client chose the real presentation: box opened flat, chicken in the base half, salad and pitta (over the salad) in the lid half. The shoot and the engine follow this layout.
 
 ## Customer reference photos (28 November 2026)
 
