@@ -1,0 +1,447 @@
+{
+ "scale": {
+  "pxPerBoxWidth": 1100,
+  "imageWidth": 1200,
+  "imageHeight": 1000
+ },
+ "box": {
+  "base": "box-base.webp",
+  "lid": "box-lid.webp",
+  "front": "box-front.webp",
+  "interior": [
+   [
+    0.185,
+    0.384
+   ],
+   [
+    0.815,
+    0.384
+   ],
+   [
+    0.9,
+    0.722
+   ],
+   [
+    0.1,
+    0.722
+   ]
+  ],
+  "floor": [
+   [
+    0.2083,
+    0.452
+   ],
+   [
+    0.7917,
+    0.452
+   ],
+   [
+    0.8942,
+    0.768
+   ],
+   [
+    0.1058,
+    0.768
+   ]
+  ],
+  "saladZone": [
+   [
+    0.185,
+    0.384
+   ],
+   [
+    0.3667,
+    0.384
+   ],
+   [
+    0.3333,
+    0.722
+   ],
+   [
+    0.1,
+    0.722
+   ]
+  ],
+  "pittaAnchor": {
+   "x": 0.62,
+   "y": 0.31,
+   "w": 0.56
+  },
+  "rimFrontY": 0.73
+ },
+ "chicken": [
+  {
+   "src": "chicken/c01.webp",
+   "w": 147,
+   "h": 156
+  },
+  {
+   "src": "chicken/c02.webp",
+   "w": 109,
+   "h": 201
+  },
+  {
+   "src": "chicken/c03.webp",
+   "w": 122,
+   "h": 159
+  },
+  {
+   "src": "chicken/c04.webp",
+   "w": 114,
+   "h": 117
+  },
+  {
+   "src": "chicken/c05.webp",
+   "w": 102,
+   "h": 82
+  },
+  {
+   "src": "chicken/c06.webp",
+   "w": 76,
+   "h": 62
+  },
+  {
+   "src": "chicken/c07.webp",
+   "w": 69,
+   "h": 60
+  },
+  {
+   "src": "chicken/c08.webp",
+   "w": 49,
+   "h": 53
+  },
+  {
+   "src": "chicken/c09.webp",
+   "w": 159,
+   "h": 109
+  },
+  {
+   "src": "chicken/c10.webp",
+   "w": 176,
+   "h": 119
+  },
+  {
+   "src": "chicken/c11.webp",
+   "w": 120,
+   "h": 89
+  },
+  {
+   "src": "chicken/c12.webp",
+   "w": 127,
+   "h": 101
+  },
+  {
+   "src": "chicken/c13.webp",
+   "w": 152,
+   "h": 118
+  },
+  {
+   "src": "chicken/c14.webp",
+   "w": 136,
+   "h": 117
+  },
+  {
+   "src": "chicken/c15.webp",
+   "w": 108,
+   "h": 93
+  },
+  {
+   "src": "chicken/c16.webp",
+   "w": 151,
+   "h": 66
+  },
+  {
+   "src": "chicken/c17.webp",
+   "w": 156,
+   "h": 88
+  },
+  {
+   "src": "chicken/c18.webp",
+   "w": 84,
+   "h": 55
+  },
+  {
+   "src": "chicken/c19.webp",
+   "w": 137,
+   "h": 158
+  },
+  {
+   "src": "chicken/c20.webp",
+   "w": 128,
+   "h": 131
+  },
+  {
+   "src": "chicken/c21.webp",
+   "w": 120,
+   "h": 131
+  },
+  {
+   "src": "chicken/c22.webp",
+   "w": 149,
+   "h": 125
+  },
+  {
+   "src": "chicken/c23.webp",
+   "w": 125,
+   "h": 146
+  },
+  {
+   "src": "chicken/c24.webp",
+   "w": 118,
+   "h": 150
+  },
+  {
+   "src": "chicken/c25.webp",
+   "w": 104,
+   "h": 149
+  },
+  {
+   "src": "chicken/c26.webp",
+   "w": 102,
+   "h": 101
+  },
+  {
+   "src": "chicken/c27.webp",
+   "w": 115,
+   "h": 128
+  },
+  {
+   "src": "chicken/c28.webp",
+   "w": 108,
+   "h": 132
+  },
+  {
+   "src": "chicken/c29.webp",
+   "w": 108,
+   "h": 94
+  },
+  {
+   "src": "chicken/c30.webp",
+   "w": 98,
+   "h": 113
+  },
+  {
+   "src": "chicken/c31.webp",
+   "w": 126,
+   "h": 79
+  },
+  {
+   "src": "chicken/c32.webp",
+   "w": 139,
+   "h": 110
+  }
+ ],
+ "onion": [
+  {
+   "src": "onion/o01.webp",
+   "w": 119,
+   "h": 57
+  },
+  {
+   "src": "onion/o02.webp",
+   "w": 76,
+   "h": 170
+  },
+  {
+   "src": "onion/o03.webp",
+   "w": 111,
+   "h": 51
+  },
+  {
+   "src": "onion/o04.webp",
+   "w": 81,
+   "h": 89
+  },
+  {
+   "src": "onion/o05.webp",
+   "w": 93,
+   "h": 39
+  },
+  {
+   "src": "onion/o06.webp",
+   "w": 200,
+   "h": 87
+  },
+  {
+   "src": "onion/o07.webp",
+   "w": 126,
+   "h": 99
+  },
+  {
+   "src": "onion/o08.webp",
+   "w": 120,
+   "h": 232
+  },
+  {
+   "src": "onion/o09.webp",
+   "w": 84,
+   "h": 170
+  },
+  {
+   "src": "onion/o10.webp",
+   "w": 162,
+   "h": 133
+  },
+  {
+   "src": "onion/o11.webp",
+   "w": 131,
+   "h": 50
+  },
+  {
+   "src": "onion/o12.webp",
+   "w": 61,
+   "h": 123
+  },
+  {
+   "src": "onion/o13.webp",
+   "w": 141,
+   "h": 95
+  },
+  {
+   "src": "onion/o14.webp",
+   "w": 61,
+   "h": 136
+  }
+ ],
+ "pepperRed": [
+  {
+   "src": "pepper-red/r01.webp",
+   "w": 51,
+   "h": 80
+  },
+  {
+   "src": "pepper-red/r02.webp",
+   "w": 76,
+   "h": 50
+  },
+  {
+   "src": "pepper-red/r03.webp",
+   "w": 51,
+   "h": 48
+  },
+  {
+   "src": "pepper-red/r04.webp",
+   "w": 39,
+   "h": 60
+  },
+  {
+   "src": "pepper-red/r05.webp",
+   "w": 51,
+   "h": 75
+  },
+  {
+   "src": "pepper-red/r06.webp",
+   "w": 48,
+   "h": 45
+  },
+  {
+   "src": "pepper-red/r07.webp",
+   "w": 20,
+   "h": 23
+  }
+ ],
+ "pepperGreen": [
+  {
+   "src": "pepper-green/g01.webp",
+   "w": 46,
+   "h": 72
+  },
+  {
+   "src": "pepper-green/g02.webp",
+   "w": 74,
+   "h": 60
+  },
+  {
+   "src": "pepper-green/g03.webp",
+   "w": 68,
+   "h": 49
+  },
+  {
+   "src": "pepper-green/g04.webp",
+   "w": 42,
+   "h": 70
+  },
+  {
+   "src": "pepper-green/g05.webp",
+   "w": 74,
+   "h": 54
+  },
+  {
+   "src": "pepper-green/g06.webp",
+   "w": 55,
+   "h": 82
+  },
+  {
+   "src": "pepper-green/g07.webp",
+   "w": 64,
+   "h": 43
+  },
+  {
+   "src": "pepper-green/g08.webp",
+   "w": 40,
+   "h": 46
+  }
+ ],
+ "chips": [
+  {
+   "src": "chips/f01.webp",
+   "w": 140,
+   "h": 247
+  },
+  {
+   "src": "chips/f02.webp",
+   "w": 341,
+   "h": 241
+  },
+  {
+   "src": "chips/f03.webp",
+   "w": 73,
+   "h": 183
+  },
+  {
+   "src": "chips/f04.webp",
+   "w": 439,
+   "h": 159
+  },
+  {
+   "src": "chips/f05.webp",
+   "w": 308,
+   "h": 101
+  },
+  {
+   "src": "chips/f06.webp",
+   "w": 226,
+   "h": 128
+  },
+  {
+   "src": "chips/f07.webp",
+   "w": 304,
+   "h": 230
+  },
+  {
+   "src": "chips/f08.webp",
+   "w": 380,
+   "h": 121
+  },
+  {
+   "src": "chips/f09.webp",
+   "w": 254,
+   "h": 103
+  },
+  {
+   "src": "chips/f10.webp",
+   "w": 186,
+   "h": 70
+  }
+ ],
+ "pitta": {
+  "src": "pitta.webp",
+  "w": 792,
+  "h": 267
+ },
+ "chipsBed": {
+  "src": "chips-bed.webp",
+  "note": "full-canvas (1200x1000) pre-built bed of real fries clipped to the interior; draw at 0,0 like the base"
+ },
+ "notes": "All coordinates normalised to the box-base image (1200x1000); box-lid.webp uses the same canvas and is drawn behind box-base. Sprite w/h are display sizes in box-base pixels (pxPerBoxWidth=1100 = outer width of the box at the front rim); stored files may be up to 2x larger for retina, always draw at w/h. Chicken/onion/pepper are cut from the real griddle photo (real-griddle.jpg) at one scale (median chicken long side = 12% of box width, matched to the real counter photo where chips and chicken share one box; the 6-9% brief figure made chicken look minced next to real fries). Chips are individual real fries cut from real-boxes-counter.jpg; pitta is the real toasted pitta from the same photo. Box base and lid are procedural (Pillow/NumPy). Draw order: lid, base, chips-bed or chips, chips (inside interior, clipped by front rim at rimFrontY), salad (saladZone), chicken/onion/pepper, pitta (pittaAnchor = pitta centre, w = pitta width as a fraction of image width). box-front.webp (front flange + front wall, same canvas) is drawn after the food and before the pitta so food tucks behind the front lip. Darken lower-layer food ~15-20% (multiply) for heap depth."
+}

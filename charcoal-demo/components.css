@@ -973,6 +973,15 @@ html.has-sheet { overflow: hidden; }
 .stage[data-visual="meal"] .rig { left: 46%; width: min(56cqw, calc((90cqh - var(--tag-room)) / .84), 480px); }
 .stage[data-visual="plate"] .rig, .stage[data-visual="hot-dog"] .rig { bottom: 14%; width: min(60cqw, calc((86cqh - var(--tag-room)) / .52), 440px); }
 .stage[data-visual="photo"] .rig { bottom: 9%; width: min(78cqw, calc((88cqh - var(--tag-room)) / .7), 500px); }
+/* Box scenes (box-scene.js) draw on two canvases laid over the whole stage;
+   the rig marks where the box stands and how wide it is (--box-top is the
+   height of the food above the box foot, in box widths). */
+.stage[data-visual="box"] .rig { --tag-room: 40px; bottom: 6%; width: min(92cqw, calc((90cqh - var(--tag-room)) / var(--box-top, .6)), 600px); }
+.stage[data-visual="box"] .contact { display: none; }
+.box-canvas { position: absolute; z-index: 2; pointer-events: none; }
+.box-canvas--pour { z-index: 29; }
+.art-box { position: absolute; inset: 0; width: 100%; height: 100%; }
+.art[data-visual="box"] .art-rig { display: none; }
 /* Seasoning has no layer of its own: a light sprinkle over the food. */
 .stage[data-choices~="salt"] .rig::after, .stage[data-choices~="vinegar"] .rig::before {
   content: "";

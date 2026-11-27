@@ -2,6 +2,8 @@ import {
   catalog, halfPounder, optionConflicts, findProduct, createDefaultSelections, formatPrice, getUnitPricePence, choiceSummary,
 } from './catalog.js'
 import { CharcoalScene } from './scene.js'
+import { BoxScene } from './box-scene.js'
+import { boxVisualOptionIds } from './box-recipes.js'
 import { productProfile } from './product-profiles.js'
 import { createBasketUI } from './basket-ui.js'
 import { initShell, make } from './shell.js'
@@ -15,6 +17,10 @@ const preset = match?.preset ?? []
 const selected = createDefaultSelections(product, preset)
 const preview = productProfile(product, CharcoalScene.defaultProfile)
 const options = product.optionGroups.flatMap(group => group.options)
+// Products served in a box use the box engine; the rest are stacked.
+const boxed = preview.layout === 'box'
+const Scene = boxed ? BoxScene : CharcoalScene
+const shownInBox = boxed ? boxVisualOptionIds(preview.recipe) : new Set()
 const $ = selector => document.querySelector(selector)
 const builder = $('.builder')
 const groupsNode = $('#choice-groups')
@@ -233,7 +239,7 @@ function showToast(message) {
 function renderStageNotes() {
   const notes = $('#stage-notes')
   notes.replaceChildren(...options.filter(option => selected.has(option.id) && !option.locked &&
-    !option.image && !(option.layerKeys?.length)).map(option => make('li', '', option.name)))
+    !option.image && !(option.layerKeys?.length) && !shownInBox.has(option.id)).map(option => make('li', '', option.name)))
   $('#stage').dataset.choices = [...selected].join(' ')
 }
 
@@ -275,6 +281,7 @@ function followScroll() {
 }
 
 function getSceneSelection() {
+  if (boxed) return new Set(selected)
   const active = options.filter(option => selected.has(option.id))
   const keys = new Set(preview.fixedLayerKeys)
   for (const option of active) {
@@ -362,7 +369,7 @@ function changeChoice(group, option) {
   showToast(cleared.length ? cleared.join(' and ') + ' removed: it clashes with ' + option.name + '.' : '')
   renderStageNotes()
   setStageLabel(option.name + (on ? ' · on' : ' · off'), on ? 'on' : 'off')
-  CharcoalScene.update(getSceneSelection())
+  Scene.update(getSceneSelection())
 }
 
 function addToBasket() {
@@ -419,7 +426,7 @@ function startAgain() {
   showToast('Ready for another ' + product.name + '.')
   renderStageNotes()
   setStageLabel('Make another', '')
-  CharcoalScene.update(getSceneSelection())
+  Scene.update(getSceneSelection())
   if (groups.length) showGroup(groups.find(isRequired) ?? groups[0], { scroll: true })
   addButton.focus()
 }
@@ -443,11 +450,11 @@ if (foundProduct) {
   renderStageNotes()
   if (activeGroup) showGroup(activeGroup)
   followScroll()
-  CharcoalScene.init({ profile: preview, selection: getSceneSelection() })
+  Scene.init({ profile: preview, selection: getSceneSelection(), options })
   setStageLabel(groups.length ? (groups.some(isRequired) ? 'Choose your ' + groups.find(isRequired).name.replace(/^choose your /i, '').toLowerCase() : 'Tap a choice to add it') : 'Ready to order')
   const replay = $('#replay')
   replay.hidden = preview.visual === 'photo'
-  replay.addEventListener('click', () => CharcoalScene.replay())
+  replay.addEventListener('click', () => Scene.replay())
   addButton.addEventListener('click', addToBasket)
   makeAnother.addEventListener('click', startAgain)
   stacked.addEventListener('change', () => activeGroup && showGroup(activeGroup))

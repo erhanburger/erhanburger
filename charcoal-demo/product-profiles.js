@@ -1,3 +1,4 @@
+import { boxRecipe } from './box-recipes.js';
 const sharedAssets = '../burger-builder-demo/assets/';
 const menuAssets = './assets/menu/';
 const photo = (key, width, step = 0, motion = 'slice') => ({
@@ -48,6 +49,8 @@ const foodTypes = new Set(['burger', 'hot-dog', 'meal', 'plate']);
 
 export function productProfile(product, burgerProfile) {
   if (!product.visual) return { image: product.image, name: product.name, ...product.preview };
+  const recipe = boxRecipe(product);
+  if (recipe) return { name: product.name, visual: 'box', layout: 'box', recipe };
 
   const reference = new Map(burgerProfile.layers.map(layer => [layer.key, layer]));
   const optionKeys = new Set(product.optionGroups.flatMap(group =>
