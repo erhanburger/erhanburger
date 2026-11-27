@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#151412">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23C21F17'/%3E%3Cpath d='M8 12l16-4M8 18l16-4M8 24l16-4' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..100,400..900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./concept.css">
+
+<title>Customise · Er-Han Burger</title>
+<meta name="description" content="Customise your order and add it to your ticket.">
+</head>
+<body class="builder-page">
+<a class="skip" href="#main">Skip to content</a>
+<header class="appbar">
+  <div class="wrap appbar-inner">
+    <a class="brand" href="./index.html" aria-label="Er-Han Burger, home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#C21F17"/><path d="M8 12l16-4M8 18l16-4M8 24l16-4" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+      <span class="brand-word">Er-Han<span>.</span></span>
+    </a>
+    <span class="status-pill" data-open-status>Opening hours</span>
+    <nav class="appbar-nav" aria-label="Main">
+      <a href="./menu.html" data-tab="menu">Menu</a>
+      <a href="./product.html" data-tab="build">Build a burger</a>
+      <a href="./menu.html?basket" class="nav-basket" data-open-ticket>Basket <span class="count-badge" data-ticket-count hidden>0</span></a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="builder" data-builder>
+  <div class="b-head">
+    <a class="btn-icon" href="./menu.html" data-back aria-label="Back to the menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <div><span class="label" data-category>Menu</span><h1 class="display" id="product-title">Loading</h1></div>
+    <p class="b-price"><span data-price>£0.00</span><small data-breakdown></small></p>
+  </div>
+  <div class="b-stage plate">
+    <div data-food style="position:absolute;inset:0"></div>
+    <p class="b-status" data-status aria-hidden="true">Lid off</p>
+    <span class="b-delta" data-delta aria-hidden="true"></span>
+  </div>
+  <div class="b-controls">
+    <p class="b-intro" data-intro></p>
+    <div class="b-tabs" role="tablist" aria-label="Choices" data-tabs></div>
+    <div data-groups></div>
+  </div>
+  <div class="b-order">
+    <p class="b-feedback" role="status" data-feedback></p>
+    <button type="button" class="btn" data-add><span data-add-label>Add to basket</span><span class="btn-price" data-add-price></span></button>
+  </div>
+</main>
+<nav class="tabbar" aria-label="App">
+  <a href="./menu.html" data-tab="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Menu</a>
+  <a href="./product.html" data-tab="build"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10a8 5 0 0 1 16 0zM3.5 13.5h17M4 17h16a0 0 0 0 1 0 0 3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z"/></svg>Build</a>
+  <a href="./menu.html?basket" class="tab-basket" data-open-ticket>
+    <span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-2-1.5L14 21l-2-1.5L10 21l-2-1.5L6 21zM9 8h6M9 12h6"/></svg></span>
+    <span class="tab-basket-text">Basket<strong data-ticket-total>Empty</strong></span>
+    <span class="count-badge" data-ticket-count hidden>0</span>
+  </a>
+</nav>
+
+<script type="module" src="./js/product.js"></script>
+</body>
+</html>

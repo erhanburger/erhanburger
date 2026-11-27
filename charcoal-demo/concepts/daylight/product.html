@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f1e5">
+  <!-- The shared animation engine resolves its assets from charcoal-demo/. -->
+  <base href="../../">
+  <title>Customise · Er-Han Burger</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 19a12 12 0 0 1 24 0z' fill='%23c2401f'/%3E%3Crect x='3' y='22' width='26' height='3' rx='1.5' fill='%2315233b'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,0..100;1,9..144,300..600,0..100&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="concepts/daylight/concept.css">
+  <script type="module" src="concepts/daylight/builder.js"></script>
+</head>
+<body class="has-tabbar is-builder">
+  <a class="skip" href="#choices">Skip to the choices</a>
+  <header class="masthead">
+    <div class="wrap masthead-inner">
+      <a class="wordmark" href="concepts/daylight/" aria-label="Er-Han Burger, home">
+        <svg class="wordmark-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 19a12 12 0 0 1 24 0z" fill="#c2401f"/><circle cx="12" cy="13" r="1.1" fill="#f7f1e5"/><circle cx="17" cy="10.5" r="1.1" fill="#f7f1e5"/><circle cx="21" cy="14" r="1.1" fill="#f7f1e5"/><rect x="3" y="22" width="26" height="3" rx="1.5" fill="#15233b"/></svg>
+        <span class="wordmark-name">Er-Han Burger</span>
+        <span class="wordmark-since">Since 2013</span>
+      </a>
+      <nav aria-label="Main">
+        <a href="concepts/daylight/menu.html">Menu</a>
+        <a class="nav-visit" href="concepts/daylight/#visit">Visit us</a>
+        <button type="button" class="basket-toggle" data-open-basket>Basket <span class="count" data-basket-count>0</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="builder" id="builder">
+    <section class="board studio" id="stage" aria-labelledby="product-title">
+      <div class="board-head">
+        <a class="back" id="back-link" href="concepts/daylight/menu.html">← Back to the menu</a>
+        <h1 id="product-title">Half Pounder <em>with Cheese</em></h1>
+        <p class="board-price" id="board-price">£6.90</p>
+      </div>
+      <div class="rig" id="rig" aria-hidden="true">
+        <div class="contact"></div>
+        <img class="ingredient" data-layer="bottom" src="concepts/daylight/assets/layers/bottom.webp" alt="">
+        <img class="ingredient" data-layer="patty-a" src="concepts/daylight/assets/layers/patty-a.webp" alt="">
+        <img class="ingredient" data-layer="patty-b" src="concepts/daylight/assets/layers/patty-b.webp" alt="">
+        <img class="ingredient" data-layer="cheese" src="concepts/daylight/assets/layers/cheese.webp" alt="">
+        <img class="ingredient" data-layer="lettuce" src="concepts/daylight/assets/layers/lettuce.webp" alt="">
+        <img class="ingredient" data-layer="tomato" src="concepts/daylight/assets/layers/tomato.webp" alt="">
+        <img class="ingredient sauce" data-layer="sauce" src="concepts/daylight/assets/layers/sauce.webp" alt="">
+        <canvas id="stream"></canvas>
+        <img class="bottle" id="bottle" src="concepts/daylight/assets/layers/bottle.webp" alt="">
+        <img class="ingredient top" data-layer="top" src="concepts/daylight/assets/layers/top.webp" alt="">
+      </div>
+      <svg class="steam" viewBox="0 0 160 160" aria-hidden="true"><path d="M58 150c-14-22 14-34 0-58s10-36 4-56"/><path d="M84 150c-12-24 16-36 2-60s12-34 6-60"/><path d="M108 150c-10-18 10-30 0-48s8-28 4-44"/></svg>
+      <div class="board-foot">
+        <span id="status" role="status">Your preview</span>
+        <button type="button" class="replay" id="replay">Replay the build</button>
+      </div>
+    </section>
+
+    <section class="panel" id="choices" aria-labelledby="controls-title">
+      <header class="panel-intro">
+        <h2 id="controls-title">Customise your burger</h2>
+        <p id="controls-intro">Choose your fillings and sauces.</p>
+      </header>
+      <nav class="group-tabs" id="group-tabs" aria-label="Choice groups"></nav>
+      <div id="choice-groups"></div>
+      <p class="panel-feedback" id="panel-feedback" role="status"></p>
+      <noscript><p>Please turn on JavaScript to customise your order, or call us on 07576 113811.</p></noscript>
+      <div class="order-bar" id="order-bar">
+        <div class="order-total">
+          <output id="basket-total" aria-live="polite">£6.90</output>
+          <small id="price-breakdown">Base price</small>
+          <span class="delta" id="delta" aria-hidden="true"></span>
+        </div>
+        <button type="button" class="order-button" id="add-to-basket" data-state="add">Add to basket</button>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabbar" aria-label="Order">
+    <a href="concepts/daylight/menu.html">Menu</a>
+    <button type="button" data-open-basket>Basket · <span data-basket-count>0</span> <span data-basket-total></span></button>
+  </nav>
+  <dialog id="basket-dialog" class="basket-dialog" aria-labelledby="basket-heading"></dialog>
+</body>
+</html>

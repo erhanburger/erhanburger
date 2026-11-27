@@ -3,7 +3,6 @@
 // layer's centre, y the height of its base above the board, w its width.
 // The same composer draws the builder, the menu thumbnails and the home hero,
 // so a new product needs data only, never new layout code.
-import { keyed } from './key.js'
 
 const root = new URL('../../', import.meta.url)
 export const asset = path => new URL(path, root).href
@@ -125,11 +124,35 @@ function stack(keys, { scale = 1, x = 0, z = 10, narrow = false } = {}) {
   return { layers, lid, top: y }
 }
 
+// Drinks use the normalised cut-outs in assets/products/: 800 px squares with a
+// shared baseline 14% above the bottom edge, so one scale fits every can.
+const DRINKS = {
+  '../IMG_0397.jpeg': 'drink-water', '../IMG_0365.webp': 'drink-water', '../IMG_0358.jpeg': 'drink-coke-classic',
+  '../IMG_0359.webp': 'drink-coke-zero', '../IMG_0360.png': 'drink-diet-coke', '../IMG_0357.png': 'drink-pepsi',
+  '../IMG_0361.jpeg': 'drink-tango', '../IMG_0362.jpeg': 'drink-fanta', '../IMG_0363.png': 'drink-mirinda',
+  '../IMG_0368.webp': 'drink-ribena-strawberry', '../IMG_0369.jpeg': 'drink-ribena-blackcurrant',
+  '../IMG_0366.jpeg': 'drink-lucozade', '../IMG_0364.png': 'drink-red-bull',
+}
+// h is the height of a can; the square art is drawn so its baseline sits on y.
+function drinkArt(id, image, h, x, y, z) {
+  const file = DRINKS[image]
+  if (!file) return { id, src: image, ar: 1.5, w: h / 1.5, x, y, z }
+  const size = h / .6
+  return { id, src: './assets/products/' + file + '.webp', ar: 1, w: size, x, y: y - size * .14, z, crop: .14 }
+}
+
+// Image for an option tile: sauces show their bottle, drinks their cut-out.
+export function tileImage(option) {
+  if (DRINKS[option.image]) return { src: asset('./assets/products/' + DRINKS[option.image] + '.webp'), kind: 'drink' }
+  if (SAUCES[option.id]) return { src: asset('./assets/sauces/' + option.id + '.webp'), kind: 'bottle' }
+  return option.image ? { src: asset(option.image) } : null
+}
+
 function drinkLayer(product, selected, x, y, h, z) {
   const drink = product.optionGroups.flatMap(group => group.options)
     .find(option => selected.has(option.id) && option.layerKeys?.some(key => key.startsWith('drink-')))
   if (!drink) return { id: 'drink-ghost', kind: 'ghost', src: ART.bottle.src, ar: ART.bottle.ar, w: h / ART.bottle.ar, x, y, z }
-  return { id: 'drink-' + drink.id, src: drink.image, keyed: true, h, w: h / 1.7, ar: 1.7, x, y, z }
+  return drinkArt('drink-' + drink.id, drink.image, h, x, y, z)
 }
 
 export function compose(product, selected = new Set()) {
@@ -206,21 +229,19 @@ export function compose(product, selected = new Set()) {
   if (product.categoryId === 'drinks') {
     const placeholder = product.image.includes('placeholder')
     return { layers: [placeholder ? layer('item', 'bottle', .36, 0, 0, { z: 10 }) :
-      { id: 'item', src: product.image, keyed: true, h: .62, w: .36, ar: 1.7, x: 0, y: 0, z: 10 }], lid: null, kind: 'single' }
+      drinkArt('item', product.image, .62, 0, 0, 10)], lid: null, kind: 'single' }
   }
   return { layers: [{ id: 'item', src: product.image, ar: .64, w: .74, x: 0, y: .02, z: 10 }], lid: null, kind: 'single' }
 }
 
-// Water has a transparent cut-out in the supplied photos; use it on the board.
-const PHOTO_SWAP = { '../IMG_0397.jpeg': '../IMG_0365.webp' }
 
 export function layerHeight(l) {
-  return l.h ?? l.w * l.ar
+  return l.w * l.ar * (1 - (l.crop ?? 0))
 }
 
 // Height of the composition above the board, in rig widths.
 export function extent(comp, lidLift = 0) {
-  return Math.max(.3, ...comp.layers.map(l => l.y + layerHeight(l) + (l.id === comp.lid ? lidLift : 0)))
+  return Math.max(.3, ...comp.layers.map(l => Math.max(0, l.y + (l.crop ?? 0) * l.w) + layerHeight(l) + (l.id === comp.lid ? lidLift : 0)))
 }
 
 // Creates or updates an <img> for a layer. Keyed photos load after keying.
@@ -228,28 +249,17 @@ export function paintLayer(img, l) {
   img.alt = ''
   img.decoding = 'async'
   img.draggable = false
-  img.className = 'layer' + (l.kind ? ' layer--' + l.kind : '')
+  const state = [...img.classList].filter(name => name.startsWith('is-'))
+  img.className = ['layer', l.kind && 'layer--' + l.kind, ...state].filter(Boolean).join(' ')
   img.style.setProperty('--x', l.x)
   img.style.setProperty('--y', l.y)
   img.style.setProperty('--w', l.w)
   img.style.setProperty('--rot', (l.rot ?? 0) + 'deg')
   img.style.zIndex = l.z ?? 1
-  img.style.filter = l.filter ?? ''
-  if (l.h) img.style.setProperty('--h', l.h)
-  else img.style.removeProperty('--h')
+  img.style.setProperty('--tint', l.filter ?? 'brightness(1)')
   img.dataset.layer = l.id
-  const path = PHOTO_SWAP[l.src] ?? l.src
-  if (l.keyed) {
-    if (img.dataset.src === path) return img
-    img.dataset.src = path
-    img.classList.add('is-keying')
-    keyed(asset(path)).then(result => {
-      if (img.dataset.src !== path) return
-      img.src = result.url
-      img.classList.remove('is-keying')
-      if (result.failed) img.classList.add('layer--boxed')
-    })
-  } else if (img.dataset.src !== path) {
+  const path = l.src
+  if (img.dataset.src !== path) {
     img.dataset.src = path
     img.src = asset(path)
   }

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#151412">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23C21F17'/%3E%3Cpath d='M8 12l16-4M8 18l16-4M8 24l16-4' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..100,400..900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./concept.css">
+
+<title>Er-Han Burger · Order’s in, grill’s lit</title>
+<meta name="description" content="Fresh, grilled, halal burgers at Brent South Shopping Park since 2013. Build your order and send it on WhatsApp for collection.">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="appbar">
+  <div class="wrap appbar-inner">
+    <a class="brand" href="./index.html" aria-label="Er-Han Burger, home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#C21F17"/><path d="M8 12l16-4M8 18l16-4M8 24l16-4" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+      <span class="brand-word">Er-Han<span>.</span></span>
+    </a>
+    <span class="status-pill" data-open-status>Opening hours</span>
+    <nav class="appbar-nav" aria-label="Main">
+      <a href="./menu.html" data-tab="menu">Menu</a>
+      <a href="./product.html" data-tab="build">Build a burger</a>
+      <a href="./menu.html?basket" class="nav-basket" data-open-ticket>Basket <span class="count-badge" data-ticket-count hidden>0</span></a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-inner">
+      <div class="hero-copy" style="display:grid;gap:var(--s-5)">
+        <div class="hero-kicker">
+          <span class="stamp">Halal</span><span class="stamp">Grilled fresh</span><span class="stamp">Since 2013</span>
+        </div>
+        <h1 class="display" id="hero-title">Order’s in. <span class="hot">Grill’s lit.</span></h1>
+        <p class="hero-lead">Build it the way you like it, check your ticket, send it on WhatsApp. We grill it, you collect it at Brent South.</p>
+        <div class="hero-ctas">
+          <a class="btn" href="./product.html">Build a Half Pounder</a>
+          <a class="btn btn--ghost" href="./menu.html">See the full menu</a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="rail"></div>
+        <div class="hero-ticket tv-paper">
+          <p class="tl tl--head"><b>🍔 ER-HAN BURGER — NEW ORDER</b></p>
+          <p class="tl tl--rule">━━━━━━━━━━━━━━━━━━━━</p>
+          <p class="tl"><b>1. Half Pounder with Cheese</b>  x1</p>
+          <p class="tl">   Lettuce</p>
+          <p class="tl">   Burger sauce</p>
+          <p class="tl tl--rule">━━━━━━━━━━━━━━━━━━━━</p>
+          <p class="tl"><b>TOTAL:  <span data-hero-price>£6.90</span></b></p>
+        </div>
+        <div class="hero-food plate" style="background:none"><div data-hero-food></div></div>
+      </div>
+    </div>
+  </section>
+  <div class="band"><ul class="wrap">
+    <li>Fresh</li><li>Grilled</li><li>Halal</li><li>Collection only</li><li>Brent South Shopping Park</li>
+  </ul></div>
+
+  <section class="section" aria-labelledby="how-title">
+    <div class="wrap split">
+      <div class="section-head" style="display:grid;gap:var(--s-3)">
+        <p class="label">How ordering works</p>
+        <h2 class="display" id="how-title" style="font-size:clamp(2.75rem,1.5rem + 4vw,4.5rem)">Three lines. One ticket.</h2>
+        <p style="color:var(--ink-2);max-width:36ch">No account, no app to download, no card details. Your order goes straight to the grill on WhatsApp.</p>
+      </div>
+      <ol class="steps">
+        <li><span class="n">01</span><div><h3>Build it</h3><p>Tap toppings and sauces. Every tap lands on your burger and the price updates as you go.</p></div></li>
+        <li><span class="n">02</span><div><h3>Check your ticket</h3><p>Your basket prints as a kitchen ticket. Add your name and a note if you like.</p></div></li>
+        <li><span class="n">03</span><div><h3>Send it on WhatsApp</h3><p>The ticket is the message. We confirm your collection time on WhatsApp, and you pay when you collect.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="deals-title" style="background:var(--paper-2)">
+    <div class="wrap">
+      <div class="section-head">
+        <div style="display:grid;gap:var(--s-2)"><p class="label">Main, chips and a drink</p><h2 class="display" id="deals-title">Meal deals</h2></div>
+        <a class="deal-go" href="./menu.html#meal-deals">All six deals</a>
+      </div>
+      <div class="deals" data-deals></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="menu-title">
+    <div class="wrap split">
+      <div class="section-head" style="display:grid;gap:var(--s-3)">
+        <p class="label">The menu</p>
+        <h2 class="display" id="menu-title" style="font-size:clamp(2.75rem,1.5rem + 4vw,4.5rem)">Straight off the grill</h2>
+      </div>
+      <ul class="cats" data-cats></ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="visit-title">
+    <div class="wrap visit">
+      <div class="visit-card">
+        <p class="label">Collect from</p>
+        <h2 class="display" id="visit-title">Brent South Shopping Park, London</h2>
+        <p>Collection only. Order on WhatsApp or call us, and we’ll tell you when it’s ready.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--s-3)">
+          <a class="btn btn--ink" data-map target="_blank" rel="noopener" href="#">Open in Maps</a>
+          <a class="btn btn--ghost" data-phone href="#">Call</a>
+        </div>
+      </div>
+      <div class="visit-card">
+        <p class="label">Opening hours</p>
+        <table class="hours"><tbody data-hours></tbody></table>
+        <p class="status-pill" data-open-status style="justify-self:start">Opening hours</p>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div style="display:grid;gap:var(--s-3)">
+      <span class="brand-word" style="font-size:2.5rem">Er-Han<span>.</span> Burger</span>
+      <p>Fresh, grilled, halal. Since 2013 at Brent South Shopping Park, London. Allergies or dietary needs? Please call <a data-phone href="#">07576 113811</a> before ordering.</p>
+    </div>
+    <span class="stamp">Halal</span>
+  </div>
+</footer>
+<nav class="tabbar" aria-label="App">
+  <a href="./menu.html" data-tab="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Menu</a>
+  <a href="./product.html" data-tab="build"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10a8 5 0 0 1 16 0zM3.5 13.5h17M4 17h16a0 0 0 0 1 0 0 3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z"/></svg>Build</a>
+  <a href="./menu.html?basket" class="tab-basket" data-open-ticket>
+    <span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-2-1.5L14 21l-2-1.5L10 21l-2-1.5L6 21zM9 8h6M9 12h6"/></svg></span>
+    <span class="tab-basket-text">Basket<strong data-ticket-total>Empty</strong></span>
+    <span class="count-badge" data-ticket-count hidden>0</span>
+  </a>
+</nav>
+
+<script type="module" src="./js/home.js"></script>
+</body>
+</html>

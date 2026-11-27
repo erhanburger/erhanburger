@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1b1916">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%231b1916'/%3E%3Cpath d='M9 20.5 14.5 10M13.5 23 19 12.5M18 25.5 23.5 15' stroke='%23e8622a' stroke-width='2.8' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="./concept.css">
+<title>Customise · Er-Han Burger</title>
+<meta name="description" content="Build your burger at Er-Han Burger: choose your toppings and sauces, then order for collection on WhatsApp.">
+</head>
+<body class="builder-page" data-phase="build">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="./index.html" aria-label="Er-Han Burger, home">
+    <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8.5 20.5 14 10M13 23.5 18.5 13M18 25.5 23.5 15.5" stroke="#e8622a" stroke-width="2.6" stroke-linecap="round"/></svg>
+    <span class="brand-name">Er-Han <span>Burger</span></span>
+  </a>
+  <nav class="site-nav" aria-label="Main">
+    <a href="./menu.html">Menu</a>
+    <a href="./index.html#how">How it works</a>
+    <a href="./index.html#visit">Visit</a>
+  </nav>
+  <div class="header-end">
+    <p class="status"><span data-open-status>Opening hours</span></p>
+    <button class="basket-chip" type="button" data-open-basket>Basket <span class="count"><span id="basket-count">0</span></span><span class="visually-hidden"> items</span></button>
+  </div>
+</header>
+<main id="main" class="stage" data-phase="build" aria-labelledby="product-title">
+  <div class="stage-title">
+    <p class="label" id="product-category">Beef burgers</p>
+    <h1 id="product-title">Half Pounder with Cheese</h1>
+    <p class="price-line"><span class="price" id="product-price">£6.90</span><span id="price-delta" aria-hidden="true"></span></p>
+  </div>
+  <div class="board" aria-hidden="true"></div>
+  <div class="rig" id="rig" role="img" aria-label="Your burger"></div>
+  <svg class="steam" id="steam" viewBox="0 0 120 70" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M38 66c-8-10 8-16 0-28s6-18 2-30"/><path d="M60 66c-8-12 9-18 1-31s5-17 1-29"/><path d="M82 66c-8-10 8-16 0-28s6-18 2-30"/></svg>
+  <p class="stage-status label" id="stage-status" aria-live="polite">Tap an ingredient to add it</p>
+  <button class="replay" type="button" id="replay">Replay the build</button>
+</main>
+<section class="panel" id="panel" aria-labelledby="panel-title">
+  <div class="panel-intro">
+    <p class="label label--ember">Grilled to order</p>
+    <h2 id="panel-title">Customise yours</h2>
+    <p class="muted" id="panel-description">Choose your fillings and sauces.</p>
+  </div>
+  <div id="groups"></div>
+</section>
+<div class="orderbar">
+  <button class="btn order-btn" type="button" id="order-btn" data-state="add"><span id="order-label">Add to basket</span><span class="price" id="order-price">£6.90</span></button>
+  <p class="order-note" id="order-note" aria-live="polite"></p>
+</div>
+<dialog class="sheet" id="basket-dialog" aria-labelledby="basket-heading"></dialog>
+<script type="module" src="./builder.js"></script>
+</body>
+</html>

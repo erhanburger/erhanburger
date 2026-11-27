@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f1e5">
+  <title>Menu · Er-Han Burger</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 19a12 12 0 0 1 24 0z' fill='%23c2401f'/%3E%3Crect x='3' y='22' width='26' height='3' rx='1.5' fill='%2315233b'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,0..100;1,9..144,300..600,0..100&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="./concept.css">
+  <script type="module" src="./menu.js"></script>
+</head>
+<body class="has-tabbar">
+  <a class="skip" href="#menu-sections">Skip to the menu</a>
+  <header class="masthead">
+    <div class="wrap masthead-inner">
+      <a class="wordmark" href="./" aria-label="Er-Han Burger, home">
+        <svg class="wordmark-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 19a12 12 0 0 1 24 0z" fill="#c2401f"/><circle cx="12" cy="13" r="1.1" fill="#f7f1e5"/><circle cx="17" cy="10.5" r="1.1" fill="#f7f1e5"/><circle cx="21" cy="14" r="1.1" fill="#f7f1e5"/><rect x="3" y="22" width="26" height="3" rx="1.5" fill="#15233b"/></svg>
+        <span class="wordmark-name">Er-Han Burger</span>
+        <span class="wordmark-since">Since 2013</span>
+      </a>
+      <nav aria-label="Main">
+        <a href="./menu.html" aria-current="page">Menu</a>
+        <a class="nav-visit" href="./#visit">Visit us</a>
+        <button type="button" class="basket-toggle" data-open-basket>Basket <span class="count" data-basket-count>0</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <header class="menu-hero">
+      <div>
+        <p class="label">Fresh · Grilled · Halal</p>
+        <h1>The <em>menu</em></h1>
+        <p>Everything is cooked when your order comes in. Tap a dish to customise it, or add simple items straight to your basket.</p>
+      </div>
+      <span class="status" data-open-status>Checking opening hours</span>
+    </header>
+    <div class="menu-layout">
+      <aside class="menu-rail">
+        <div class="search" role="search">
+          <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8.5" cy="8.5" r="6"/><path d="M13 13l5 5"/></svg>
+          <label class="visually-hidden" for="menu-search">Search the menu</label>
+          <input id="menu-search" type="search" placeholder="Search the menu" autocomplete="off">
+        </div>
+        <nav class="cat-nav" id="cat-nav" aria-label="Menu categories"></nav>
+        <div class="rail-note">
+          <p>Collection only from Brent South Shopping Park.</p>
+          <p>Prefer to call? <a href="tel:07576113811">07576 113811</a></p>
+        </div>
+      </aside>
+      <div id="menu-sections">
+        <p class="no-results" id="no-results" role="status" hidden>Nothing matches that search. Try “chicken” or “chips”.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <span>Er-Han Burger · Fresh, grilled, halal · Since 2013</span>
+      <span>Brent South Shopping Park, London · 07576 113811</span>
+    </div>
+  </footer>
+
+  <nav class="tabbar" aria-label="Order">
+    <a href="./">Home</a>
+    <button type="button" data-open-basket>Basket · <span data-basket-count>0</span> <span data-basket-total></span></button>
+  </nav>
+  <dialog id="basket-dialog" class="basket-dialog" aria-labelledby="basket-heading"></dialog>
+</body>
+</html>
