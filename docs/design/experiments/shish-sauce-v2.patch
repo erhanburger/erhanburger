@@ -1,0 +1,711 @@
+diff --git a/charcoal-demo/components.css b/charcoal-demo/components.css
+index 190f15d..b28d5ca 100644
+--- a/charcoal-demo/components.css
++++ b/charcoal-demo/components.css
+@@ -992,6 +992,15 @@ html.has-sheet { overflow: hidden; }
+ .stage-photo.is-entering { animation: photo-in 280ms var(--ease-out) both; }
+ @keyframes photo-in { from { opacity: 0; transform: scale(.975); } }
+ .stage-sauce { position: absolute; z-index: 3; pointer-events: none; }
++/* On short phones the photo takes the room: a smaller title and a one-line
++   ticket tag leave the whole box visible at the largest size. */
++@media (max-width: 899px) and (max-height: 700px) {
++  .builder[data-scene="photo"] .builder-title h1 { font-size: 1.3rem; }
++  .builder[data-scene="photo"] .builder-head { padding-block: 4px; }
++  .stage[data-visual="shish-photo"] .stage-ticket { top: 3px; max-width: calc(100% - var(--tap) - var(--s-5)); padding: 7px 6px 6px; font-size: 10px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
++  .stage[data-visual="shish-photo"] .rig { --tag-room: 16px; bottom: 1.5%; }
++  .stage[data-visual="shish-photo"] .stage-caption { top: 6px; right: 6px; }
++}
+ .art[data-visual="shish-photo"] .art-rig { display: none; }
+ .art .art-shish { left: 3%; top: 50%; width: 94%; transform: translateY(-50%); filter: none; }
+ /* Seasoning has no layer of its own: a light sprinkle over the food. */
+diff --git a/charcoal-demo/photo-scene.js b/charcoal-demo/photo-scene.js
+index c305fd2..886d040 100644
+--- a/charcoal-demo/photo-scene.js
++++ b/charcoal-demo/photo-scene.js
+@@ -1,139 +1,290 @@
+ // Photo scenes: a product shown in its approved photograph (the chicken shish
+-// boxes), with the chosen sauces squeezed over the food by the shared bottle
+-// from sauce-motion.js. Other choices do not change the photograph.
++// boxes), with the chosen sauces squeezed over the food. Other choices do not
++// change the photograph.
++//
++// The sauce is drawn as it would lie on real food seen from above: each sauce
++// takes its own hand-squeezed route (uneven swings, wobble, blobs where the
++// bottle turned, tapered ends), sinks and breaks where it falls into the dark
++// gaps between chicken pieces (read from the photo itself), and casts a soft
++// shadow. Creamy sauces are opaque, thin ones translucent. There is no
++// bottle: from above, a squeeze reads as the line running out under a fresh
++// bead.
+ //
+ // State-driven: the sauces on the food always converge to the selection.
+-// New sauces queue and pour one at a time; a deselected sauce fades away,
+-// even mid-pour, so rapid taps never leave the picture out of step.
++// New sauces queue and are squeezed one at a time; a deselected sauce fades,
++// even mid-squeeze, so rapid taps never leave the picture out of step. Every
++// route is seeded, so the same selection always gives the same picture.
+ //
+-// A product opts in with `photo: { src, small, sauceArea, sauceAmounts }`:
+-// sauceArea is [left, top, right, bottom] of the food the sauce goes on, as
+-// shares of the photo; sauceAmounts maps option ids to 'little' or 'extra'.
+-import { paintSaucePour, paintSauceTrail, sauceProfiles, preloadSauceBottles, surfacePoint } from './sauce-motion.js'
++// A product opts in with `photo: { src, small, width, height, sauceArea,
++// sauceAmounts }`: sauceArea is [left, top, right, bottom] of the food the
++// sauce goes on, as shares of the photo; sauceAmounts maps option ids to
++// 'little' or 'extra'.
++import { sauceProfiles } from './sauce-motion.js'
+ 
+ const clamp = value => Math.max(0, Math.min(1, value))
+ const ease = value => value * value * (3 - 2 * value)
+ 
+-// How each sauce is squeezed over food seen from above. Creamy sauces go on
+-// as a full zigzag, burger sauce as one stripe down the middle, thinner
+-// sauces as a tighter, finer zigzag.
+-// thickness is the line's width as a share of the photo's width.
++// Colours seen on real sauces in daylight: [edge, body, crown, highlight].
++// thickness is the line's width as a share of the photo width; angle turns the
++// route so different sauces cross rather than run in step.
+ const sauceStyles = {
+-  'garlic-mayo': { path: 'drizzle', turns: 6, width: .74, thickness: .0135 },
+-  mayo: { path: 'drizzle', turns: 6, width: .74, thickness: .013 },
+-  'burger-sauce': { path: 'stripe', width: 0, thickness: .017 },
+-  ketchup: { path: 'drizzle', turns: 7, width: .66, thickness: .0085 },
+-  'bbq-sauce': { path: 'drizzle', turns: 7, width: .66, thickness: .0085 },
+-  'chilli-sauce': { path: 'drizzle', turns: 8, width: .68, thickness: .0075 },
+-  mustard: { path: 'drizzle', turns: 7, width: .62, thickness: .0075 },
++  'garlic-mayo': { path: 'drizzle', sweeps: 8, reach: .82, thickness: .0155, angle: -5, opacity: 1,
++    colours: ['#bdb6a5', '#f1eee5', '#fdfcf8', '#ffffff'] },
++  mayo: { path: 'drizzle', sweeps: 7, reach: .8, thickness: .015, angle: 7, opacity: 1,
++    colours: ['#c4b48b', '#f2e7c9', '#fcf6e6', '#ffffff'] },
++  'burger-sauce': { path: 'stripe', reach: .06, thickness: .027, angle: 2, opacity: .93,
++    colours: ['#c8774f', '#eba27c', '#f6bf9f', '#ffe8da'] },
++  ketchup: { path: 'drizzle', sweeps: 6, reach: .72, thickness: .0098, angle: 17, opacity: .9,
++    colours: ['#7c1309', '#b8261a', '#d9473a', '#ffb3a6'] },
++  'bbq-sauce': { path: 'drizzle', sweeps: 6, reach: .74, thickness: .0098, angle: -18, opacity: .86,
++    colours: ['#2e120a', '#5b2413', '#7d3a20', '#e0a27c'] },
++  'chilli-sauce': { path: 'drizzle', sweeps: 7, reach: .7, thickness: .0088, angle: 24, opacity: .8,
++    colours: ['#86210f', '#cf3a1b', '#ec6433', '#ffc39a'] },
++  mustard: { path: 'drizzle', sweeps: 6, reach: .66, thickness: .009, angle: -26, opacity: .92,
++    colours: ['#9a6a07', '#dda21c', '#f1c34c', '#fff0b0'] },
+ }
+ 
+-function mix(a, b, share) {
+-  const parse = hex => [1, 3, 5].map(index => parseInt(hex.slice(index, index + 2), 16))
+-  const [x, y] = [parse(a), parse(b)]
+-  return 'rgb(' + x.map((value, index) => Math.round(value + (y[index] - value) * share)).join(',') + ')'
+-}
++const squeezeTime = { drizzle: 950, stripe: 680 }
++const fadeTime = 260
+ 
+-// A squeezed line seen from above: a soft darker edge, the sauce's own
+-// colour, a paler rounded crown and a broken specular highlight from the
+-// upper left, so it reads as a glossy bead lying on the food.
+-function paintGlossyTrail(context, layer, progress, alpha, width) {
+-  const count = Math.max(2, Math.round(layer.samples * progress))
+-  const points = []
+-  for (let index = 0; index < count; index++) {
+-    const t = progress * index / (count - 1)
+-    const p = surfacePoint(layer, width, t)
+-    const ends = Math.min(1, .25 + t * 14, .25 + (progress - t) * 30)
+-    const swell = 1 + .13 * Math.sin(t * 23 + layer.phase) + .07 * Math.sin(t * 61 + layer.phase * 2)
+-    points.push({ x: p.x, y: -p.y, w: layer.thickness * width * ends * swell, t })
++function seeded(seed) {
++  let state = seed >>> 0
++  return () => {
++    state = (state + 0x6d2b79f5) >>> 0
++    let t = state
++    t = Math.imul(t ^ (t >>> 15), t | 1)
++    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+   }
+-  const [edge, body, light] = layer.sauce.colours
+-  const pass = (colour, scale, opacity, dx = 0, dy = 0, keep = () => true) => {
+-    context.strokeStyle = colour
+-    context.globalAlpha = alpha * opacity
+-    for (let index = 1; index < points.length; index++) {
+-      const a = points[index - 1]
+-      const b = points[index]
+-      if (!keep(b)) continue
+-      context.lineWidth = Math.max(.6, b.w * scale)
+-      context.beginPath()
+-      context.moveTo(a.x + dx * a.w, a.y + dy * a.w)
+-      context.lineTo(b.x + dx * b.w, b.y + dy * b.w)
+-      context.stroke()
+-    }
+-  }
+-  context.save()
+-  context.lineCap = 'round'
+-  context.lineJoin = 'round'
+-  const fine = Math.min(1, layer.thickness / .012)
+-  pass(edge, 1.08, .55)
+-  pass(edge, .95, .5)
+-  pass(body, .8, 1, -.02, -.02)
+-  pass(mix(body, light, .2 + fine * .25), .42, .3 + fine * .25, -.1, -.1)
+-  const shine = layer.sauce.shine
+-  pass(light, .16, .55 + shine * .4, -.2, -.22, ({ t }) => Math.sin(t * 47 + layer.phase) > -.35)
+-  pass('#ffffff', .07, shine * .5, -.22, -.24, ({ t }) => Math.sin(t * 31 + layer.phase) > .3)
+-  context.restore()
+ }
+ 
+-const timings = { enter: 240, pour: 900, exit: 215 }
+-const pourTime = timings.enter + timings.pour + timings.exit
+-const fadeTime = 260
++const hash = text => [...text].reduce((value, char) => Math.imul(value ^ char.charCodeAt(0), 16777619), 2166136261)
+ 
+-// The sauces to show for a selection, in the order they were chosen. Each
+-// sauce choice keeps its own lane (a small shift and phase), so a line never
+-// moves when other sauces come and go.
++// The sauces to show for a selection, in the order they were chosen.
+ function sauceTargets(photo, options, selectedIds) {
+   const saucy = options.filter(option => (option.layerKeys ?? []).some(key => sauceProfiles[key]))
+   return [...selectedIds].flatMap(id => {
+     const option = saucy.find(choice => choice.id === id)
+     if (!option) return []
+     const sauceKey = option.layerKeys.find(key => sauceProfiles[key])
+-    return [{ id, sauceKey, lane: saucy.indexOf(option), amount: photo.sauceAmounts?.[id] ?? 'normal' }]
++    const amount = photo.sauceAmounts?.[id] ?? 'normal'
++    const passes = amount === 'extra' ? [{ body: 1.3 }, { body: 1.1, share: .6, offset: .5 }] :
++      amount === 'little' ? [{ body: .72, share: .55, offset: .22 }] : [{}]
++    return passes.map((pass, index) => ({ key: id + '#' + index, id, sauceKey, lane: saucy.indexOf(option), pass, index }))
+   })
+ }
+ 
+-// Rig units: x from the photo's centre, y up from its foot, both in photo widths.
+-function sauceLayers(target, photo, aspect) {
+-  const [left, top, right, bottom] = photo.sauceArea
++// ---------- Routes ----------
++
++function catmull(points, steps) {
++  const out = []
++  for (let index = 0; index < points.length - 1; index++) {
++    const p0 = points[Math.max(0, index - 1)]
++    const p1 = points[index]
++    const p2 = points[index + 1]
++    const p3 = points[Math.min(points.length - 1, index + 2)]
++    for (let step = 0; step < steps; step++) {
++      const t = step / steps
++      const t2 = t * t
++      const t3 = t2 * t
++      const at = axis => .5 * (2 * p1[axis] + (p2[axis] - p0[axis]) * t +
++        (2 * p0[axis] - 5 * p1[axis] + 4 * p2[axis] - p3[axis]) * t2 + (3 * p1[axis] - p0[axis] - 3 * p2[axis] + p3[axis]) * t3)
++      out.push({ a: at('a'), c: at('c'), turn: step === 0 ? p1.turn ?? 0 : 0 })
++    }
++  }
++  const last = points.at(-1)
++  out.push({ a: last.a, c: last.c, turn: last.turn ?? 0 })
++  return out
++}
++
++// A route in the sauce area, in photo shares (u across, v down), with a width
++// factor per point and the photo's darkness under it.
++function buildRoute(target, photo, shade) {
+   const style = sauceStyles[target.sauceKey] ?? sauceStyles.ketchup
+-  const profile = sauceProfiles[target.sauceKey]
+-  const span = right - left
+-  const lane = ((target.lane * 3) % 5 - 2)
+-  const centre = (left + right) / 2 - .5 + lane * span * .035
+-  const head = (1 - top) * aspect
+-  const length = (bottom - top) * aspect
+-  // Each lane slants a little differently and turns at its own rate, so two
+-  // sauces cross each other instead of running in step.
+-  const slant = [0, .05, -.06, .08, -.03][target.lane % 5] * span
+-  const layer = ({ share = 1, body = 1, phase = 0, inset = .06, turns = 0 } = {}) => ({
+-    key: target.sauceKey, path: style.path, turns: (style.turns + (target.lane % 3) - 1 + turns) * share, samples: 160, slant,
+-    offset: centre, width: span * style.width, phase: lane * .7 + phase,
+-    y: head - length * (inset + lane * .012), height: length * (1 - inset * 2) * share,
+-    thickness: style.thickness * body, sauce: { ...profile, body: profile.body * body }, paintTrail: paintGlossyTrail,
++  const random = seeded(hash(target.sauceKey) ^ (target.lane * 7919) ^ (target.index * 104729) ^ hash(photo.src))
++  const [left, top, right, bottom] = photo.sauceArea
++  const aspect = photo.height / photo.width
++  // Work in photo-width units so angles are true.
++  const width = right - left
++  const height = (bottom - top) * aspect
++  const share = target.pass.share ?? 1
++  const angle = (style.angle + (random() - .5) * 8) * Math.PI / 180
++  const centre = { x: left + width / 2 + (random() - .5) * width * .08, y: (top + (bottom - top) / 2) * aspect }
++  const length = height * .84 * share
++  const start = -length / 2 + (target.pass.offset ?? 0) * height * .4 - (1 - share) * height * .2
++  const half = width * style.reach / 2
++  let smooth
++  if (style.path === 'stripe') {
++    const controls = []
++    const count = 7
++    for (let index = 0; index <= count; index++) {
++      controls.push({ a: start + length * index / count + (random() - .5) * length * .03, c: (random() - .5) * width * style.reach })
++    }
++    smooth = catmull(controls, 14)
++  } else {
++    // Back-and-forth runs joined by round turns, as a squeeze bottle swung
++    // over the box draws them: uneven spacing, uneven reach, a slight slope.
++    const sweeps = Math.max(3, Math.round(style.sweeps * share + (random() - .5) * 2))
++    const steps = Array.from({ length: sweeps }, () => .65 + random() * .7)
++    const total = steps.reduce((sum, value) => sum + value, 0)
++    const spacing = steps.map(step => length * step / total)
++    smooth = []
++    let side = random() < .5 ? -1 : 1
++    let a = start
++    let c = side * half * (.3 + random() * .4)
++    for (let index = 0; index < sweeps; index++) {
++      // The hand keeps moving down while it swings, so runs slant; turns
++      // are small and round.
++      const radius = spacing[index] * (.17 + random() * .08)
++      const target = -side * (half * (.62 + random() * .38) - radius * .6)
++      const slope = spacing[index] - radius * 2
++      const sag = (random() - .5) * spacing[index] * .5
++      const runs = 12
++      for (let step = 0; step < runs; step++) {
++        const t = step / runs
++        smooth.push({ a: a + slope * t + Math.sin(t * Math.PI) * sag, c: c + (target - c) * t, turn: 0 })
++      }
++      a += slope
++      c = target
++      // Round turn bulging outwards on the far side.
++      const bulge = -side
++      const arcs = 10
++      for (let step = 0; step <= arcs; step++) {
++        const theta = -Math.PI / 2 + Math.PI * step / arcs
++        smooth.push({ a: a + radius + Math.sin(theta) * radius, c: c + bulge * Math.cos(theta) * radius * (.9 + random() * .2), turn: step === arcs / 2 ? 1 : 0 })
++      }
++      a += radius * 2
++      side = -side
++    }
++    // The last run trails off.
++    const end = -side * half * (.2 + random() * .4)
++    for (let step = 1; step <= 8; step++) smooth.push({ a: a + step * .002, c: c + (end - c) * step / 8, turn: 0 })
++  }
++  const phaseA = random() * 6
++  const phaseB = random() * 6
++  const cos = Math.cos(angle)
++  const sin = Math.sin(angle)
++  const points = smooth.map(({ a, c, turn }, index) => {
++    const t = index / (smooth.length - 1)
++    const wobble = (Math.sin(t * 37 + phaseA) * .5 + Math.sin(t * 89 + phaseB) * .3) * width * .006
++    const x = centre.x + (c + wobble) * cos + a * sin
++    const y = centre.y - (c + wobble) * sin + a * cos
++    return { u: x, v: y / aspect, turn, x, y }
++  })
++  // Arc length, blobs at turns, swelling, and the food's darkness underneath.
++  let run = 0
++  points.forEach((point, index) => {
++    if (index) run += Math.hypot(point.x - points[index - 1].x, point.y - points[index - 1].y)
++    point.s = run
+   })
+-  if (target.amount === 'little') return [layer({ share: .55, body: .7, inset: .14 })]
+-  if (target.amount === 'extra') return [layer({ body: 1.3 }), layer({ body: 1.1, phase: 2.2, turns: -1, share: .6, inset: .2 })]
+-  return [layer()]
++  const blobs = points.filter(point => point.turn).map(point => ({ s: point.s, size: .25 + random() * .35 }))
++  for (const point of points) {
++    point.t = point.s / run
++    const ends = Math.min(1, .2 + point.t * 22, .15 + (1 - point.t) * 14)
++    let blob = 0
++    for (const { s, size } of blobs) blob = Math.max(blob, size * Math.exp(-(((point.s - s) / (width * .03)) ** 2)))
++    const swell = 1 + .14 * Math.sin(point.t * 29 + phaseA) + .08 * Math.sin(point.t * 71 + phaseB)
++    point.w = style.thickness * (target.pass.body ?? 1) * ends * swell * (1 + blob)
++    point.gap = shade ? clamp((.3 - shade(point.u, point.v)) / .16) : 0
++  }
++  // Where the line crosses a deep gap it sometimes breaks for a moment.
++  let breaking = false
++  for (const point of points) {
++    if (point.gap > .75 && !breaking && random() < .35) breaking = true
++    if (point.gap < .4) breaking = false
++    point.hidden = breaking && style.path !== 'stripe'
++  }
++  return { points, style }
++}
++
++function mix(a, b, share) {
++  const parse = hex => [1, 3, 5].map(index => parseInt(hex.slice(index, index + 2), 16))
++  const [x, y] = [parse(a), parse(b)]
++  return 'rgb(' + x.map((value, index) => Math.round(value + (y[index] - value) * share)).join(',') + ')'
++}
++
++// Draws a route revealed up to `progress` (0 to 1) at `alpha`.
++// frame: { x, y, s } = the photo's top-left corner and width in canvas pixels.
++function paintRoute(context, route, progress, alpha, frame) {
++  if (progress <= 0 || alpha <= 0) return
++  const { points, style } = route
++  const [edge, body, crown, light] = style.colours
++  const visible = points.filter(point => point.t <= progress)
++  if (visible.length < 2) return
++  const head = visible.at(-1).t
++  const px = point => frame.x + point.u * frame.s
++  const py = point => frame.y + point.v * frame.s * route.aspect
++  const widthOf = point => {
++    // A fresh bead at the head; just-laid sauce settles and spreads a little.
++    const age = head - point.t
++    const bead = progress < 1 ? 1 + .45 * Math.exp(-((age / .012) ** 2)) : 1
++    return point.w * frame.s * bead * (.88 + .12 * clamp(age * 12 + (progress >= 1 ? 1 : 0))) * (1 - point.gap * .28)
++  }
++  const pass = (colour, scale, opacity, dx, dy, keep) => {
++    context.strokeStyle = colour
++    for (let index = 1; index < visible.length; index++) {
++      const a = visible[index - 1]
++      const b = visible[index]
++      if (a.hidden || b.hidden || (keep && !keep(b))) continue
++      const w = widthOf(b)
++      context.globalAlpha = alpha * opacity * (1 - b.gap * .35)
++      context.lineWidth = Math.max(.5, w * scale)
++      context.beginPath()
++      context.moveTo(px(a) + dx * w, py(a) + dy * w)
++      context.lineTo(px(b) + dx * w, py(b) + dy * w)
++      context.stroke()
++    }
++  }
++  const glossBreak = point => Math.sin(point.t * 53 + point.w * 900) > -.2 && point.gap < .5
++  context.save()
++  context.lineCap = 'round'
++  context.lineJoin = 'round'
++  const body1 = style.opacity
++  // Soft falloff, the darker rim, the sauce body, its shaded lower side, a
++  // paler crown, then the light catching the top.
++  pass(edge, 1.14, .22 * body1)
++  pass(edge, 1, .7 * body1)
++  pass(body, .84, body1, -.04, -.04)
++  pass(mix(edge, body, .3), .5, .65 * body1, .18, .2)
++  pass(crown, .42, .6 * body1, -.13, -.15)
++  pass(light, .2, .75, -.2, -.24, glossBreak)
++  pass('#ffffff', .08, .55, -.22, -.27, point => glossBreak(point) && Math.sin(point.t * 23) > .1)
++  // Where the line dips between pieces, the shadow of the food falls on it.
++  context.strokeStyle = 'rgb(70, 38, 18)'
++  for (let index = 1; index < visible.length; index++) {
++    const a = visible[index - 1]
++    const b = visible[index]
++    if (a.hidden || b.hidden || b.gap < .05) continue
++    context.globalAlpha = alpha * b.gap * .26
++    context.lineWidth = widthOf(b) * 1.02
++    context.beginPath()
++    context.moveTo(px(a), py(a))
++    context.lineTo(px(b), py(b))
++    context.stroke()
++  }
++  context.restore()
+ }
+ 
+ export const PhotoScene = (() => {
+   let stage
+-  let rig
+-  let bottle
+   let status
++  let rig
+   let image
+   let canvas
+   let context
+-  let buffer
+-  let bufferContext
++  let layer
++  let layerContext
++  let baked
++  let bakedContext
++  let bakedKey = ''
+   let photo
+-  let aspect = .642
+   let options = []
+   let selection = new Set()
+-  let view = { ox: 0, oy: 0, s: 1, scale: 1 }
+-  let frame = 0
+-  // Sauce passes: { key, layer, state: queued|pouring|rest|fading, t0, from }
++  let frame = { x: 0, y: 0, s: 0, scale: 1 }
++  let shade
++  let routes = new Map()
++  let animation = 0
++  // Sauce passes: { key, sauceKey, state: queued|pouring|rest|fading, t0, from }
+   let sauces = []
+   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
+   const now = () => performance.now()
+@@ -145,35 +296,54 @@ export const PhotoScene = (() => {
+ 
+   function measure() {
+     const stageBox = stage.getBoundingClientRect()
+-    const rigBox = rig.getBoundingClientRect()
+-    if (!stageBox.width || !rigBox.width) return
++    const box = image.getBoundingClientRect()
++    if (!stageBox.width || !box.width) return
+     const scale = Math.min(devicePixelRatio || 1, 2)
++    const rigBox = rig.getBoundingClientRect()
+     Object.assign(canvas.style, {
+       left: stageBox.left - rigBox.left + 'px', top: stageBox.top - rigBox.top + 'px',
+       width: stageBox.width + 'px', height: stageBox.height + 'px',
+     })
+-    for (const surface of [canvas, buffer]) {
++    for (const surface of [canvas, layer, baked]) {
+       surface.width = Math.round(stageBox.width * scale)
+       surface.height = Math.round(stageBox.height * scale)
+     }
+-    view = { ox: rigBox.left + rigBox.width / 2 - stageBox.left, oy: rigBox.bottom - stageBox.top, s: rigBox.width, scale }
++    // The photo's corner and width in canvas pixels; the entrance scale is ignored.
++    const width = image.offsetWidth
++    frame = {
++      x: (rigBox.left + rigBox.width / 2 - width / 2 - stageBox.left) * scale,
++      y: (rigBox.bottom - image.offsetHeight - stageBox.top) * scale,
++      s: width * scale, scale,
++    }
++    bakedKey = ''
+   }
+ 
+-  function targets() {
+-    return sauceTargets(photo, options, selection).flatMap(target =>
+-      sauceLayers(target, photo, aspect).map((layer, pass) => ({ key: target.id + '#' + pass, layer })))
++  function wanted() {
++    return sauceTargets(photo, options, selection)
++  }
++
++  function routeFor(entry) {
++    if (!routes.has(entry.key + entry.sauceKey)) {
++      const route = buildRoute(entry, photo, shade)
++      route.aspect = photo.height / photo.width
++      routes.set(entry.key + entry.sauceKey, route)
++    }
++    return routes.get(entry.key + entry.sauceKey)
+   }
+ 
+   function progressOf(entry, time) {
+     if (entry.state === 'rest') return 1
+-    if (entry.state === 'pouring') return ease(clamp((time - entry.t0 - timings.enter) / timings.pour))
++    if (entry.state === 'pouring') {
++      const style = sauceStyles[entry.sauceKey] ?? sauceStyles.ketchup
++      return clamp((time - entry.t0) / squeezeTime[style.path])
++    }
+     return entry.from ?? 0
+   }
+ 
+-  function reconcile({ delay = 60 } = {}) {
++  function reconcile({ delay = 40 } = {}) {
+     const time = now()
+-    const wanted = targets()
+-    const keys = new Set(wanted.map(({ key }) => key))
++    const targets = wanted()
++    const keys = new Set(targets.map(({ key }) => key))
+     for (const entry of sauces) {
+       if (keys.has(entry.key) && entry.state !== 'fading') continue
+       if (entry.state === 'queued') entry.state = 'dropped'
+@@ -184,20 +354,17 @@ export const PhotoScene = (() => {
+       }
+     }
+     const showing = new Set(sauces.filter(({ state }) => state !== 'fading' && state !== 'dropped').map(({ key }) => key))
+-    for (const target of wanted) {
++    for (const target of targets) {
+       if (!showing.has(target.key)) sauces.push({ ...target, state: 'queued', t0: time + delay })
+     }
+     sauces = sauces.filter(({ state }) => state !== 'dropped')
+-    if (reducedMotion.matches) {
+-      sauces = wanted.map(target => ({ ...target, state: 'rest' }))
+-    }
++    if (reducedMotion.matches) sauces = targets.map(target => ({ ...target, state: 'rest' }))
+     start()
+   }
+ 
+-  // Advances the pour queue; returns the pour in progress and whether anything moves.
+   function step(time) {
+     let pouring = sauces.find(({ state }) => state === 'pouring')
+-    if (pouring && time - pouring.t0 >= pourTime) {
++    if (pouring && progressOf(pouring, time) >= 1) {
+       pouring.state = 'rest'
+       pouring = null
+     }
+@@ -214,50 +381,56 @@ export const PhotoScene = (() => {
+     return { pouring, moving: sauces.some(({ state }) => state !== 'rest') }
+   }
+ 
++  // Lays a layer of sauce on a surface with the soft shadow it casts on the food.
++  function layDown(target, source) {
++    target.save()
++    target.shadowColor = 'rgba(30, 15, 6, .55)'
++    target.shadowBlur = 2.5 * frame.scale
++    target.shadowOffsetX = .6 * frame.scale
++    target.shadowOffsetY = 1.4 * frame.scale
++    target.drawImage(source, 0, 0)
++    target.restore()
++  }
++
+   function paint(time) {
+-    if (!view.s) return false
++    if (!frame.s || !shade) return false
+     const { pouring, moving } = step(time)
+-    const { ox, oy, s, scale } = view
+-    // The sauce is painted on its own layer, then laid on the photo with a
+-    // soft shadow so it sits on the food rather than floating over it.
+-    bufferContext.setTransform(1, 0, 0, 1, 0, 0)
+-    bufferContext.clearRect(0, 0, buffer.width, buffer.height)
+-    bufferContext.setTransform(scale, 0, 0, scale, ox * scale, oy * scale)
+-    for (const entry of sauces) {
+-      if (entry.state === 'rest') paintSauceTrail(bufferContext, entry.layer, 1, 1, s, 0)
+-      else if (entry.state === 'fading') {
+-        paintSauceTrail(bufferContext, entry.layer, entry.from, 1 - ease(clamp((time - entry.t0) / fadeTime)), s, 0)
++    // Sauces at rest are drawn once, in the order they were chosen.
++    const order = wanted().map(({ key }) => key)
++    const resting = sauces.filter(({ state }) => state === 'rest').sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key))
++    const restKey = resting.map(({ key, sauceKey }) => key + sauceKey).join(' ')
++    if (restKey !== bakedKey) {
++      bakedKey = restKey
++      bakedContext.clearRect(0, 0, baked.width, baked.height)
++      layerContext.clearRect(0, 0, layer.width, layer.height)
++      for (const entry of resting) paintRoute(layerContext, routeFor(entry), 1, 1, frame)
++      layDown(bakedContext, layer)
++    }
++    context.clearRect(0, 0, canvas.width, canvas.height)
++    context.drawImage(baked, 0, 0)
++    const live = sauces.filter(({ state }) => state !== 'rest' && state !== 'queued')
++    if (live.length) {
++      layerContext.clearRect(0, 0, layer.width, layer.height)
++      for (const entry of live) {
++        const alpha = entry.state === 'fading' ? 1 - ease(clamp((time - entry.t0) / fadeTime)) : 1
++        paintRoute(layerContext, routeFor(entry), progressOf(entry, time), alpha, frame)
+       }
++      layDown(context, layer)
+     }
+     if (pouring) {
+-      paintSaucePour({
+-        context: bufferContext, bottle, canvas: { style: {} }, traceDepth: 0, layer: pouring.layer,
+-        elapsed: time - pouring.t0, timings, width: s, canvasSize: 0, verticalRoom: s * 2,
+-      })
+-      const label = pouring.layer.sauce.label
++      const label = sauceProfiles[pouring.sauceKey].label
+       setStatus('saucing', 'Adding ' + (label.startsWith('BBQ') ? label : label.toLowerCase()) + '…')
+-    } else {
+-      bottle.style.visibility = 'hidden'
+-      setStatus(moving ? 'assembling' : 'ready', moving ? 'Adjusting your order…' : 'Ready')
+-    }
+-    context.setTransform(1, 0, 0, 1, 0, 0)
+-    context.clearRect(0, 0, canvas.width, canvas.height)
+-    context.save()
+-    context.shadowColor = 'rgba(28, 14, 6, .5)'
+-    context.shadowBlur = 3 * scale
+-    context.shadowOffsetY = 1.5 * scale
+-    context.drawImage(buffer, 0, 0)
+-    context.restore()
+-    return moving || Boolean(pouring)
++    } else setStatus(moving ? 'assembling' : 'ready', moving ? 'Adjusting your order…' : 'Ready')
++    return moving
+   }
+ 
+   function tick() {
+-    frame = 0
+-    if (paint(now())) frame = requestAnimationFrame(tick)
++    animation = 0
++    if (paint(now())) animation = requestAnimationFrame(tick)
+   }
+ 
+   function start() {
+-    if (!frame) frame = requestAnimationFrame(tick)
++    if (!animation) animation = requestAnimationFrame(tick)
+   }
+ 
+   function showPhoto() {
+@@ -267,13 +440,37 @@ export const PhotoScene = (() => {
+     image.classList.add('is-entering')
+   }
+ 
++  // Reads the photo's brightness, to find the gaps between pieces of food.
++  function readShade() {
++    const sample = new Image()
++    sample.src = photo.small
++    return sample.decode().then(() => {
++      const width = 240
++      const height = Math.round(width * photo.height / photo.width)
++      const surface = document.createElement('canvas')
++      surface.width = width
++      surface.height = height
++      const draw = surface.getContext('2d', { willReadFrequently: true })
++      draw.filter = 'blur(1px)'
++      draw.drawImage(sample, 0, 0, width, height)
++      const { data } = draw.getImageData(0, 0, width, height)
++      shade = (u, v) => {
++        const x = Math.min(width - 1, Math.max(0, Math.round(u * width)))
++        const y = Math.min(height - 1, Math.max(0, Math.round(v * height)))
++        const at = (y * width + x) * 4
++        return (data[at] * .3 + data[at + 1] * .55 + data[at + 2] * .15) / 255
++      }
++    }).catch(() => {
++      shade = () => 1
++    })
++  }
++
+   function init({ profile, selection: selected = [], options: list = [] }) {
+     stage = document.querySelector('#stage')
+     rig = document.querySelector('#rig')
+-    bottle = document.querySelector('#bottle')
+     status = document.querySelector('#status')
++    document.querySelector('.builder')?.setAttribute('data-scene', 'photo')
+     photo = profile.photo
+-    aspect = photo.height / photo.width
+     options = list
+     selection = new Set(selected)
+     stage.dataset.visual = 'shish-photo'
+@@ -290,16 +487,21 @@ export const PhotoScene = (() => {
+     canvas = document.createElement('canvas')
+     canvas.className = 'stage-sauce'
+     context = canvas.getContext('2d')
+-    buffer = document.createElement('canvas')
+-    bufferContext = buffer.getContext('2d')
++    layer = document.createElement('canvas')
++    layerContext = layer.getContext('2d')
++    baked = document.createElement('canvas')
++    bakedContext = baked.getContext('2d')
+     rig.prepend(image)
+     rig.append(canvas)
+-    if (!reducedMotion.matches) preloadSauceBottles(Object.keys(sauceStyles).map(key => ({ sauce: sauceProfiles[key] })))
+     showPhoto()
+     measure()
+     // Sauces already chosen (e.g. after "Make another") are shown at rest.
+-    sauces = targets().map(target => ({ ...target, state: 'rest' }))
+-    paint(now())
++    sauces = wanted().map(target => ({ ...target, state: 'rest' }))
++    readShade().then(() => {
++      routes = new Map()
++      bakedKey = '-'
++      start()
++    })
+     new ResizeObserver(() => {
+       measure()
+       paint(now())
+@@ -317,6 +519,7 @@ export const PhotoScene = (() => {
+   function replay() {
+     showPhoto()
+     sauces = []
++    bakedKey = '-'
+     reconcile({ delay: reducedMotion.matches ? 0 : 320 })
+   }
+ 
+diff --git a/charcoal-demo/sauce-motion.js b/charcoal-demo/sauce-motion.js
+index c7bd944..801a08b 100644
+--- a/charcoal-demo/sauce-motion.js
++++ b/charcoal-demo/sauce-motion.js
+@@ -43,23 +43,7 @@ export function preloadSauceBottles(layers) {
+   }
+ }
+ 
+-export function surfacePoint(layer, width, progress) {
+-  if (layer.path === 'drizzle' || layer.path === 'stripe') {
+-    // Seen from above (photo scenes): the line runs down the food. layer.y is
+-    // its top, layer.height its length; a drizzle swings side to side with
+-    // rounded turns, a stripe runs straight down with a slight wobble.
+-    const down = (layer.y - progress * layer.height) * width;
+-    const phase = layer.phase ?? 0;
+-    if (layer.path === 'stripe') {
+-      return { x: (layer.offset + Math.sin(progress * Math.PI * 4 + phase) * .01) * width, y: down };
+-    }
+-    // A hand-squeezed line: each swing a little wider or narrower, the turns
+-    // a little uneven, the whole line drifting slightly.
+-    const swing = Math.sin(progress * Math.PI * layer.turns + phase + .35 * Math.sin(progress * 17 + phase));
+-    const reach = .86 + .14 * Math.sin(progress * Math.PI * layer.turns * .37 + phase * 3);
+-    const drift = .03 * Math.sin(progress * 5.3 + phase) * layer.width + (progress - .5) * (layer.slant ?? 0);
+-    return { x: (layer.offset + drift + Math.sign(swing) * Math.abs(swing) ** .6 * reach * layer.width / 2) * width, y: down };
+-  }
++function surfacePoint(layer, width, progress) {
+   if (layer.path === 'zigzag') {
+     // A squeezed line along a long item (hot dog, shish): side to side with small waves.
+     const along = -.42 + progress * .84;
+@@ -113,12 +97,9 @@ function paintSauceRibbon(context, points, profile, canvasSize, alpha) {
+ 
+ export function paintSauceTrail(context, layer, progress, alpha, width, canvasSize) {
+   if (!context || progress <= 0 || alpha <= 0) return;
+-  // A layer may bring its own painter (photo scenes draw glossy strokes).
+-  if (layer.paintTrail) return layer.paintTrail(context, layer, progress, alpha, width, canvasSize);
+   const depositWidth = width * .0117 * layer.sauce.body;
+-  const samples = layer.samples ?? 42;
+-  const points = Array.from({ length: samples }, (_, index) => {
+-    const t = progress * index / (samples - 1);
++  const points = Array.from({ length: 42 }, (_, index) => {
++    const t = progress * index / 41;
+     const taper = Math.min(1, .22 + t * 18, .13 + (progress - t) * 27);
+     return {
+       ...surfacePoint(layer, width, t),
