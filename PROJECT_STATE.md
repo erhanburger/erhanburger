@@ -124,3 +124,11 @@
 - Bağımsız görsel inceleme ilk sahnede tavuğun görünürlüğü, chips ve porsiyon ayrımı için düzeltme istedi. Ayarlanan sahne önizleme düzeyinde geçti. Izgara sebzeleri yer yer grup olarak okunuyor. Yüksek çözünürlüklü ImageGen kaynakları ve teknik yöntem `docs/chicken-shish/` altında. Sohbetteki orijinal fotoğrafların dosya kopyaları çalışma alanına ulaşmadı.
 - Chromium ile dört ürün 1440×900, 390×844, 568×320 ve mobil azaltılmış hareket ayarında test edildi. Zorunlu chilli tercihi, salata, soğan ve biber, sos, kutu kapağı, 6/9 tavuk katmanı, GBP fiyatı, sepet ve kategoriye dönüş geçti. Tüm 45 ürün masaüstü ve mobil regresyonundan geçti.
 - Cloudflare Pages alan adına bu çalışma ortamından bağlantı ağ geçidinde HTTP 403 ile engelleniyor. Yerel Chrome sonuçları uzaktaki dağıtımı doğrulamaz. Yayındaki sürümün doğrulanması açık.
+
+## Chicken Shish görsel veto ve yayın protokolü
+
+- Kullanıcının Cloudflare iPhone görüntüleri ürün kartları ile hareketli sahne arasındaki belirgin kalite farkını gösterdi. `1d8594d` için önceki önizleme düzeyi görsel onayı geri çekildi. Üç ayrı oturum yeni ölçütlerle veto verdi. İşlevsel test sonuçları ayrı tutuluyor.
+- Kalıcı bağımsız veto ve 12 ölçütlü puanlama `AGENTS.md` dosyasına eklendi. Denetim, oturumların somut katkıları, puanların gerekçeleri ve kaynak gereksinimleri `docs/chicken-shish/QUALITY_REVIEW.md` içinde.
+- Kart görselleri korunuyor. Tek kompozisyonlu fotoğraf adayı yerel araştırma olarak üretildi. Dinamik seçim karşılıkları ve hareket için kaynaklar doğrulanmadan Cloudflare bağlantılı dala bir düzeltme gönderilmeyecek.
+
+- Kullanıcı patatesli Medium ve Large çeşitlerinde chips porsiyonunun aynı olduğunu doğruladı. Large yalnızca tavuk miktarını %50 artırır. Izgara referansının mevcut arşiv dosyası `IMG_0457.jpeg` (4032 × 3024, EXIF RightTop) ortak çalışma kütüphanesine bayt düzeyinde kopyalandı. İki HP10 kutulu sohbet ekinin kaynak dosyası henüz çalışma alanında yok. Başarısız taslak ve denetim ekran görüntüleri yayın dalına dâhil edilmeden ortak çalışma alanında saklandı.
