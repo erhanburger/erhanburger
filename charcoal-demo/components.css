@@ -973,16 +973,27 @@ html.has-sheet { overflow: hidden; }
 .stage[data-visual="meal"] .rig { left: 46%; width: min(56cqw, calc((90cqh - var(--tag-room)) / .84), 480px); }
 .stage[data-visual="plate"] .rig, .stage[data-visual="hot-dog"] .rig { bottom: 14%; width: min(60cqw, calc((86cqh - var(--tag-room)) / .52), 440px); }
 .stage[data-visual="photo"] .rig { bottom: 9%; width: min(78cqw, calc((88cqh - var(--tag-room)) / .7), 500px); }
-/* Box scenes (box-scene.js) draw on two canvases laid over the whole stage;
-   the rig marks where the box stands and how wide it is (--box-top is the
-   height of the food above the box foot, in box widths). */
-.stage[data-visual="box"] .rig { --tag-room: 40px; bottom: 6%; width: min(92cqw, calc((90cqh - var(--tag-room)) / var(--box-top, .6)), 600px); }
-.stage[data-visual="box"] .contact { display: none; }
-@media (min-width: 900px) and (min-height: 560px) { .stage[data-visual="box"] .rig { bottom: 16%; } }
-.box-canvas { position: absolute; z-index: 2; pointer-events: none; }
-.box-canvas--pour { z-index: 29; }
-.art-box { position: absolute; inset: 0; width: 100%; height: 100%; }
-.art[data-visual="box"] .art-rig { display: none; }
+/* Photo scenes (photo-scene.js): the approved photograph stands on the pass,
+   whole, below the ticket tag; its edges melt into the stage. Sauces are
+   drawn on a canvas over it. */
+.stage[data-visual="shish-photo"] .rig { --tag-room: 38px; bottom: 3%; width: min(96cqw, calc((95cqh - var(--tag-room)) * 1.557), 820px); }
+.stage[data-visual="shish-photo"] .contact { display: none; }
+/* The approved shish photographs sit on a neutral charcoal set; the pass
+   takes the same neutral tones so the photo's edges disappear into it. */
+.stage[data-visual="shish-photo"] { background: radial-gradient(120% 90% at 30% 35%, #4b4b4e 0%, #303032 45%, #1b1b1c 100%); }
+.art[data-visual="shish-photo"] { background: radial-gradient(120% 90% at 30% 35%, #4b4b4e 0%, #303032 45%, #1b1b1c 100%); }
+.stage-photo, .art-shish {
+  -webkit-mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent), linear-gradient(transparent, #000 6%, #000 94%, transparent);
+  -webkit-mask-composite: source-in;
+  mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent), linear-gradient(transparent, #000 6%, #000 94%, transparent);
+  mask-composite: intersect;
+}
+.stage-photo { position: absolute; z-index: 1; left: 0; bottom: 0; display: block; width: 100%; height: auto; max-width: none; pointer-events: none; user-select: none; }
+.stage-photo.is-entering { animation: photo-in 280ms var(--ease-out) both; }
+@keyframes photo-in { from { opacity: 0; transform: scale(.975); } }
+.stage-sauce { position: absolute; z-index: 3; pointer-events: none; }
+.art[data-visual="shish-photo"] .art-rig { display: none; }
+.art .art-shish { left: 3%; top: 50%; width: 94%; transform: translateY(-50%); filter: none; }
 /* Seasoning has no layer of its own: a light sprinkle over the food. */
 .stage[data-choices~="salt"] .rig::after, .stage[data-choices~="vinegar"] .rig::before {
   content: "";

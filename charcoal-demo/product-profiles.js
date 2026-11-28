@@ -1,4 +1,3 @@
-import { boxRecipe } from './box-recipes.js';
 const sharedAssets = '../burger-builder-demo/assets/';
 const menuAssets = './assets/menu/';
 const photo = (key, width, step = 0, motion = 'slice') => ({
@@ -14,7 +13,6 @@ const componentPhotos = {
   'dog-top': photo('roll-top', 1.08, 0, 'crown'),
   chips: photo('chips', .97),
   nugget: photo('nugget', .31, 0, 'patty'),
-  shish: photo('shish', .98, .18, 'patty'),
 };
 
 const props = './assets/props/';
@@ -23,15 +21,7 @@ const roundClosers = new Set(['top', 'dog-top']);
 // Serving layouts for products that are not stacked like a burger. Positions are
 // fractions of the rig width: offset is horizontal, positionY is height above the
 // surface. Earlier entries sit further back.
-const plate = { key: 'plate', asset: props + 'plate.webp', width: 1.34, offset: 0, positionY: -.035, step: 0, motion: 'plate' };
 const tray = { key: 'tray', asset: props + 'tray.webp', width: 1.22, offset: 0, positionY: -.03, step: 0, motion: 'tray' };
-const shishSaladLayout = {
-  lettuce: { offset: -.27, positionY: .095, width: .50 },
-  onion: { offset: -.36, positionY: .13, width: .30 },
-  tomato: { offset: -.22, positionY: .115, width: .33 },
-  cucumber: { offset: -.31, positionY: .085, width: .30 },
-  gherkin: { offset: -.15, positionY: .10, width: .24 },
-};
 // Fillings on an open hot dog lie along the sausage instead of covering it.
 const openRoll = {
   cheese: { width: .50, offset: -.14, positionY: .075, motion: 'drape' },
@@ -44,21 +34,18 @@ const nuggetSpots = [
   [-.33, .045, 14], [-.07, .03, -8], [.20, .04, 11],
   [-.13, .27, 4], [.14, .285, -13], [.40, .11, 7],
 ];
-const shishSalad = new Set(['lettuce', 'tomato', 'cucumber', 'onion']);
 const foodTypes = new Set(['burger', 'hot-dog', 'meal', 'plate']);
 
 export function productProfile(product, burgerProfile) {
+  // Products shown in an approved photograph (photo-scene.js).
+  if (product.photo) return { name: product.name, visual: 'shish-photo', layout: 'photo', photo: product.photo };
   if (!product.visual) return { image: product.image, name: product.name, ...product.preview };
-  const recipe = boxRecipe(product);
-  if (recipe) return { name: product.name, visual: 'box', layout: 'box', recipe };
 
   const reference = new Map(burgerProfile.layers.map(layer => [layer.key, layer]));
   const optionKeys = new Set(product.optionGroups.flatMap(group =>
     group.options.flatMap(option => option.layerKeys ?? [])));
   const meal = product.visual === 'meal';
-  const shish = product.categoryId === 'shish';
   const hotDog = product.components.includes('dog-bottom');
-  const withChips = product.components.includes('chips');
   const mainOffset = meal ? -.20 : 0;
   const mainScale = meal ? .71 : 1;
   const fixedLayerKeys = [];
@@ -96,9 +83,8 @@ export function productProfile(product, burgerProfile) {
       add(accessories, { ...configured, key: 'chips-large', motion: 'chips', width: 1.04, positionY: .04, offset: -.04 }, false);
       add(accessories, { ...configured, key: 'chips-large-heap', motion: 'chips', width: .86, positionY: .15, offset: .08, restingAngle: 7 }, false);
     } else if (key === 'chips') {
-      const width = meal ? .46 : shish ? .52 : 1.03;
-      if (shish) add(main, { ...configured, motion: 'chips', width: .40, positionY: .095, offset: .37, step: 0 });
-      else add(accessories, { ...configured, motion: meal ? configured.motion : 'chips', width, positionY: 0, offset: meal ? .36 : 0 });
+      const width = meal ? .46 : 1.03;
+      add(accessories, { ...configured, motion: meal ? configured.motion : 'chips', width, positionY: 0, offset: meal ? .36 : 0 });
     } else if (key === 'nugget' && !meal) {
       if (!nuggets) add(accessories, tray);
       const [x, y, turn] = nuggetSpots[nuggets++];
@@ -112,16 +98,6 @@ export function productProfile(product, burgerProfile) {
         positionY: row * .188, restingAngle: ((nuggets++ * 17) % 29) - 14,
       });
     } else {
-      if (key === 'shish') {
-        // Served on a plate: grilled chicken on the right, salad beside it.
-        const large = product.name.includes('Large')
-        if (!main.some(layer => layer.key === 'plate')) {
-          main.unshift(plate)
-          fixedLayerKeys.push(plate.key)
-        }
-        add(main, { ...configured, motion: 'grill', width: large ? .62 : .56, offset: withChips ? .08 : .2, positionY: .07, step: 0 })
-        continue
-      }
       const hotDogMotion = hotDog && !meal ? { dog: { 'dog-bottom': 'roll', sausage: 'sausage' }[key] } : {};
       add(main, hotDog && !meal && openRoll[key] ? { ...configured, ...openRoll[key], step: 0 } :
         hotDogMotion.dog ? { ...configured, motion: hotDogMotion.dog } : configured);
@@ -152,15 +128,13 @@ export function productProfile(product, burgerProfile) {
   for (const layer of reference.values()) {
     if (!optionKeys.has(layer.key) || represented.has(layer.key)) continue;
     const scale = mainScale * (hotDog && !layer.sauce ? .74 : 1);
-    const placed = shish && shishSaladLayout[layer.key] ? { ...shishSaladLayout[layer.key], motion: 'salad', step: 0 } :
-      shish && layer.sauce ? { offset: withChips ? .05 : .2, positionY: .15, width: .50, path: 'zigzag' } :
-      hotDog && !meal && layer.sauce ? { offset: 0, positionY: .105, width: .80, path: 'zigzag' } :
+    const placed = hotDog && !meal && layer.sauce ? { offset: 0, positionY: .105, width: .80, path: 'zigzag' } :
       hotDog && !meal && openRoll[layer.key] ? { ...openRoll[layer.key], step: 0 } :
-      shish ? { offset: withChips ? .05 : .2, positionY: .14, width: .40, step: 0 } : {};
+      {};
     add(main, {
       ...layer, required: false, width: layer.width * scale,
       step: layer.step * scale, offset: layer.offset * scale + mainOffset, ...placed,
-    }, shish && shishSalad.has(layer.key));
+    }, false);
   }
   // Side dishes and a chosen drink stay beside the main during assembly.
   for (const choice of product.optionGroups.flatMap(group => group.options)) {
@@ -172,12 +146,6 @@ export function productProfile(product, burgerProfile) {
     }, false);
   }
   add(main, cover);
-  if (shish) {
-    // Plate, then salad, then grilled chicken, then chips, then sauce.
-    const rank = layer => layer.key === 'plate' ? 0 : layer.sauce ? 4 : layer.key.startsWith('shish') ? 2 :
-      layer.key.startsWith('chips') ? 3 : 1;
-    main.sort((a, b) => rank(a) - rank(b));
-  }
   return {
     name: product.name, visual: product.visual, fixedLayerKeys,
     layers: [...accessories, ...main], closingLayerKey: cover?.key,

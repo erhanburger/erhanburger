@@ -2,8 +2,7 @@ import {
   catalog, halfPounder, optionConflicts, findProduct, createDefaultSelections, formatPrice, getUnitPricePence, choiceSummary,
 } from './catalog.js'
 import { CharcoalScene } from './scene.js'
-import { BoxScene } from './box-scene.js'
-import { boxVisualOptionIds } from './box-recipes.js'
+import { PhotoScene } from './photo-scene.js'
 import { productProfile } from './product-profiles.js'
 import { createBasketUI } from './basket-ui.js'
 import { initShell, make } from './shell.js'
@@ -17,10 +16,9 @@ const preset = match?.preset ?? []
 const selected = createDefaultSelections(product, preset)
 const preview = productProfile(product, CharcoalScene.defaultProfile)
 const options = product.optionGroups.flatMap(group => group.options)
-// Products served in a box use the box engine; the rest are stacked.
-const boxed = preview.layout === 'box'
-const Scene = boxed ? BoxScene : CharcoalScene
-const shownInBox = boxed ? boxVisualOptionIds(preview.recipe) : new Set()
+// Products shown in a photograph get sauces over the photo; the rest are stacked.
+const photoScene = preview.layout === 'photo'
+const Scene = photoScene ? PhotoScene : CharcoalScene
 const $ = selector => document.querySelector(selector)
 const builder = $('.builder')
 const groupsNode = $('#choice-groups')
@@ -239,7 +237,7 @@ function showToast(message) {
 function renderStageNotes() {
   const notes = $('#stage-notes')
   notes.replaceChildren(...options.filter(option => selected.has(option.id) && !option.locked &&
-    !option.image && !(option.layerKeys?.length) && !shownInBox.has(option.id)).map(option => make('li', '', option.name)))
+    !option.image && !(option.layerKeys?.length)).map(option => make('li', '', option.name)))
   $('#stage').dataset.choices = [...selected].join(' ')
 }
 
@@ -281,7 +279,7 @@ function followScroll() {
 }
 
 function getSceneSelection() {
-  if (boxed) return new Set(selected)
+  if (photoScene) return new Set(selected)
   const active = options.filter(option => selected.has(option.id))
   const keys = new Set(preview.fixedLayerKeys)
   for (const option of active) {

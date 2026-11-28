@@ -9,32 +9,6 @@
 import { productProfile } from './product-profiles.js'
 import { burgerProfile } from './burger-layers.js'
 import { createDefaultSelections } from './catalog.js'
-import { renderBoxStill } from './box-scene.js'
-
-// Box scenes are drawn on a canvas when the card comes near the screen (or by
-// the sweep below), from the same plan as the builder.
-const pendingBoxes = new Set()
-let boxWatcher
-function drawBox(canvas) {
-  if (!pendingBoxes.delete(canvas)) return
-  boxWatcher?.unobserve(canvas)
-  const { recipe, product } = canvas.boxArt
-  const options = product.optionGroups.flatMap(group => group.options)
-  renderBoxStill(canvas, recipe, options, createDefaultSelections(product, product.cardChoices ?? []))
-    .catch(() => canvas.closest('.art')?.classList.add('art--missing'))
-}
-function watchBox(canvas, eager) {
-  pendingBoxes.add(canvas)
-  if (eager || !('IntersectionObserver' in window)) {
-    requestAnimationFrame(() => drawBox(canvas))
-    return
-  }
-  boxWatcher ??= new IntersectionObserver(entries => {
-    for (const entry of entries) if (entry.isIntersecting) drawBox(entry.target)
-  }, { rootMargin: '300px' })
-  boxWatcher.observe(canvas)
-}
-
 // Lazy pictures still arrive even if the page is never scrolled (for example a
 // full-page capture or a preview that cannot detect scrolling).
 let sweepScheduled = false
@@ -43,7 +17,6 @@ function scheduleSweep() {
   sweepScheduled = true
   const sweep = () => setTimeout(() => {
     for (const image of document.querySelectorAll('.art img[loading="lazy"]')) image.loading = 'eager'
-    for (const canvas of [...pendingBoxes]) drawBox(canvas)
   }, 600)
   if (document.readyState !== 'loading') sweep()
   else addEventListener('DOMContentLoaded', sweep, { once: true })
@@ -98,13 +71,13 @@ export function productArt(product, { eager = false, className = '' } = {}) {
     if (++failed === count) art.classList.add('art--missing')
   }
   const profile = productProfile(product, burgerProfile)
-  if (profile.layout === 'box') {
-    art.dataset.visual = 'box'
-    const canvas = document.createElement('canvas')
-    canvas.className = 'art-box'
-    canvas.boxArt = { recipe: profile.recipe, product }
-    art.append(canvas)
-    watchBox(canvas, eager)
+  if (profile.layout === 'photo') {
+    // The same approved photograph as the builder, whole, on the card's pass.
+    art.dataset.visual = 'shish-photo'
+    const node = image(profile.photo.small, eager, onError)
+    node.className = 'art-shish'
+    art.append(node)
+    count++
   } else if (product.art) {
     // Hand-placed cut-outs: positions are shares of the tile width.
     art.dataset.visual = 'art'

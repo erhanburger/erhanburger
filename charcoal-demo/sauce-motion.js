@@ -43,7 +43,23 @@ export function preloadSauceBottles(layers) {
   }
 }
 
-function surfacePoint(layer, width, progress) {
+export function surfacePoint(layer, width, progress) {
+  if (layer.path === 'drizzle' || layer.path === 'stripe') {
+    // Seen from above (photo scenes): the line runs down the food. layer.y is
+    // its top, layer.height its length; a drizzle swings side to side with
+    // rounded turns, a stripe runs straight down with a slight wobble.
+    const down = (layer.y - progress * layer.height) * width;
+    const phase = layer.phase ?? 0;
+    if (layer.path === 'stripe') {
+      return { x: (layer.offset + Math.sin(progress * Math.PI * 4 + phase) * .01) * width, y: down };
+    }
+    // A hand-squeezed line: each swing a little wider or narrower, the turns
+    // a little uneven, the whole line drifting slightly.
+    const swing = Math.sin(progress * Math.PI * layer.turns + phase + .35 * Math.sin(progress * 17 + phase));
+    const reach = .86 + .14 * Math.sin(progress * Math.PI * layer.turns * .37 + phase * 3);
+    const drift = .03 * Math.sin(progress * 5.3 + phase) * layer.width + (progress - .5) * (layer.slant ?? 0);
+    return { x: (layer.offset + drift + Math.sign(swing) * Math.abs(swing) ** .6 * reach * layer.width / 2) * width, y: down };
+  }
   if (layer.path === 'zigzag') {
     // A squeezed line along a long item (hot dog, shish): side to side with small waves.
     const along = -.42 + progress * .84;
@@ -97,9 +113,12 @@ function paintSauceRibbon(context, points, profile, canvasSize, alpha) {
 
 export function paintSauceTrail(context, layer, progress, alpha, width, canvasSize) {
   if (!context || progress <= 0 || alpha <= 0) return;
+  // A layer may bring its own painter (photo scenes draw glossy strokes).
+  if (layer.paintTrail) return layer.paintTrail(context, layer, progress, alpha, width, canvasSize);
   const depositWidth = width * .0117 * layer.sauce.body;
-  const points = Array.from({ length: 42 }, (_, index) => {
-    const t = progress * index / 41;
+  const samples = layer.samples ?? 42;
+  const points = Array.from({ length: samples }, (_, index) => {
+    const t = progress * index / (samples - 1);
     const taper = Math.min(1, .22 + t * 18, .13 + (progress - t) * 27);
     return {
       ...surfacePoint(layer, width, t),
