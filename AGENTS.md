@@ -34,3 +34,9 @@
 - Research professional restaurant and design examples, then share the findings in project memory. Develop at least three materially different concepts covering layout, typography, brand character, product presentation and the customer journey. Use independent customer and QA reviews.
 - The previous Charcoal Studio visual direction may be replaced in the preview. Preserve interactive food preparation, the working basket and ordering logic, verified menu facts, and British English with GBP. Implement an option without another design approval only if independent review finds a clear winner. Where design taste decides, present the alternatives.
 - Record and verify a clean, pushed baseline before redesign. Work only on `burger-builder`. Do not inspect or change other branches. Use the dedicated Cloudflare Pages preview at https://erhanburger-preview.pages.dev, connected to the `burger-builder` branch. Do not use Netlify. Use free preview methods and spend £0 externally. The three-round limit still applies.
+
+## Permanent Master Agent completion rule
+
+- Break the assignment into phases, delegate specialised work, review the results and have defects corrected. Move directly to the next authorised phase without waiting for routine approval or a new command.
+- Complete technical and independent visual checks, exercise the customer flow in a real browser, push the reviewed work to `burger-builder`, and verify the Cloudflare Pages release. Keep the live site and all other branches outside the work.
+- End a turn before completion only when progress genuinely requires the user's intervention, such as a missing source, permission, or paid action, or when a technical runtime or usage limit prevents further work. Record completed work, pending work and the concrete blocker in project memory before stopping.

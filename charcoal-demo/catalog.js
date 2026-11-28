@@ -106,6 +106,27 @@ const toppingsGroup = {
 };
 const toppingsGroups = [toppingsGroup, sauceGroup, preferenceGroup];
 
+const shishSaladLayers = ['lettuce', 'tomato', 'cucumber', 'onion', 'mixed-cabbage', 'long-chilli'];
+const shishSaladRemoval = [...shishSaladLayers, 'gherkin'];
+const shishPreferenceLayers = {
+  plain: shishSaladRemoval,
+  'no-salad': shishSaladRemoval,
+  'no-onion': ['onion', 'grilled-onion'],
+  'no-pepper': ['red-pepper', 'green-pepper'],
+};
+const shishToppingsGroup = {
+  ...toppingsGroup,
+  options: toppingsGroup.options.map(choice => choice.id === 'all-salad'
+    ? { ...choice, layerKeys: shishSaladLayers }
+    : choice),
+};
+const shishPreferenceGroup = {
+  ...preferenceGroup,
+  options: preferenceGroup.options.map(choice => Object.hasOwn(shishPreferenceLayers, choice.id)
+    ? { ...choice, removeLayerKeys: shishPreferenceLayers[choice.id] }
+    : choice),
+};
+
 // index.html Half Pounder with Cheese menu row, TOPPINGS and SAUCES are the
 // ordering source. The charcoal preview has two beef layers for presentation.
 export const halfPounder = {
@@ -187,7 +208,9 @@ const otherProducts = [
   ...shishProducts, ...sidesAndDrinks, ...mealDeals,
 ].map(product => ({
   ...product,
-  optionGroups: optionPolicies[product.policy],
+  optionGroups: product.categoryId === 'shish'
+    ? [kebabChilli, shishToppingsGroup, sauceGroup, shishPreferenceGroup]
+    : optionPolicies[product.policy],
 }));
 
 export const catalog = {

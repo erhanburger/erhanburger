@@ -1,23 +1,28 @@
-const photo = '../IMG_0457.jpeg';
-const saladDescription = 'Served with fresh onions, cucumber, tomatoes, lettuce, long chillies, mixed cabbage and sauce.';
+const saladDescription = 'Choose your salad and sauces. All salad includes fresh onions, cucumber, tomatoes, lettuce, long chillies and mixed cabbage.';
 
-function chickenShish(id, name, basePricePence, components) {
+function chickenShish(portion, basePricePence, withChips = false) {
+  const variant = withChips ? portion + '-with-chips' : portion;
+  const size = portion === 'large' ? 'Large' : 'Medium';
+  const subtitle = '– ' + size + (withChips ? ' with Chips' : '');
+
   return {
-    id,
-    name,
+    id: 'chicken-shish-' + variant,
+    name: 'Chicken Shish ' + subtitle,
+    titleLines: ['Chicken Shish ', subtitle],
     basePricePence,
-    image: photo,
+    image: './assets/shish/' + variant + '.webp',
     categoryId: 'shish',
     policy: 'kebab',
     visual: 'plate',
-    components,
+    portion,
+    components: withChips ? ['shish', 'chips'] : ['shish'],
     builderDescription: saladDescription,
   };
 }
 
 export default [
-  chickenShish('chicken-shish-medium', 'Chicken Shish – Medium', 980, ['shish']),
-  chickenShish('chicken-shish-medium-with-chips', 'Chicken Shish – Medium with Chips', 1080, ['shish', 'chips']),
-  chickenShish('chicken-shish-large', 'Chicken Shish – Large', 1180, ['shish']),
-  chickenShish('chicken-shish-large-with-chips', 'Chicken Shish – Large with Chips', 1280, ['shish', 'chips']),
+  chickenShish('medium', 980),
+  chickenShish('medium', 1080, true),
+  chickenShish('large', 1180),
+  chickenShish('large', 1280, true),
 ];

@@ -94,3 +94,11 @@
 
 - [x] Cloudflare Pages ve `burger-builder` otomatik dağıtım ayarlarını proje hafızasına kaydet.
 - [ ] Cloudflare Pages dağıtımında ana sayfa, menü, özelleştirme, animasyon ve sepeti doğrula. Önceki Netlify doğrulama maddeleri emekliye ayrıldı.
+
+## Chicken Shish HP10 önizlemesi
+
+- [x] Dört ürünün servis fotoğraflarına dayanan kompozisyonunu üret ve bağımsız görsel değerlendirme yap.
+- [x] Katmanlı HP10 açılışı, ürün hazırlama sırası ve Shish seçeneklerini önizlemeye bağla.
+- [x] Dört ürünü masaüstü, mobil emülasyon, kısa yatay görünüm ve azaltılmış hareketle test et. Tam menü regresyonunu çalıştır.
+- [ ] Cloudflare Pages bağlantısı erişilebilir bir ortamdan yayınlanan commit’i ve müşteri akışını doğrula.
+- [ ] Orijinal restoran fotoğraflarının arşivlenebilir dosyaları ulaştığında referans kütüphanesine değişmeden ekle.

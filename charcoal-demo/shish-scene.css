@@ -1,0 +1,54 @@
+.stage[data-visual="shish-box"] .rig {
+  left: 52%;
+  width: min(53%, 309px, 51cqh);
+  bottom: 9%;
+}
+
+.stage[data-visual="shish-box"] .contact {
+  left: -26%;
+  width: 152%;
+}
+
+.stage[data-visual="shish-box"] .ingredient[data-layer^="shish-box-"] {
+  filter: none;
+}
+
+.stage[data-visual="shish-box"] .ingredient[data-layer="shish-box-base"] {
+  clip-path: polygon(0 42.6%, 100% 24.4%, 100% 100%, 0 100%);
+}
+
+.stage[data-visual="shish-box"] .ingredient[data-layer="shish-box-lid"] {
+  clip-path: polygon(0 0, 100% 0, 100% 26%, 0 44%);
+}
+
+.stage[data-visual="shish-box"] .ingredient[data-layer="shish-box-base"],
+.stage[data-visual="shish-box"] .ingredient[data-layer="shish-box-closed"] {
+  filter: drop-shadow(0 9px 12px #160a058c);
+}
+
+@media (max-width: 760px) {
+  .stage[data-visual="shish-box"] .stage-heading {
+    left: 13px;
+    top: 12px;
+    max-width: calc(100% - 24px);
+  }
+
+  .stage[data-visual="shish-box"] .stage-heading h1 {
+    font-size: clamp(1rem, 4.5vw, 1.37rem);
+  }
+
+  .stage[data-visual="shish-box"] .stage-heading h1 em {
+    display: inline;
+    margin-inline-start: .35em;
+  }
+
+  .stage[data-visual="shish-box"] .rig {
+    left: 54%;
+    bottom: 9%;
+    width: min(53%, 169px, 62cqh);
+  }
+}
+
+.stage[data-visual="shish-box"] .ingredient:not([data-layer^="shish-box-"]) {
+  filter: drop-shadow(0 2px 2px #2b170743);
+}

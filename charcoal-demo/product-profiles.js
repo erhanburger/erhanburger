@@ -1,3 +1,5 @@
+import { shishSceneProfile } from './shish-scene.js';
+
 const sharedAssets = '../burger-builder-demo/assets/';
 const menuAssets = './assets/menu/';
 const photo = (key, width, step = 0, motion = 'slice') => ({
@@ -11,15 +13,8 @@ const componentPhotos = {
   sausage: photo('dog-overhead-sausage', .91, 0, 'patty'),
   chips: photo('chips', .97),
   nugget: photo('nugget', .31, 0, 'patty'),
-  shish: photo('shish-grilled-chicken', .98, 0, 'patty'),
 };
 
-const shishSalad = {
-  lettuce: { width: .48, offset: .43, positionY: .29 },
-  tomato: { width: .30, offset: .48, positionY: .24 },
-  cucumber: { width: .29, offset: .35, positionY: .26 },
-  onion: { width: .30, offset: .42, positionY: .36 },
-};
 const dogToppings = {
   cheese: { width: .54, offset: -.09, positionY: .105 },
   'extra-cheese': { width: .51, offset: -.08, positionY: .112 },
@@ -35,18 +30,17 @@ const foodTypes = new Set(['burger', 'hot-dog', 'meal', 'plate']);
 
 export function productProfile(product, burgerProfile) {
   if (!product.visual) return { image: product.image, name: product.name, ...product.preview };
+  if (product.categoryId === 'shish') return shishSceneProfile(product, burgerProfile);
 
   const reference = new Map(burgerProfile.layers.map(layer => [layer.key, layer]));
   const optionKeys = new Set(product.optionGroups.flatMap(group =>
     group.options.flatMap(option => option.layerKeys ?? [])));
   const meal = product.visual === 'meal';
-  const shish = product.categoryId === 'shish';
   const hotDog = product.components.includes('dog-bottom');
-  const withChips = product.components.includes('chips');
   const standaloneChips = product.categoryId === 'chips';
-  const mainOffset = meal ? -.20 : shish ? -.245 : 0;
+  const mainOffset = meal ? -.20 : 0;
   const mainScale = meal ? .71 : 1;
-  const planar = hotDog || shish || product.visual === 'plate' || !product.components.includes('top');
+  const planar = hotDog || product.visual === 'plate' || !product.components.includes('top');
 
   function onDog(position) {
     return {
@@ -95,10 +89,6 @@ export function productProfile(product, burgerProfile) {
         ...configured, width, offset: meal ? -.27 : (col - 1) * .30 + (row % 2) * .035,
         positionY: row * .188, restingAngle: ((nuggets++ * 17) % 29) - 14,
       });
-    } else if (key === 'shish') {
-      const width = product.name.includes('Large') ? 1.03 : .84;
-      add(main, { ...configured, width, positionY: 0, offset: -.22 });
-      add(main, { ...photo('shish-grilled-veg', width * .78), key: 'grilled-veg', offset: -.21, positionY: .15 });
     } else {
       const dogPosition = dogToppings[key] ?? (key === 'sausage' ?
         { width: .91, offset: 0, positionY: .112 } :
@@ -115,10 +105,6 @@ export function productProfile(product, burgerProfile) {
     });
   }
 
-  if (shish) {
-    add(main, { ...photo('shish-cabbage', .36, 0, 'leaf'), key: 'mixed-cabbage', offset: .46, positionY: .22 });
-    add(main, { ...photo('shish-long-chilli', .34), key: 'long-chilli', offset: .24, positionY: .40 });
-  }
   const represented = new Set(main.map(layer => layer.key));
   for (const layer of reference.values()) {
     if (!optionKeys.has(layer.key) || represented.has(layer.key)) continue;
@@ -127,13 +113,10 @@ export function productProfile(product, burgerProfile) {
     if (hotDog) {
       const target = layer.sauce ? { width: .83, offset: 0, positionY: .21 } : dogToppings[layer.key];
       if (target) placement = { ...onDog(target), trace: layer.sauce ? 'lengthwise' : undefined };
-    } else if (shish) {
-      placement = layer.sauce ? { width: .6, offset: -.23, positionY: .12, step: 0 } :
-        { width: layer.width * .46, offset: .34, positionY: .29, step: 0, ...shishSalad[layer.key] };
     } else if (standaloneChips && layer.sauce) {
       placement = { width: .63, offset: layer.offset, positionY: .14, step: 0 };
     }
-    add(main, { ...layer, required: false, ...placement }, shish && !!shishSalad[layer.key]);
+    add(main, { ...layer, required: false, ...placement }, false);
   }
   // Side dishes and a chosen drink stay beside the main during assembly.
   for (const choice of product.optionGroups.flatMap(group => group.options)) {

@@ -1,3 +1,4 @@
+import { paintShishPackaging } from './shish-scene.js';
 import { paintSaucePour, paintSauceTrail, preloadSauceBottles, sauceProfiles } from './sauce-motion.js';
 import { ingredientPose, ingredientTiming } from './ingredient-motion.js';
 
@@ -149,7 +150,7 @@ export const CharcoalScene = (() => {
   }
 
   function place(layer, {
-    lift = 0, move = 0, angle = 0, squash = 1, spread = 1, skew = 0, yaw = 0, opacity = 1, shadow = 0,
+    lift = 0, move = 0, angle = 0, squash = 1, spread = 1, skew = 0, yaw = 0, opacity = 1, shadow = 0, lidFold,
   } = {}) {
     if (layer.sauce) {
       paintTrail({ ...layer, y: layer.y + lift, offset: layer.offset + move }, 1, opacity);
@@ -160,9 +161,12 @@ export const CharcoalScene = (() => {
     image.style.visibility = opacity > 0 ? 'visible' : 'hidden';
     image.style.opacity = opacity;
     image.style.setProperty('--width', `${layer.width * 100}%`);
-    image.style.transformOrigin = squash !== 1 || spread !== 1 ? '50% 100%' : '';
+    image.style.transformOrigin = layer.packaging === 'lid' ? '50% 34.4%' :
+      squash !== 1 || spread !== 1 ? '50% 100%' : '';
+    // Fold around the slanted hinge visible in the aligned box photograph.
+    const hinge = lidFold === undefined ? '' : ` rotate(-7deg) scaleY(${lidFold}) rotate(7deg)`;
     image.style.transform =
-      `translate3d(calc(-50% + ${(layer.offset + move) * width}px), ${-(layer.y + lift) * width}px, 0) rotate(${angle + (layer.restingAngle ?? 0)}deg) rotateY(${yaw}deg) skewX(${skew}deg) scale(${spread}, ${squash})`;
+      `translate3d(calc(-50% + ${(layer.offset + move) * width}px), ${-(layer.y + lift) * width}px, 0) rotate(${angle + (layer.restingAngle ?? 0)}deg) rotateY(${yaw}deg) skewX(${skew}deg) scale(${spread}, ${squash})${hinge}`;
     paintLandingShadow(layer, image, shadow * opacity, lift);
   }
 
@@ -271,6 +275,11 @@ export const CharcoalScene = (() => {
 
   function paintReplay(elapsed, next, plan) {
     resetDispenser();
+    if (profile.packaging) {
+      const closed = profile.layers.find(layer => layer.key === profile.packaging.closedKey);
+      const box = next.filter(layer => layer.packaging);
+      paintShishPackaging(elapsed, profile.packaging, box, closed ? { ...closed, y: closed.positionY } : undefined, place);
+    }
     const poses = new Map();
     for (const { layer, start, motion } of plan) {
       if (motion) poses.set(layer.key, landingPose(layer, motion, elapsed - start));
@@ -366,13 +375,15 @@ export const CharcoalScene = (() => {
     showRest(reducedMotion.matches ? next : []);
     if (reducedMotion.matches || !next.length) return;
 
-    let start = 0;
-    let landedAt = 0;
-    const plan = next.map(layer => {
+    const leadIn = profile.packaging?.openDuration ?? 0;
+    let start = leadIn;
+    let landedAt = leadIn;
+    const plan = next.filter(layer => !layer.packaging).map(layer => {
       const motion = layer.sauce ? null : ingredientTiming(layer, timings, profile.closingLayerKey);
-      if (layer.sauce || layer.key === profile.closingLayerKey) start = Math.max(start, landedAt);
+      if (layer.sauce || layer.finishesReplay || layer.key === profile.closingLayerKey) start = Math.max(start, landedAt, leadIn + (layer.replayDelay ?? 0));
+      else if (layer.replayDelay !== undefined) start = leadIn + layer.replayDelay;
       const entry = { layer, start, motion };
-      landedAt = start + (motion?.duration ?? pourDuration);
+      landedAt = Math.max(landedAt, start + (motion?.duration ?? pourDuration));
       // Only overlap the next release with the previous layer's final settling.
       start += motion ? motion.fall + Math.round(motion.settle * .5) : pourDuration + 75;
       return entry;
